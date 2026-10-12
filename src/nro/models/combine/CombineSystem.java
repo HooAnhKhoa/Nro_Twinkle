@@ -291,6 +291,7 @@ public class CombineSystem {
     }
 
     public static double getTileNangCapDo(int level) {
+        if (level >= 0 && level < 8) return nro.models.server.PanelBridge.upgrade(level, 0);
         switch (level) {
             case 0:
                 return 80;

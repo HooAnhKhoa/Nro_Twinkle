@@ -317,6 +317,7 @@ public class ChangeMapService {
     }
 
     private void changeMap(Player pl, Zone zoneJoin, int mapId, int zoneId, int x, int y, byte typeSpace) {
+        if (pl instanceof nro.models.boss.Boss) nro.models.server.PanelBridge.applySpawnStats((nro.models.boss.Boss) pl);
         if (pl.idNRNM != -1 && !Util.canDoWithTime(pl.lastTimePickNRNM, 30000)) {
             resetPoint(pl);
             Service.gI().sendThongBao(pl, "Không thể chuyển map quá nhanh khi đeo Ngọc Rồng Namếc");

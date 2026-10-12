@@ -64,6 +64,11 @@ import java.io.IOException;
 
 public class Boss extends Player implements IBoss {
 
+    public boolean panelIndependent = false;
+    public boolean panelStatsApplied = false;
+    public boolean panelCanSpawn() { return this.panelIndependent && this.parentBoss == null; }
+    public void panelSetRest(int seconds) { this.secondsRest = seconds; }
+    public void panelSpawn() { this.currentLevel = -1; this.changeStatus(BossStatus.RESPAWN); }
     public int currentLevel = -1;
     public final BossData[] data;
 
@@ -125,8 +130,10 @@ public class Boss extends Player implements IBoss {
         }
         this.data = data;
         this.secondsRest = this.data[0].getSecondsRest();
+        nro.models.server.PanelBridge.register(this);
         this.bossStatus = BossStatus.REST;
         BossManager.gI().addBoss(this);
+        this.panelIndependent = true;
 
         this.bossAppearTogether = new Boss[this.data.length][];
         for (int i = 0; i < this.bossAppearTogether.length; i++) {
@@ -152,6 +159,7 @@ public class Boss extends Player implements IBoss {
         }
         this.data = data;
         this.secondsRest = this.data[0].getSecondsRest();
+        nro.models.server.PanelBridge.register(this);
         this.bossStatus = BossStatus.REST;
         switch (bossType) {
             case YARDART ->
@@ -201,6 +209,7 @@ public class Boss extends Player implements IBoss {
 
     @Override
     public void initBase() {
+        nro.models.server.PanelBridge.configure(this);
         BossData data = this.data[this.currentLevel];
         this.name = String.format(data.getName(), Util.nextInt(0, 100));
         this.gender = data.getGender();
@@ -335,6 +344,8 @@ public class Boss extends Player implements IBoss {
 
     @Override
     public void update() {
+        nro.models.server.PanelBridge.tickBoss(this);
+        if (!nro.models.server.PanelBridge.enabled(this)) { if (this.zone != null) this.leaveMap(); return; }
         if (prepareBom) {
             return;
         }
@@ -407,6 +418,7 @@ public class Boss extends Player implements IBoss {
 
     @Override
     public void respawn() {
+        this.panelStatsApplied = false;
         this.currentLevel++;
         if (this.currentLevel >= this.data.length) {
             this.currentLevel = 0;

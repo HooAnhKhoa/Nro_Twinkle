@@ -121,6 +121,7 @@ public class ServerManager {
             new Thread(ShenronEventManager.gI(), "Update Shenron").start();
 
             BossManager.gI().loadBoss();
+            PanelBridge.start();
             Manager.MAPS.forEach(nro.models.map.Map::initBoss);
             EventManager.gI().init();
 

@@ -1478,7 +1478,7 @@ public class NPoint {
                 if (dameAttack > 2_147_483_647) {
                     dameAttack = 2_147_483_647;
                 }
-                return (int) dameAttack;
+                return (int) nro.models.server.PanelBridge.skillDamage(this.player, dameAttack);
         }
 
         if (intrinsic.id == 18 && this.player.effectSkill.isMonkey) {
@@ -1535,7 +1535,7 @@ public class NPoint {
                 > 2_147_483_647) {
             dameAttack = 2_147_483_647;
         }
-        return (int) dameAttack;
+        return (int) nro.models.server.PanelBridge.skillDamage(this.player, dameAttack);
     }
 
     public int getCurrPercentHP() {

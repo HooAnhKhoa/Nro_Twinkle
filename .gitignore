@@ -4,6 +4,9 @@
 /nbproject/private/
 /Config.properties
 *.sql
+!/web/*schema.sql
+!/web/boss_web.sql
+!/web/server_rates.sql
 *.log
 *.class
 /Teamobi2026.jar
