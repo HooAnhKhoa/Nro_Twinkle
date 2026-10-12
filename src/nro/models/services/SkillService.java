@@ -750,6 +750,7 @@ public class SkillService {
                     } else if (player.setClothes.cadicM == 5) {
                         dame += player.nPoint.hpMax * 50 / 100;
                     }
+                    dame = nro.models.server.PanelBridge.skillDamage(player, dame);
                     if (!player.isBoss) {
                         for (Mob mob : player.zone.mobs) {
                             if (Util.getDistance(player, mob) <= rangeBom) { //khoảng cách có tác dụng bom

@@ -24,6 +24,7 @@ public final class PanelBridge {
     private static final Map<String, Long> spawnRequests = new ConcurrentHashMap<>();
     private static final Queue<CommandResult> results = new ConcurrentLinkedQueue<>();
     private static final class CommandResult { final long id;final String text;CommandResult(long id,String text){this.id=id;this.text=text;} }
+    private static final class PanelCommand {long id,playerId;String action;boolean stale;}
     private static final class BossConfig {int hp,damage,rest;boolean enabled;}
     private static String key(Boss b) {return b.getClass().getName();}
     public static void register(Boss b) {bosses.computeIfAbsent(key(b),k->new CopyOnWriteArrayList<>()).add(new WeakReference<>(b));}
@@ -59,10 +60,14 @@ public final class PanelBridge {
             for(String file:new String[]{"panel_schema.sql","boss_web.sql","server_rates.sql"}) {
                 for(String sql:Files.readString(Path.of("web",file)).split(";"))if(!sql.trim().isEmpty())s.execute(sql);
             }
+            try(ResultSet columns=s.executeQuery("SHOW COLUMNS FROM boss_web_config LIKE 'head_id'")) {
+                if(!columns.next())try(Statement migration=c.createStatement()){migration.execute("ALTER TABLE boss_web_config ADD head_id INT NOT NULL DEFAULT 0");}
+            }
         }catch(Exception e){Logger.logException(PanelBridge.class,e);return;}
         Executors.newSingleThreadScheduledExecutor(r->{Thread t=new Thread(r,"PanelBridge");t.setDaemon(true);return t;}).scheduleWithFixedDelay(PanelBridge::poll,0,3,TimeUnit.SECONDS);
     }
     private static void poll() {
+        List<PanelCommand> commands=new ArrayList<>();
         try(Connection c=LocalManager.getConnection()) {
             Runtime rt=Runtime.getRuntime();Double cpu=null;
             java.lang.management.OperatingSystemMXBean os=ManagementFactory.getOperatingSystemMXBean();
@@ -85,14 +90,18 @@ public final class PanelBridge {
             try(Statement s=c.createStatement()){s.executeUpdate("UPDATE boss_web_command SET completed_at=NOW(),result='Lệnh hết hạn; boss chưa thể xuất hiện.' WHERE completed_at IS NULL AND requested_at<NOW()-INTERVAL 30 SECOND");}
             try(Statement s=c.createStatement();ResultSet r=s.executeQuery("SELECT * FROM panel_command WHERE completed_at IS NULL ORDER BY id LIMIT 20")){
                 while(r.next()){
-                    String message;boolean stale=r.getTimestamp("requested_at").getTime()<System.currentTimeMillis()-30000;
-                    if(stale)message="Lệnh hết hạn; không thực hiện.";
-                    else if("kick".equals(r.getString("action"))){Player p=Client.gI().getPlayer(r.getLong("player_id"));if(p==null)message="Nhân vật đã offline.";else{Client.gI().kickSession(p.getSession());message="Đã kick và lưu nhân vật.";}}
-                    else if("maintenance".equals(r.getString("action"))){Maintenance.gI().startSeconds(60);message="Đã bắt đầu bảo trì sau 60 giây.";}
-                    else message="Lệnh không hợp lệ.";
-                    try(PreparedStatement done=c.prepareStatement("UPDATE panel_command SET completed_at=NOW(),result=? WHERE id=?")){done.setString(1,message);done.setLong(2,r.getLong("id"));done.executeUpdate();}
+                    PanelCommand command=new PanelCommand();command.id=r.getLong("id");command.playerId=r.getLong("player_id");command.action=r.getString("action");command.stale=r.getTimestamp("requested_at").getTime()<System.currentTimeMillis()-30000;commands.add(command);
                 }
             }
+        }catch(Exception e){Logger.logException(PanelBridge.class,e);}
+        // Release the bridge connection before kick saves players, including pools of size one.
+        for(PanelCommand command:commands)try {
+            String message;
+            if(command.stale)message="Lệnh hết hạn; không thực hiện.";
+            else if("kick".equals(command.action)){Player p=Client.gI().getPlayer(command.playerId);if(p==null)message="Nhân vật đã offline.";else{Client.gI().kickSession(p.getSession());message="Đã kick nhân vật theo quy trình lưu / thoát của server.";}}
+            else if("maintenance".equals(command.action)){Maintenance.gI().startSeconds(60);message="Đã bắt đầu bảo trì sau 60 giây.";}
+            else message="Lệnh không hợp lệ.";
+            try(Connection c=LocalManager.getConnection();PreparedStatement done=c.prepareStatement("UPDATE panel_command SET completed_at=NOW(),result=? WHERE id=?")){done.setString(1,message);done.setLong(2,command.id);done.executeUpdate();}
         }catch(Exception e){Logger.logException(PanelBridge.class,e);}
     }
     private static void publishBosses(Connection c)throws SQLException {

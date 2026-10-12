@@ -1442,7 +1442,7 @@ public class NPoint {
                 if (this.player.setClothes.picolo == 5) {
                     dameSkill *= 3 / 2;
                 }
-                return dameSkill;
+                return (int) nro.models.server.PanelBridge.skillDamage(this.player, dameSkill);
             case Skill.QUA_CAU_KENH_KHI:
                 long hpmob = 0;
                 long hppl = 0;
@@ -1470,7 +1470,7 @@ public class NPoint {
                 if (dameqckk > 2_147_483_647) {
                     dameqckk = 2_147_483_647;
                 }
-                return (int) dameqckk;
+                return (int) nro.models.server.PanelBridge.skillDamage(this.player, dameqckk);
             case Skill.DE_TRUNG:
                 if (player.setClothes.pikkoroDaimao == 5) {
                     dameAttack *= 4;

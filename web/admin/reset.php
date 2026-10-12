@@ -10,8 +10,13 @@ if($_SERVER['REQUEST_METHOD']==='POST') {
         $online=(int)$conn->query('SELECT COUNT(*) AS n FROM account WHERE last_time_login>last_time_logout')->fetch_assoc()['n'];
         if($online)throw new RuntimeException('Vẫn có tài khoản đánh dấu online. Kiểm tra server trước khi reset.');
         $tables=['account','clan','player','history_transaction','super_rank'];$prefix='panel_backup_'.date('Ymd_His').'_';
-        foreach($tables as $table){$conn->query("CREATE TABLE `$prefix$table` LIKE `$table`");$conn->query("INSERT INTO `$prefix$table` SELECT * FROM `$table`");}
-        $conn->begin_transaction();foreach($tables as $table)$conn->query('DELETE FROM `'.$table.'`'.($table==='account'?' WHERE is_admin != 1':''));$conn->commit();
+        $engines=$conn->query("SELECT TABLE_NAME,ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME IN ('account','clan','player','history_transaction','super_rank')")->fetch_all(MYSQLI_ASSOC);
+        if(count($engines)!==count($tables))throw new RuntimeException('Thiếu bảng dữ liệu; không thực hiện reset.');
+        foreach($engines as $table)if(strcasecmp($table['ENGINE'],'InnoDB')!==0)throw new RuntimeException('Reset yêu cầu các bảng InnoDB để đảm bảo hoàn tác khi lỗi.');
+        foreach($tables as $table)$conn->query("CREATE TABLE `$prefix$table` LIKE `$table`");
+        $conn->begin_transaction();
+        foreach($tables as $table)$conn->query("INSERT INTO `$prefix$table` SELECT * FROM `$table`");
+        foreach($tables as $table)$conn->query('DELETE FROM `'.$table.'`'.($table==='account'?' WHERE is_admin != 1':''));$conn->commit();
         $_SESSION['reset_flash']='Đã reset. Bản sao lưu trong database: '.$prefix.'*. Giữ lại tài khoản admin.';header('Location: reset.php');exit;
     }catch(Throwable $e){$conn->rollback();$message=$e instanceof RuntimeException?$e->getMessage():'Reset không thành công. Không tiếp tục nếu thiếu bảng hoặc sao lưu lỗi.';}
 }

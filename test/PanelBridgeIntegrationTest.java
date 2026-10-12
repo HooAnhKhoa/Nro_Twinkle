@@ -1,0 +1,40 @@
+import java.sql.*;
+import java.lang.reflect.Method;
+import nro.models.boss.*;
+import nro.models.consts.*;
+import nro.models.data.LocalManager;
+import nro.models.server.*;
+
+/** Run only against the disposable nro_panel_qa_20261013 database. */
+public class PanelBridgeIntegrationTest {
+    private static void check(boolean value,String name){if(!value)throw new AssertionError(name);System.out.println("PASS: "+name);}
+    public static void main(String[] args)throws Exception {
+        try(Connection c=LocalManager.getConnection()) {
+            check("nro_panel_qa_20261013".equals(c.getCatalog()),"isolated QA database");
+            Boss b=new Boss(-999999,new BossData("QA runtime boss",(byte)0,new short[]{297,298,299},10,new int[]{100},new int[]{1},new int[][]{},new String[]{},new String[]{},new String[]{},60));
+            String key=b.getClass().getName();
+            Method publish=PanelBridge.class.getDeclaredMethod("publishBosses",Connection.class);publish.setAccessible(true);publish.invoke(null,c);
+            try(PreparedStatement s=c.prepareStatement("UPDATE boss_web_config SET hp=5000,damage=333,rest_seconds=600,enabled=1,customized=1 WHERE boss_key=?")){s.setString(1,key);s.executeUpdate();}
+            try(Statement s=c.createStatement()){s.executeUpdate("UPDATE server_rates SET exp_rate=5,upgrade_1=100,drop_multiplier=0,revision=revision+1 WHERE id=1");}
+            Method poll=PanelBridge.class.getDeclaredMethod("poll");poll.setAccessible(true);poll.invoke(null);
+            PanelBridge.configure(b);check(b.data[0].getHp()[0]==5000&&b.data[0].getDame()==333&&b.data[0].getSecondsRest()==600,"boss configuration applied");
+            b.currentLevel=0;PanelBridge.applySpawnStats(b);check(b.nPoint.hpMax==5000&&b.nPoint.dame==333,"spawn overrides specialized HP/damage");
+            b.nPoint.hp=4000;PanelBridge.applySpawnStats(b);check(b.nPoint.hp==4000,"map transition does not heal boss twice");
+            check(Manager.RATE_EXP_SERVER==5,"live EXP setting applied");check(PanelBridge.upgrade(0,80)==100,"upgrade chance applied");check(!PanelBridge.rollDrop(100,100),"zero multiplier prevents random drops");
+            try(Statement s=c.createStatement()){s.executeUpdate("INSERT INTO panel_skill_rate(skill_id,multiplier) VALUES(0,2) ON DUPLICATE KEY UPDATE multiplier=2");}poll.invoke(null);
+            nro.models.player.Player p=new nro.models.player.Player();p.isPlayer=true;
+            p.playerSkill.skillSelect=new nro.models.skill.Skill();p.playerSkill.skillSelect.template=new nro.models.player_system.Template.SkillTemplate();p.playerSkill.skillSelect.template.id=0;
+            check(PanelBridge.skillDamage(p,100)==200,"player skill multiplier applied");
+            check(PanelBridge.skillDamage(b,100)==100,"boss skill damage remains independent");
+            try(Statement s=c.createStatement()){s.executeUpdate("UPDATE server_rates SET drop_multiplier=1 WHERE id=1");}poll.invoke(null);check(PanelBridge.rollDrop(100,100),"guaranteed drop preserved at x1");
+            try(PreparedStatement s=c.prepareStatement("UPDATE boss_web_config SET enabled=0 WHERE boss_key=?")){s.setString(1,key);s.executeUpdate();}poll.invoke(null);check(!PanelBridge.enabled(b),"disabled boss recognized");
+            try(PreparedStatement s=c.prepareStatement("UPDATE boss_web_config SET enabled=1 WHERE boss_key=?")){s.setString(1,key);s.executeUpdate();}
+            long id;try(PreparedStatement s=c.prepareStatement("INSERT INTO boss_web_command(boss_key) VALUES(?)",Statement.RETURN_GENERATED_KEYS)){s.setString(1,key);s.executeUpdate();try(ResultSet r=s.getGeneratedKeys()){r.next();id=r.getLong(1);}}
+            poll.invoke(null);PanelBridge.tickBoss(b);check(b.bossStatus==BossStatus.RESPAWN,"spawn queued on boss update thread");poll.invoke(null);
+            try(PreparedStatement s=c.prepareStatement("SELECT completed_at FROM boss_web_command WHERE id=?")){s.setLong(1,id);try(ResultSet r=s.executeQuery()){r.next();check(r.getTimestamp(1)!=null,"spawn acknowledgement stored");}}
+            try(PreparedStatement s=c.prepareStatement("INSERT INTO boss_web_command(boss_key,requested_at) VALUES(?,NOW()-INTERVAL 60 SECOND)",Statement.RETURN_GENERATED_KEYS)){s.setString(1,key);s.executeUpdate();try(ResultSet r=s.getGeneratedKeys()){r.next();id=r.getLong(1);}}
+            poll.invoke(null);b.bossStatus=BossStatus.REST;PanelBridge.tickBoss(b);check(b.bossStatus==BossStatus.REST,"expired command cannot spawn later");
+            System.out.println("Java bridge checks complete.");
+        }catch(Throwable e){e.printStackTrace();System.exit(1);}System.exit(0);
+    }
+}
