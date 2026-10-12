@@ -1,0 +1,11 @@
+/build/
+/dist/
+/data/
+/nbproject/private/
+/Config.properties
+*.sql
+*.log
+*.class
+/Teamobi2026.jar
+/item.xlsx
+/Lệnh admin.docx
