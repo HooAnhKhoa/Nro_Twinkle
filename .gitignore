@@ -9,3 +9,8 @@
 /Teamobi2026.jar
 /item.xlsx
 /Lệnh admin.docx
+
+/web/config.php
+/web/admin/*.lock
+/web/admin/*.log
+
