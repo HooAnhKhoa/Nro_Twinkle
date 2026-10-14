@@ -5,6 +5,8 @@ function bossGroupRows(array $rows): array {
     foreach($rows as $row){
         $maps=json_decode($row['map_ids'],true);$maps=is_array($maps)?array_values(array_unique(array_map('intval',$maps))):[];sort($maps,SORT_NUMERIC);
         $name=mb_strtolower(preg_replace('/\s+/u',' ',trim($row['name'])),'UTF-8');
+        // Yardrat training mobs are not entries in the boss editor.
+        if(preg_match('/^(chiến binh|tân binh|tập sự)(?:\s*-\s*\d+)?$/u',$name))continue;
         $key=$name.'|'.json_encode($maps);$groups[$key][]=$row;
     }
     $result=[];

@@ -11,3 +11,4 @@ $grouped=bossGroupRows([$old,$live,$second,$otherMap]);check(count($grouped)===2
 $group=$grouped[0]['map_ids']==='[16]'?$grouped[1]:$grouped[0];
 check(str_starts_with($group['boss_key'],'nro.'),'live canonical configuration is kept');check(count($group['locations'])===2,'all live zones retained');check($group['online_count']===2,'stale duplicate count is excluded');
 $case=bossGroupRows([$live,row('BossManager:1',' BABY ',[14,15],100,null)]);check(count($case)===1,'whitespace and case differences do not duplicate names');
+$training=bossGroupRows([$live,row('training:1','Chiến binh-0',[131],1,[]),row('training:2','Tân binh-5',[132],1,[]),row('training:3','Tập sự-4',[133],1,[])]);check(count($training)===1&&$training[0]['name']==='Baby','Yardrat training mobs excluded while real bosses remain');
