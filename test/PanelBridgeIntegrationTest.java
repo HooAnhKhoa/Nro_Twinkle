@@ -22,12 +22,14 @@ public class PanelBridgeIntegrationTest {
             b.zone=null;publish.invoke(null,c);
             try(PreparedStatement s=c.prepareStatement("SELECT current_locations FROM boss_web_config WHERE boss_key=?")){s.setString(1,key);try(ResultSet r=s.executeQuery()){r.next();check(r.getString(1).equals("[]"),"location clears when boss leaves map");}}
             try(PreparedStatement s=c.prepareStatement("UPDATE boss_web_config SET hp=5000,damage=333,rest_seconds=600,enabled=1,customized=1 WHERE boss_key=?")){s.setString(1,key);s.executeUpdate();}
-            try(Statement s=c.createStatement()){s.executeUpdate("UPDATE server_rates SET exp_rate=5,upgrade_1=100,drop_multiplier=0,revision=revision+1 WHERE id=1");}
+            try(Statement s=c.createStatement()){s.executeUpdate("UPDATE server_rates SET exp_rate=5,upgrade_1=100,star_1=0,star_9=100,drop_multiplier=0,revision=revision+1 WHERE id=1");}
             Method poll=PanelBridge.class.getDeclaredMethod("poll");poll.setAccessible(true);poll.invoke(null);
             PanelBridge.configure(b);check(b.data[0].getHp()[0]==5000&&b.data[0].getDame()==333&&b.data[0].getSecondsRest()==600,"boss configuration applied");
             b.currentLevel=0;PanelBridge.applySpawnStats(b);check(b.nPoint.hpMax==5000&&b.nPoint.dame==333,"spawn overrides specialized HP/damage");
             b.nPoint.hp=4000;PanelBridge.applySpawnStats(b);check(b.nPoint.hp==4000,"map transition does not heal boss twice");
             check(Manager.RATE_EXP_SERVER==5,"live EXP setting applied");check(PanelBridge.upgrade(0,80)==100,"upgrade chance applied");check(!PanelBridge.rollDrop(100,100),"zero multiplier prevents random drops");
+            check(nro.models.combine.PhaLeHoaTrangBi.getRatio(0)==0&&nro.models.combine.PhaLeHoaTrangBi.getRatio(8)==100,"star chances applied independently at both boundaries");
+            check(PanelBridge.star(9,17)==17,"unsupported star level keeps original fallback");
             try(Statement s=c.createStatement()){s.executeUpdate("INSERT INTO panel_skill_rate(skill_id,multiplier) VALUES(0,2) ON DUPLICATE KEY UPDATE multiplier=2");}poll.invoke(null);
             nro.models.player.Player p=new nro.models.player.Player();p.isPlayer=true;
             p.playerSkill.skillSelect=new nro.models.skill.Skill();p.playerSkill.skillSelect.template=new nro.models.player_system.Template.SkillTemplate();p.playerSkill.skillSelect.template.id=0;

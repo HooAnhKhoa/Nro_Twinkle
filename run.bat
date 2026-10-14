@@ -1,6 +1,8 @@
 @ECHO OFF
 cd /d "%~dp0"
-if exist Teamobi2026-panel-maps.jar (
+if exist Teamobi2026-panel-stars.jar (
+  java -server -Dfile.encoding=UTF-8 -jar Teamobi2026-panel-stars.jar
+) else if exist Teamobi2026-panel-maps.jar (
   java -server -Dfile.encoding=UTF-8 -jar Teamobi2026-panel-maps.jar
 ) else if exist Teamobi2026-panel.jar (
   java -server -Dfile.encoding=UTF-8 -jar Teamobi2026-panel.jar

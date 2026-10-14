@@ -20,6 +20,7 @@ public final class PanelBridge {
     private static volatile Map<String, BossConfig> bossConfig = Collections.emptyMap();
     private static volatile Map<Integer, Double> skillRates = Collections.emptyMap();
     private static volatile double[] upgrades = {80,50,20,10,7,5,1,.3};
+    private static volatile double[] stars = {50,20,10,5,1,.7,.5,.1,.1};
     public static volatile double dropMultiplier = 1;
     private static final Map<String, Long> spawnRequests = new ConcurrentHashMap<>();
     private static final Queue<CommandResult> results = new ConcurrentLinkedQueue<>();
@@ -29,6 +30,7 @@ public final class PanelBridge {
     private static String key(Boss b) {return b.getClass().getName();}
     public static void register(Boss b) {bosses.computeIfAbsent(key(b),k->new CopyOnWriteArrayList<>()).add(new WeakReference<>(b));}
     public static double upgrade(int level,double original) {return level>=0&&level<upgrades.length?upgrades[level]:original;}
+    public static double star(int level,double original) {return level>=0&&level<stars.length?stars[level]:original;}
     public static boolean rollDrop(double numerator,double denominator) {return denominator>0 && ThreadLocalRandom.current().nextDouble()*denominator<Math.min(denominator,Math.max(0,numerator*dropMultiplier));}
     public static long skillDamage(Player p,long original) {
         if(p==null||!p.isPl()||p.playerSkill==null||p.playerSkill.skillSelect==null)return original;
@@ -60,6 +62,10 @@ public final class PanelBridge {
             for(String file:new String[]{"panel_schema.sql","boss_web.sql","server_rates.sql"}) {
                 for(String sql:Files.readString(Path.of("web",file)).split(";"))if(!sql.trim().isEmpty())s.execute(sql);
             }
+            double[] defaults={50,20,10,5,1,.7,.5,.1,.1};
+            for(int i=1;i<=9;i++)try(ResultSet columns=s.executeQuery("SHOW COLUMNS FROM server_rates LIKE 'star_"+i+"'")) {
+                if(!columns.next())try(Statement migration=c.createStatement()){migration.execute("ALTER TABLE server_rates ADD star_"+i+" DECIMAL(6,3) NOT NULL DEFAULT "+defaults[i-1]);}
+            }
             try(ResultSet columns=s.executeQuery("SHOW COLUMNS FROM boss_web_config LIKE 'head_id'")) {
                 if(!columns.next())try(Statement migration=c.createStatement()){migration.execute("ALTER TABLE boss_web_config ADD head_id INT NOT NULL DEFAULT 0");}
             }
@@ -80,7 +86,7 @@ public final class PanelBridge {
             }
             long rateRevision=0;
             try(Statement s=c.createStatement();ResultSet r=s.executeQuery("SELECT * FROM server_rates WHERE id=1")) {
-                if(r.next()){rateRevision=r.getLong("revision");Manager.RATE_EXP_SERVER=(byte)r.getInt("exp_rate");dropMultiplier=r.getDouble("drop_multiplier");double[] next=new double[8];for(int i=0;i<8;i++)next[i]=r.getDouble("upgrade_"+(i+1));upgrades=next;}
+                if(r.next()){rateRevision=r.getLong("revision");Manager.RATE_EXP_SERVER=(byte)r.getInt("exp_rate");dropMultiplier=r.getDouble("drop_multiplier");double[] next=new double[8];for(int i=0;i<8;i++)next[i]=r.getDouble("upgrade_"+(i+1));upgrades=next;double[] nextStars=new double[9];for(int i=0;i<9;i++)nextStars[i]=r.getDouble("star_"+(i+1));stars=nextStars;}
             }
             try(PreparedStatement s=c.prepareStatement("UPDATE server_rates SET heartbeat=NOW(),applied_revision=? WHERE id=1")){s.setLong(1,rateRevision);s.executeUpdate();}
             Map<Integer,Double> nextSkills=new HashMap<>();try(Statement s=c.createStatement();ResultSet r=s.executeQuery("SELECT * FROM panel_skill_rate")){while(r.next())nextSkills.put(r.getInt(1),r.getDouble(2));}skillRates=nextSkills;

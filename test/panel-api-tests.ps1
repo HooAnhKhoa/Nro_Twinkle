@@ -35,8 +35,8 @@ $j=Call-Panel @{action='spawn';csrf=$bossToken;key='qa.boss.1'} 'boss.php';Check
 $ratesPage=Invoke-WebRequest ($base+'rates.php') -WebSession $qaSession
 $rateToken=[regex]::Match($ratesPage.Content,'const csrf="([a-f0-9]+)"').Groups[1].Value
 $j=Call-Panel @{action='read';csrf=$rateToken} 'rates.php';$rev=[int]$j.body.row.revision
-$j=Call-Panel @{action='save';csrf=$rateToken;revision=$rev;exp=3;drop=1;upgrades=@(80,50,20,10,7,5,1,.3)} 'rates.php';Check ($j.code -eq 200) 'EXP/drop/upgrade settings save'
-$j=Call-Panel @{action='save';csrf=$rateToken;revision=$rev;exp=3;drop=1;upgrades=@(80,50,20,10,7,5,1,.3)} 'rates.php';Check ($j.code -eq 409) 'stale configuration cannot overwrite newer version'
+$j=Call-Panel @{action='save';csrf=$rateToken;revision=$rev;exp=3;drop=1;upgrades=@(80,50,20,10,7,5,1,.3);stars=@(50,20,10,5,1,.7,.5,.1,.1)} 'rates.php';Check ($j.code -eq 200) 'EXP/drop/upgrade settings save'
+$j=Call-Panel @{action='save';csrf=$rateToken;revision=$rev;exp=3;drop=1;upgrades=@(80,50,20,10,7,5,1,.3);stars=@(50,20,10,5,1,.7,.5,.1,.1)} 'rates.php';Check ($j.code -eq 409) 'stale configuration cannot overwrite newer version'
 $j=Call-Panel @{id=0;multiplier=1} 'skill_rates.php';Check ($j.code -eq 200) 'skill multiplier save'
 $j=Call-Panel @{action='read';player_id=2} 'intrinsic.php';Check ($j.code -eq 200) 'intrinsic player data loads'
 $intrinsic=$j.body.templates|Where-Object { [int]$_.id -gt 0 -and ([int]$_.gender -eq 0 -or [int]$_.gender -eq 3) } | Select-Object -First 1

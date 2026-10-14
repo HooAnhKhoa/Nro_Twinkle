@@ -42,7 +42,7 @@ public class PhaLeHoaTrangBi {
     private static void QuyTrinh(Player player, Item item, int star) {
         player.combineNew.goldCombine = CombineSystem.getGoldPhaLeHoa(star);
         player.combineNew.gemCombine = CombineSystem.getGemPhaLeHoa(star);
-        player.combineNew.ratioCombine = getFakeRatio(star);
+        player.combineNew.ratioCombine = getRatio(star);
 
         String npcSay = item.template.name + "\n|2|";
         for (Item.ItemOption io : item.itemOptions) {
@@ -63,6 +63,10 @@ public class PhaLeHoaTrangBi {
     }
 
     public static float getRatio(int star) {
+        return (float)nro.models.server.PanelBridge.star(star,getOriginalRatio(star));
+    }
+
+    private static float getOriginalRatio(int star) {
         switch (star) {
             case 0:
                 return 50f;

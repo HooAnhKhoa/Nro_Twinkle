@@ -17,6 +17,7 @@ $conn->query("INSERT IGNORE INTO account VALUES(1,'qa_admin',1,1000,'2020-01-01'
 $conn->query("INSERT IGNORE INTO player VALUES(1,'QA Admin',1,0,'[0,0,0,0]'),(2,'QA Player',2,0,'[0,0,0,0]'),(3,'QA Online',3,0,'[0,0,0,0]')");
 $conn->query("INSERT IGNORE INTO giftcode VALUES(1,'qatest',9999),(2,'twinkle',100)");
 foreach(['panel_schema.sql','boss_web.sql','server_rates.sql'] as $f)foreach(explode(';',file_get_contents($repo.'/web/'.$f)) as $sql)if(trim($sql)!=='')$conn->query($sql);
+require $repo.'/web/admin/rates_schema.php'; ensureStarRates($conn);
 if(!$conn->query("SHOW COLUMNS FROM boss_web_config LIKE 'current_locations'")->num_rows)$conn->query('ALTER TABLE boss_web_config ADD current_locations TEXT NULL');
 $conn->query('UPDATE panel_runtime SET heartbeat=NULL,maintenance=0 WHERE id=1');
 $conn->query("DELETE FROM boss_web_config WHERE boss_key NOT LIKE 'qa.boss.%'");
