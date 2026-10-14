@@ -15,4 +15,4 @@ $training=bossGroupRows([$live,row('training:1','Chiến binh-0',[131],1,[]),row
 $questNames=['Baby','Android 13','Số 1','Pic','Kuku','Android 15','Poc','Số 4','Android 14','Xên con 7','Xên con 1'];
 $quest=bossGroupRows(array_map(fn($name)=>row($name,$name,[1],1,[]),$questNames));
 check(array_column($quest,'name')===['Kuku','Số 4','Số 1','Android 15','Android 14','Android 13','Poc','Pic','Xên con 1','Xên con 7','Baby'],'boss order follows main task and subtask rather than alphabetical order');
-check($quest[0]['task_group']==='Nhiệm vụ 19'&&end($quest)['task_group']==='Boss khác','quest headers identify mission bosses and other bosses');
+check($quest[0]['task_group']==='Nhiệm vụ 19'&&end($quest)['task_group']==='Nhiệm vụ 29','quest headers identify mission bosses and other bosses');
