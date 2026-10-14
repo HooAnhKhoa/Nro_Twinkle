@@ -18,7 +18,10 @@ body.admin-page.admin-embedded{padding:0!important;margin:0!important;min-height
 .admin-page[data-admin-page=player] #itemModal .modal-content{width:920px!important;padding:20px!important;text-align:left}
 .admin-page[data-admin-page=player] #itemModal h2{font-size:18px!important;padding:0 40px 12px 0!important;border-bottom:1px solid #e0e8f1!important}
 .admin-page[data-admin-page=player] #itemModal .close-btn-pop{position:absolute;right:12px;top:12px;width:30px!important;height:30px!important;font-size:18px!important;cursor:pointer}
-.admin-page[data-admin-page=player] #modalBody.full-grid{display:grid!important;grid-template-columns:repeat(auto-fill,40px)!important;grid-auto-flow:row!important;grid-auto-rows:40px!important;gap:8px!important;padding:8px!important;justify-content:start!important;max-height:calc(80vh - 100px)!important;overflow:auto!important;cursor:default;margin-top:12px!important}
-.admin-page[data-admin-page=player] #modalBody .item-slot{width:40px!important;height:40px!important;min-width:0}
+.admin-page[data-admin-page=player] #modalBody.full-grid{display:grid!important;grid-template-columns:repeat(auto-fill,48px)!important;grid-auto-flow:row!important;grid-auto-rows:48px!important;gap:8px!important;padding:8px!important;justify-content:start!important;max-height:calc(80vh - 100px)!important;overflow:auto!important;cursor:default;margin-top:12px!important}
+.admin-page[data-admin-page=player] #modalBody .item-slot{width:48px!important;height:48px!important;min-width:0}
 .admin-page[data-admin-page=player] #modalBody .btn-del-mini{width:18px!important;height:18px!important;min-height:0!important;padding:0!important;top:-5px;right:-5px;font-size:10px!important;border-radius:50%!important}
 @media(max-width:650px){.admin-page[data-admin-page=player] #itemModal .modal-content{padding:14px!important}.admin-page[data-admin-page=player] #modalBody.full-grid{gap:7px!important;padding:6px!important}}
+
+.admin-page[data-admin-page=player] #modalBody .item-slot img{width:36px!important;height:36px!important}
+.admin-page[data-admin-page=player] #modalBody .qty{font-size:12px!important}
