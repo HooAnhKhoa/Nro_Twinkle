@@ -288,7 +288,7 @@ input.data { border: none; background: transparent; text-align: center; font-wei
 }
 .pagination a.active { background: #2563eb; color: white; }
 </style>
-<link rel="stylesheet" href="/typography.css?v=20261014-1"><link rel="stylesheet" href="admin-ui.css?v=20261015-4"><script src="admin-ui.js?v=20261015-2" defer></script><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<link rel="stylesheet" href="/typography.css?v=20261014-1"><link rel="stylesheet" href="admin-ui.css?v=20261015-5"><script src="admin-ui.js?v=20261015-3" defer></script><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 
 <body class="admin-page" data-admin-page="item"><?php require_once __DIR__.'/admin_ui.php'; adminPageToolbar('Vật phẩm'); ?>
 

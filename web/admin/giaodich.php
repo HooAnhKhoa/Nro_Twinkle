@@ -137,7 +137,7 @@ $list = $conn->query($sql);
         .mini-icon { width: 24px; height: 24px; }
         .time-col { font-size: 15px; color: #475569; font-weight: bold; }
     </style>
-<link rel="stylesheet" href="/typography.css?v=20261014-1"><link rel="stylesheet" href="admin-ui.css?v=20261015-4"><script src="admin-ui.js?v=20261015-2" defer></script><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<link rel="stylesheet" href="/typography.css?v=20261014-1"><link rel="stylesheet" href="admin-ui.css?v=20261015-5"><script src="admin-ui.js?v=20261015-3" defer></script><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body class="admin-page" data-admin-page="giaodich"><?php require_once __DIR__.'/admin_ui.php'; adminPageToolbar('Giao dịch'); ?>
 <div class="container">
     <div class="header-box">

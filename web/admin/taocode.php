@@ -122,7 +122,7 @@ $options = ($options_res && $options_res->num_rows > 0) ? $options_res->fetch_al
         
         pre { background: var(--dark); color: #38bdf8; padding: 20px; border-radius: 8px; white-space: pre-wrap; border-left: 5px solid var(--primary); font-size: 1rem; }
     </style>
-<link rel="stylesheet" href="/typography.css?v=20261014-1"><link rel="stylesheet" href="admin-ui.css?v=20261015-4"><script src="admin-ui.js?v=20261015-2" defer></script><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<link rel="stylesheet" href="/typography.css?v=20261014-1"><link rel="stylesheet" href="admin-ui.css?v=20261015-5"><script src="admin-ui.js?v=20261015-3" defer></script><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body class="admin-page" data-admin-page="taocode"><?php require_once __DIR__.'/admin_ui.php'; adminPageToolbar('Tạo Giftcode'); ?>
 
 <div class="container">

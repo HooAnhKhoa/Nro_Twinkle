@@ -1,7 +1,14 @@
 document.addEventListener('DOMContentLoaded',()=>{
     document.querySelectorAll('[data-admin-back]').forEach(link=>link.addEventListener('click',event=>{
-        if(window.parent!==window){try{if(typeof window.parent.closeDialog==='function'){event.preventDefault();window.parent.closeDialog();}}catch(error){}}
+        if(window.parent!==window){try{if(typeof window.parent.showDashboardOverview==='function'){event.preventDefault();window.parent.showDashboardOverview();}else if(typeof window.parent.closeDialog==='function'){event.preventDefault();window.parent.closeDialog();}}catch(error){}}
     }));
+        document.addEventListener('click',event=>{
+        const link=event.target.closest('a');if(!link||window.parent===window)return;
+        const url=new URL(link.href,location.href);
+        if(url.origin===location.origin&&url.pathname==='/admin/panel.php'){
+            try{if(typeof window.parent.showDashboardOverview==='function'){event.preventDefault();window.parent.showDashboardOverview();}}catch(error){}
+        }
+    });
     if(document.body.dataset.adminPage==='account'){
         document.querySelectorAll('input[type=password].track').forEach(input=>{
             if(!/^p\d+$/.test(input.id))return;

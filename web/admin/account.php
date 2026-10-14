@@ -538,7 +538,7 @@ font-size: 1.14em; /* Đây là đoạn tăng 5% */
 .vip{background:#e9d5ff;}
 .active{background:#dcfce7;}
 </style>
-<link rel="stylesheet" href="/typography.css?v=20261014-1"><link rel="stylesheet" href="admin-ui.css?v=20261015-4"><script src="admin-ui.js?v=20261015-2" defer></script><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<link rel="stylesheet" href="/typography.css?v=20261014-1"><link rel="stylesheet" href="admin-ui.css?v=20261015-5"><script src="admin-ui.js?v=20261015-3" defer></script><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 
 <body class="admin-page" data-admin-page="account"><?php require_once __DIR__.'/admin_ui.php'; adminPageToolbar('Tài khoản'); ?>
 
