@@ -30,6 +30,19 @@ public class PanelBridgeIntegrationTest {
             check(Manager.RATE_EXP_SERVER==5,"live EXP setting applied");check(PanelBridge.upgrade(0,80)==100,"upgrade chance applied");check(!PanelBridge.rollDrop(100,100),"zero multiplier prevents random drops");
             check(nro.models.combine.PhaLeHoaTrangBi.getRatio(0)==0&&nro.models.combine.PhaLeHoaTrangBi.getRatio(8)==100,"star chances applied independently at both boundaries");
             check(PanelBridge.star(9,17)==17,"unsupported star level keeps original fallback");
+            try(Statement s=c.createStatement()){
+                s.executeUpdate("UPDATE server_rates SET drop_multiplier=2 WHERE id=1");
+                s.executeUpdate("UPDATE panel_drop_rate SET mode='multiplier',value=1");
+                s.executeUpdate("UPDATE panel_drop_rate SET value=3 WHERE category='gold'");
+                s.executeUpdate("UPDATE panel_drop_rate SET value=0 WHERE category='skh'");
+            }
+            poll.invoke(null);
+            check(PanelBridge.dropChance("gold",1,20)==30,"gold group multiplies base chance and global factor");
+            check(PanelBridge.dropChance("dragon_ball",1,100)==2,"gold group does not change dragon ball group");
+            check(!PanelBridge.rollDrop("skh",100,100),"zero group multiplier disables guaranteed random roll");
+            check(PanelBridge.dropChance("gold",100,100)==100,"effective drop chance caps at 100 percent");
+            check(PanelBridge.dropChance("gold",1,0)==0,"invalid denominator cannot produce a drop");
+            try(Statement s=c.createStatement()){s.executeUpdate("UPDATE server_rates SET drop_multiplier=1 WHERE id=1");}poll.invoke(null);
             try(Statement s=c.createStatement()){s.executeUpdate("INSERT INTO panel_skill_rate(skill_id,multiplier) VALUES(0,2) ON DUPLICATE KEY UPDATE multiplier=2");}poll.invoke(null);
             nro.models.player.Player p=new nro.models.player.Player();p.isPlayer=true;
             p.playerSkill.skillSelect=new nro.models.skill.Skill();p.playerSkill.skillSelect.template=new nro.models.player_system.Template.SkillTemplate();p.playerSkill.skillSelect.template.id=0;

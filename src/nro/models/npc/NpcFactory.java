@@ -502,7 +502,7 @@ public class NpcFactory {
                             case 2 -> {
                                 if (player.isAdmin()) {
                                     System.out.println(player.name + " Đang bảo trì game!");
-                                    Maintenance.gI().startSeconds(5);
+                                    Maintenance.gI().startSeconds(15);
                                 }
                             }
                             case 3 ->

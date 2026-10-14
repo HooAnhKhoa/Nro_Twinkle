@@ -310,7 +310,7 @@ public class ServerManager {
             String line = sc.nextLine();
             switch (line) {
                 case "bt":
-                    Maintenance.gI().startSeconds(5);
+                    Maintenance.gI().startSeconds(15);
                     break;
                 case "bat":
                     AutoMaintenance.AutoMaintenance = true;

@@ -22,6 +22,8 @@ public final class PanelBridge {
     private static volatile double[] upgrades = {80,50,20,10,7,5,1,.3};
     private static volatile double[] stars = {50,20,10,5,1,.7,.5,.1,.1};
     public static volatile double dropMultiplier = 1;
+    private static volatile Map<String, DropConfig> dropRates = Collections.emptyMap();
+    private static final class DropConfig {String mode;double value;DropConfig(String mode,double value){this.mode=mode;this.value=value;}}
     private static final Map<String, Long> spawnRequests = new ConcurrentHashMap<>();
     private static final Queue<CommandResult> results = new ConcurrentLinkedQueue<>();
     private static final class CommandResult { final long id;final String text;CommandResult(long id,String text){this.id=id;this.text=text;} }
@@ -32,6 +34,13 @@ public final class PanelBridge {
     public static double upgrade(int level,double original) {return level>=0&&level<upgrades.length?upgrades[level]:original;}
     public static double star(int level,double original) {return level>=0&&level<stars.length?stars[level]:original;}
     public static boolean rollDrop(double numerator,double denominator) {return denominator>0 && ThreadLocalRandom.current().nextDouble()*denominator<Math.min(denominator,Math.max(0,numerator*dropMultiplier));}
+    public static double dropChance(String category,double numerator,double denominator) {
+        if(denominator<=0)return 0;
+        DropConfig config=dropRates.get(category);
+        double chance=config!=null&&"percent".equals(config.mode)?config.value:100*numerator/denominator*dropMultiplier*(config==null?1:config.value);
+        return Math.min(100,Math.max(0,chance));
+    }
+    public static boolean rollDrop(String category,double numerator,double denominator) {return ThreadLocalRandom.current().nextDouble()*100<dropChance(category,numerator,denominator);}
     public static long skillDamage(Player p,long original) {
         if(p==null||!p.isPl()||p.playerSkill==null||p.playerSkill.skillSelect==null)return original;
         return (long)Math.min(Integer.MAX_VALUE,Math.max(0,original*skillRates.getOrDefault((int)p.playerSkill.skillSelect.template.id,1d)));
@@ -59,7 +68,7 @@ public final class PanelBridge {
     }
     public static void start() {
         try(Connection c=LocalManager.getConnection();Statement s=c.createStatement()) {
-            for(String file:new String[]{"panel_schema.sql","boss_web.sql","server_rates.sql"}) {
+            for(String file:new String[]{"panel_schema.sql","boss_web.sql","server_rates.sql","drop_rates.sql"}) {
                 for(String sql:Files.readString(Path.of("web",file)).split(";"))if(!sql.trim().isEmpty())s.execute(sql);
             }
             double[] defaults={50,20,10,5,1,.7,.5,.1,.1};
@@ -88,6 +97,7 @@ public final class PanelBridge {
             try(Statement s=c.createStatement();ResultSet r=s.executeQuery("SELECT * FROM server_rates WHERE id=1")) {
                 if(r.next()){rateRevision=r.getLong("revision");Manager.RATE_EXP_SERVER=(byte)r.getInt("exp_rate");dropMultiplier=r.getDouble("drop_multiplier");double[] next=new double[8];for(int i=0;i<8;i++)next[i]=r.getDouble("upgrade_"+(i+1));upgrades=next;double[] nextStars=new double[9];for(int i=0;i<9;i++)nextStars[i]=r.getDouble("star_"+(i+1));stars=nextStars;}
             }
+            Map<String,DropConfig> nextDrops=new HashMap<>();try(Statement s=c.createStatement();ResultSet r=s.executeQuery("SELECT category,mode,value FROM panel_drop_rate")){while(r.next())nextDrops.put(r.getString(1),new DropConfig(r.getString(2),r.getDouble(3)));}dropRates=nextDrops;
             try(PreparedStatement s=c.prepareStatement("UPDATE server_rates SET heartbeat=NOW(),applied_revision=? WHERE id=1")){s.setLong(1,rateRevision);s.executeUpdate();}
             Map<Integer,Double> nextSkills=new HashMap<>();try(Statement s=c.createStatement();ResultSet r=s.executeQuery("SELECT * FROM panel_skill_rate")){while(r.next())nextSkills.put(r.getInt(1),r.getDouble(2));}skillRates=nextSkills;
             publishBosses(c);Map<String,BossConfig> next=new HashMap<>();
@@ -108,7 +118,7 @@ public final class PanelBridge {
             String message;
             if(command.stale)message="Lệnh hết hạn; không thực hiện.";
             else if("kick".equals(command.action)){Player p=Client.gI().getPlayer(command.playerId);if(p==null)message="Nhân vật đã offline.";else{Client.gI().kickSession(p.getSession());message="Đã kick nhân vật theo quy trình lưu / thoát của server.";}}
-            else if("maintenance".equals(command.action)){Maintenance.gI().startSeconds(60);message="Đã bắt đầu bảo trì sau 60 giây.";}
+            else if("maintenance".equals(command.action)){Maintenance.gI().startSeconds(15);message="Đã bắt đầu bảo trì sau 15 giây.";}
             else message="Lệnh không hợp lệ.";
             try(Connection c=LocalManager.getConnection();PreparedStatement done=c.prepareStatement("UPDATE panel_command SET completed_at=NOW(),result=? WHERE id=?")){done.setString(1,message);done.setLong(2,command.id);done.executeUpdate();}
         }catch(Exception e){Logger.logException(PanelBridge.class,e);}

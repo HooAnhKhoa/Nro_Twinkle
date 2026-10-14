@@ -7,12 +7,15 @@
 !/web/*schema.sql
 !/web/boss_web.sql
 !/web/server_rates.sql
+!/web/drop_rates.sql
 *.log
 *.class
 /Teamobi2026.jar
 /Teamobi2026-panel.jar
 /Teamobi2026-panel-maps.jar
 /Teamobi2026-panel-stars.jar
+/Teamobi2026-panel-drops.jar
+/Teamobi2026-panel-network.jar
 /item.xlsx
 /Lệnh admin.docx
 

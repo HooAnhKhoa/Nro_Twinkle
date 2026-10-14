@@ -1,6 +1,8 @@
 package nro.models.network;
 
 import java.net.Socket;
+import java.net.ServerSocket;
+import java.net.SocketTimeoutException;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.ServerSocketChannel;
@@ -26,6 +28,7 @@ public class Network implements INetwork, Runnable {
     private ISessionAcceptHandler acceptHandler;
     private Thread loopServer;
     private Selector selector;
+    private ServerSocket fallbackSocket;
 
     public static Network gI() {
         if (instance == null) {
@@ -42,7 +45,7 @@ public class Network implements INetwork, Runnable {
         try {
             this.selector = Selector.open();
         } catch (IOException ex) {
-            Logger.error(ex.toString());
+            Logger.error("Selector unavailable; using direct socket accept: " + ex);
         }
         this.loopServer = new Thread((Runnable) this, "Network");
         return this;
@@ -61,10 +64,16 @@ public class Network implements INetwork, Runnable {
         }
         try {
             this.port = port;
+            if(this.selector==null){
+                this.fallbackSocket=new ServerSocket();
+                this.fallbackSocket.setSoTimeout(500);
+                this.fallbackSocket.bind(new InetSocketAddress(port));
+            }else{
             this.serverSocketChannel = ServerSocketChannel.open();
             this.serverSocketChannel.configureBlocking(false);
             this.serverSocketChannel.socket().bind(new InetSocketAddress(port));
             this.serverSocketChannel.register(this.selector, 16);
+            }
         } catch (IOException ex) {
             Logger.error("Error initializing server at port " + port + "\n");
             System.exit(0);
@@ -78,6 +87,8 @@ public class Network implements INetwork, Runnable {
     @Override
     public INetwork close() {
         this.start = false;
+        if(this.fallbackSocket!=null)try{this.fallbackSocket.close();}catch(IOException ignored){}
+        if(this.selector!=null)this.selector.wakeup();
         if (this.serverSocketChannel != null) {
             try {
                 this.serverSocketChannel.close();
@@ -108,6 +119,10 @@ public class Network implements INetwork, Runnable {
     public void run() {
         while (this.start) {
             try {
+                if(this.fallbackSocket!=null){
+                    try{acceptSocket(this.fallbackSocket.accept());}catch(SocketTimeoutException timeout){}
+                    continue;
+                }
                 int numKeys = this.selector.select(500);
                 if (numKeys == 0) {
                     continue;
@@ -126,13 +141,10 @@ public class Network implements INetwork, Runnable {
 
                     ServerSocketChannel server = (ServerSocketChannel) key.channel();
                     Socket socket = server.accept().socket();
-                    socket.setTcpNoDelay(true);
-
-                    ISession session = SessionFactory.gI().cloneSession(this.sessionClone, socket);
-                    this.acceptHandler.sessionInit(session);
-                    SessionManager.gI().putSession(session);
+                    acceptSocket(socket);
                 }
             } catch (IOException ex) {
+                if(!this.start)break;
                 Logger.error("IOException in Network loop: " + ex.getMessage());
                 try {
                     Thread.sleep(100);
@@ -143,6 +155,13 @@ public class Network implements INetwork, Runnable {
                 Logger.error("Exception in Network loop: " + ex2.toString());
             }
         }
+    }
+
+    private void acceptSocket(Socket socket)throws Exception {
+        socket.setTcpNoDelay(true);
+        ISession session=SessionFactory.gI().cloneSession(this.sessionClone,socket);
+        this.acceptHandler.sessionInit(session);
+        SessionManager.gI().putSession(session);
     }
 
     @Override

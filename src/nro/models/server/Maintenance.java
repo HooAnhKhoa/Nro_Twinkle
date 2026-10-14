@@ -28,7 +28,7 @@ public class Maintenance extends Thread {
     public void startCountdown() {
         if (!isRunning) {
             isRunning = true;
-            this.timeInSeconds = 60;
+            this.timeInSeconds = 15;
             this.start();
         }
     }
@@ -51,7 +51,7 @@ public class Maintenance extends Thread {
 
     @Override
     public void run() {
-        Logger.log(Logger.YELLOW, "Bắt đầu đếm ngược 60s bảo trì");
+        Logger.log(Logger.YELLOW, "Bắt đầu đếm ngược " + timeInSeconds + "s bảo trì");
 
         while (timeInSeconds > 0) {
             try {
