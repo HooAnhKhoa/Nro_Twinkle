@@ -1009,18 +1009,6 @@ public class Mob {
             }
         }
 
-        if (MapService.gI().isMapDoanhTrai(mapid) && (nro.models.server.PanelBridge.rollDrop("upgrade_stone",10, 100))) {
-            ItemMap it = new ItemMap(zone, 225, 1, x, yEnd, player.id);
-            it.options.add(new Item.ItemOption(74, 0));
-            list.add(it);
-        }
-
-        if (MapService.gI().isMap3Planets(mapid) && (nro.models.server.PanelBridge.rollDrop("upgrade_stone",10, 100))) {
-            ItemMap it = new ItemMap(zone, 225, 1, x, yEnd, player.id);
-            it.options.add(new Item.ItemOption(74, 0));
-            list.add(it);
-        }
-
         if (MapService.gI().isMap3Planets(mapid) || MapService.gI().isMapNappa(mapid) || MapService.gI().isMapTuongLai(mapid) || MapService.gI().isMapCold(mapid)) {
             int dropRate = 10;
             if (player.itemTime.isUseCoBonLa) {

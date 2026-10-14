@@ -8,7 +8,9 @@ if errorlevel 1 (
   pause
   exit /b 0
 )
-if exist Teamobi2026-panel-stones.jar (
+if exist Teamobi2026-panel-no-fragments.jar (
+  "%GAME_JAVA%" -server -Djava.net.preferIPv4Stack=true -Dfile.encoding=UTF-8 -jar Teamobi2026-panel-no-fragments.jar
+) else if exist Teamobi2026-panel-stones.jar (
   "%GAME_JAVA%" -server -Djava.net.preferIPv4Stack=true -Dfile.encoding=UTF-8 -jar Teamobi2026-panel-stones.jar
 ) else if exist Teamobi2026-panel-network.jar (
   "%GAME_JAVA%" -server -Djava.net.preferIPv4Stack=true -Dfile.encoding=UTF-8 -jar Teamobi2026-panel-network.jar
