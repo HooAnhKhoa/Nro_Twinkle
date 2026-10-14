@@ -45,6 +45,7 @@ body:has(.cards):has(.editor) .panel { max-width: 1050px; grid-template-columns:
 .search { flex-wrap: wrap; }
 .search input { max-width: none; }
 .search small { font-size: 13px !important; }
+.boss-task-heading { grid-column: 1 / -1; padding: 8px 10px; margin-top: 4px; border-radius: 5px; background: #dfedf8; color: #346486; font-size: 15px; font-weight: 700; }
 @media(min-width:1200px) { .section:not(.operations) .menu { grid-template-columns: repeat(auto-fit,minmax(110px,1fr)); } }
 @media(max-width:700px) {
   h1 { font-size: 24px !important; } h2 { font-size: 20px !important; }

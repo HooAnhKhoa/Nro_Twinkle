@@ -1,4 +1,20 @@
 <?php
+// Ordered by TaskService.checkDoneTaskKillBoss (main task, then subtask).
+function bossTaskOrder(array $row): int {
+    $name=mb_strtolower(trim($row['name']),'UTF-8');
+    $order=['kuku'=>1900,'mập đầu đinh'=>1901,'rambo'=>1902,
+        'số 4'=>2001,'số 3'=>2002,'số 2'=>2003,'số 1'=>2004,'tiểu đội trưởng'=>2005,
+        'fide đại ca 1'=>2101,'fide đại ca 2'=>2102,'fide đại ca 3'=>2103,
+        'android 19'=>2301,'dr.kôrê'=>2302,
+        'android 15'=>2401,'android 14'=>2402,'android 13'=>2403,
+        'poc'=>2501,'pic'=>2502,'king kong'=>2503,
+        'xên bọ hung'=>2601,'xên hoàn thiện'=>2704,'siêu bọ hung'=>2704,
+        'drabura'=>2801,'bui bui'=>2802,'ya côn'=>2804,'mabư'=>2806];
+    if(preg_match('/^xên con ([1-7])$/u',$name))return 2703;
+    // The Cell forms are one runtime boss; the independent Super Cell is task 27.
+    if($name==='xên hoàn thiện'&&str_contains($row['boss_key'],'XenBoHung'))return 2602;
+    return $order[$name]??9999;
+}
 // Pure display grouping. Keeps the live configuration key and never modifies game data.
 function bossGroupRows(array $rows): array {
     $groups=[];
@@ -32,8 +48,10 @@ function bossGroupRows(array $rows): array {
             }
         }
         if($hasPosition){$representative['locations']=array_values($locations);$representative['current_locations']=json_encode($representative['locations'],JSON_UNESCAPED_UNICODE);$representative['online_count']=array_sum(array_column($representative['locations'],'count'));}
+        $representative['task_order']=bossTaskOrder($representative);
+        $representative['task_group']=$representative['task_order']===9999?'Boss khác':'Nhiệm vụ '.intdiv($representative['task_order'],100);
         $result[]=$representative;
     }
-    usort($result,fn($a,$b)=>strcmp(mb_strtolower($a['name'],'UTF-8'),mb_strtolower($b['name'],'UTF-8')));
+    usort($result,fn($a,$b)=>($a['task_order']<=>$b['task_order'])?:strnatcasecmp($a['name'],$b['name'])?:strcmp($a['map_ids'],$b['map_ids']));
     return $result;
 }
