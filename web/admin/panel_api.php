@@ -3,6 +3,10 @@ require_once 'panel_common.php';
 panelSchema();
 $data=panelInput(); $action=$data['action']??'';
 try {
+    if($action==='overview') {
+        require_once __DIR__.'/dashboard_data.php';
+        panelReply(panelOverview($conn));
+    }
     if($action==='status') {
         $runtime=$conn->query('SELECT *,TIMESTAMPDIFF(SECOND,heartbeat,NOW()) AS age FROM panel_runtime WHERE id=1')->fetch_assoc();
         $codes=$conn->query('SELECT id,code,count_left FROM giftcode ORDER BY id DESC LIMIT 40')->fetch_all(MYSQLI_ASSOC);
