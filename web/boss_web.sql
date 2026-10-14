@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS boss_web_config (
  enabled TINYINT NOT NULL DEFAULT 1, customized TINYINT NOT NULL DEFAULT 0,
  map_ids TEXT NOT NULL, head_id INT NOT NULL DEFAULT 0, online_count INT NOT NULL DEFAULT 0,
  can_spawn TINYINT NOT NULL DEFAULT 0,
+ current_locations TEXT NULL,
  heartbeat DATETIME NULL, applied_at DATETIME NULL
 );
 CREATE TABLE IF NOT EXISTS boss_web_command (

@@ -63,6 +63,9 @@ public final class PanelBridge {
             try(ResultSet columns=s.executeQuery("SHOW COLUMNS FROM boss_web_config LIKE 'head_id'")) {
                 if(!columns.next())try(Statement migration=c.createStatement()){migration.execute("ALTER TABLE boss_web_config ADD head_id INT NOT NULL DEFAULT 0");}
             }
+            try(ResultSet columns=s.executeQuery("SHOW COLUMNS FROM boss_web_config LIKE 'current_locations'")) {
+                if(!columns.next())try(Statement migration=c.createStatement()){migration.execute("ALTER TABLE boss_web_config ADD current_locations TEXT NULL");}
+            }
         }catch(Exception e){Logger.logException(PanelBridge.class,e);return;}
         Executors.newSingleThreadScheduledExecutor(r->{Thread t=new Thread(r,"PanelBridge");t.setDaemon(true);return t;}).scheduleWithFixedDelay(PanelBridge::poll,0,3,TimeUnit.SECONDS);
     }
@@ -106,10 +109,19 @@ public final class PanelBridge {
     }
     private static void publishBosses(Connection c)throws SQLException {
         for(Map.Entry<String,CopyOnWriteArrayList<WeakReference<Boss>>> entry:bosses.entrySet()){
-            Boss first=null;int online=0;for(WeakReference<Boss> ref:entry.getValue()){Boss b=ref.get();if(b==null){entry.getValue().remove(ref);continue;}if(first==null)first=b;if(b.zone!=null)online++;}if(first==null)continue;
+            Boss first=null;int online=0;Map<String,Map<String,Object>> locations=new LinkedHashMap<>();
+            for(WeakReference<Boss> ref:entry.getValue()){
+                Boss b=ref.get();if(b==null){entry.getValue().remove(ref);continue;}if(first==null)first=b;
+                nro.models.map.Zone zone=b.zone;
+                if(zone!=null&&zone.map!=null){online++;String position=zone.map.mapId+":"+zone.zoneId;
+                    Map<String,Object> location=locations.get(position);
+                    if(location==null){location=new LinkedHashMap<>();location.put("map_id",zone.map.mapId);location.put("map_name",zone.map.mapName);location.put("zone_id",zone.zoneId);location.put("count",0);locations.put(position,location);}
+                    location.put("count",((Integer)location.get("count"))+1);
+                }
+            }if(first==null)continue;
             BossData d=first.data[0];
-            try(PreparedStatement s=c.prepareStatement("INSERT INTO boss_web_config(boss_key,name,hp,damage,rest_seconds,map_ids,can_spawn,head_id,online_count,heartbeat) VALUES(?,?,?,?,?,?,?,?,?,NOW()) ON DUPLICATE KEY UPDATE online_count=VALUES(online_count),can_spawn=VALUES(can_spawn),head_id=VALUES(head_id),heartbeat=NOW(),applied_at=NOW()")){
-                s.setString(1,entry.getKey());s.setString(2,d.getName());s.setInt(3,d.getHp()[0]);s.setInt(4,Math.max(0,d.getDame()));s.setInt(5,Math.max(1,d.getSecondsRest()));s.setString(6,Arrays.toString(d.getMapJoin()));s.setInt(7,canSpawn(first)?1:0);s.setInt(8,d.getOutfit()[0]);s.setInt(9,online);s.executeUpdate();
+            try(PreparedStatement s=c.prepareStatement("INSERT INTO boss_web_config(boss_key,name,hp,damage,rest_seconds,map_ids,can_spawn,head_id,online_count,current_locations,heartbeat) VALUES(?,?,?,?,?,?,?,?,?,?,NOW()) ON DUPLICATE KEY UPDATE online_count=VALUES(online_count),current_locations=VALUES(current_locations),can_spawn=VALUES(can_spawn),head_id=VALUES(head_id),rest_seconds=IF(customized=0,VALUES(rest_seconds),rest_seconds),heartbeat=NOW(),applied_at=NOW()")){
+                s.setString(1,entry.getKey());s.setString(2,d.getName());s.setInt(3,d.getHp()[0]);s.setInt(4,Math.max(0,d.getDame()));s.setInt(5,Math.max(0,d.getSecondsRest()));s.setString(6,Arrays.toString(d.getMapJoin()));s.setInt(7,canSpawn(first)?1:0);s.setInt(8,d.getOutfit()[0]);s.setInt(9,online);s.setString(10,new com.google.gson.Gson().toJson(locations.values()));s.executeUpdate();
             }
         }
     }

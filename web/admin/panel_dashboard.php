@@ -1,5 +1,5 @@
 <?php require_once 'panel_common.php'; ?>
-<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Quản trị hệ thống • Nro Twinkle</title><link rel="stylesheet" href="panel.css"></head><body>
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Quản trị hệ thống • Nro Twinkle</title><link rel="stylesheet" href="panel.css?v=20261014-font"></head><body>
 <aside class="sidebar"><img class="avatar" src="../img/nm.jpg" alt="Avatar quản trị"><b><?=panelEscape($username)?></b><section class="server-card"><h3>TRẠNG THÁI SERVER</h3><div id="serverState">Đang tải…</div><p>Online: <b id="online">—</b> • Session: <b id="sessions">—</b></p><p>Thread: <b id="threads">—</b></p><p>CPU: <b id="cpu">—</b></p><p>RAM: <b id="ram">—</b></p><div class="panel-badge">PANEL TWINKLE<small>Quản trị hệ thống</small></div></section><a class="back" href="/forum.php">← Về trang chủ</a></aside>
 <main><h1>⚙ Quản trị hệ thống</h1><section class="section operations"><h2>Vận hành</h2><p class="subtitle">Thao tác ảnh hưởng trực tiếp server</p><div class="menu">
 <?php foreach([

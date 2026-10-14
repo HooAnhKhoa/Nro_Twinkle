@@ -14,6 +14,13 @@ public class PanelBridgeIntegrationTest {
             Boss b=new Boss(-999999,new BossData("QA runtime boss",(byte)0,new short[]{297,298,299},10,new int[]{100},new int[]{1},new int[][]{},new String[]{},new String[]{},new String[]{},60));
             String key=b.getClass().getName();
             Method publish=PanelBridge.class.getDeclaredMethod("publishBosses",Connection.class);publish.setAccessible(true);publish.invoke(null,c);
+            b.data[0].setSecondsRest(0);publish.invoke(null,c);
+            try(PreparedStatement s=c.prepareStatement("SELECT rest_seconds FROM boss_web_config WHERE boss_key=?")){s.setString(1,key);try(ResultSet r=s.executeQuery()){r.next();check(r.getInt(1)==0,"zero rest is preserved instead of forced to one second");}}
+            nro.models.map.Map map=new nro.models.map.Map(0,"QA Làng Aru",(byte)0,(byte)0,(byte)0,(byte)0,(byte)0,new int[][]{{0}},new int[]{0},0,10,new java.util.ArrayList<>());
+            b.zone=new nro.models.map.Zone(map,2,10);publish.invoke(null,c);
+            try(PreparedStatement s=c.prepareStatement("SELECT current_locations FROM boss_web_config WHERE boss_key=?")){s.setString(1,key);try(ResultSet r=s.executeQuery()){r.next();com.google.gson.JsonObject location=new com.google.gson.JsonParser().parse(r.getString(1)).getAsJsonArray().get(0).getAsJsonObject();check(location.get("map_name").getAsString().equals("QA Làng Aru")&&location.get("zone_id").getAsInt()==2,"actual map name and zone are published");}}
+            b.zone=null;publish.invoke(null,c);
+            try(PreparedStatement s=c.prepareStatement("SELECT current_locations FROM boss_web_config WHERE boss_key=?")){s.setString(1,key);try(ResultSet r=s.executeQuery()){r.next();check(r.getString(1).equals("[]"),"location clears when boss leaves map");}}
             try(PreparedStatement s=c.prepareStatement("UPDATE boss_web_config SET hp=5000,damage=333,rest_seconds=600,enabled=1,customized=1 WHERE boss_key=?")){s.setString(1,key);s.executeUpdate();}
             try(Statement s=c.createStatement()){s.executeUpdate("UPDATE server_rates SET exp_rate=5,upgrade_1=100,drop_multiplier=0,revision=revision+1 WHERE id=1");}
             Method poll=PanelBridge.class.getDeclaredMethod("poll");poll.setAccessible(true);poll.invoke(null);

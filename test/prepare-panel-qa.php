@@ -9,7 +9,7 @@ if($conn->query('SELECT DATABASE() AS db')->fetch_assoc()['db']!==$qa)throw new 
 $conn->query("CREATE TABLE IF NOT EXISTS account(id INT PRIMARY KEY,username VARCHAR(100),is_admin INT,vnd INT NOT NULL DEFAULT 0,last_time_login DATETIME NOT NULL,last_time_logout DATETIME NOT NULL)");
 $conn->query("CREATE TABLE IF NOT EXISTS player(id BIGINT PRIMARY KEY,name VARCHAR(100),account_id INT,gender INT DEFAULT 0,data_intrinsic TEXT)");
 $conn->query("CREATE TABLE IF NOT EXISTS giftcode(id INT PRIMARY KEY,code VARCHAR(100),count_left INT)");
-foreach(['part','skill_template','intrinsic'] as $t) {
+foreach(['part','skill_template','intrinsic','map_template'] as $t) {
     $conn->query("CREATE TABLE IF NOT EXISTS `$t` LIKE srcnrofree.`$t`");
     if(!$conn->query("SELECT 1 FROM `$t` LIMIT 1")->num_rows)$conn->query("INSERT INTO `$t` SELECT * FROM srcnrofree.`$t`");
 }
@@ -17,6 +17,7 @@ $conn->query("INSERT IGNORE INTO account VALUES(1,'qa_admin',1,1000,'2020-01-01'
 $conn->query("INSERT IGNORE INTO player VALUES(1,'QA Admin',1,0,'[0,0,0,0]'),(2,'QA Player',2,0,'[0,0,0,0]'),(3,'QA Online',3,0,'[0,0,0,0]')");
 $conn->query("INSERT IGNORE INTO giftcode VALUES(1,'qatest',9999),(2,'twinkle',100)");
 foreach(['panel_schema.sql','boss_web.sql','server_rates.sql'] as $f)foreach(explode(';',file_get_contents($repo.'/web/'.$f)) as $sql)if(trim($sql)!=='')$conn->query($sql);
+if(!$conn->query("SHOW COLUMNS FROM boss_web_config LIKE 'current_locations'")->num_rows)$conn->query('ALTER TABLE boss_web_config ADD current_locations TEXT NULL');
 $conn->query('UPDATE panel_runtime SET heartbeat=NULL,maintenance=0 WHERE id=1');
 $conn->query("DELETE FROM boss_web_config WHERE boss_key NOT LIKE 'qa.boss.%'");
 $conn->query('DELETE FROM panel_command');

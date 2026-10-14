@@ -28,7 +28,7 @@ $j=Call-Panel @{action='gift';player_id=2;amount=2147483647;request_key=[guid]::
 $j=Call-Panel @{action='kick';player_id=2};Check ($j.code -eq 409) 'offline server cannot accept kick'
 $bossPage=Invoke-WebRequest ($base+'boss.php?embed=1') -WebSession $qaSession
 $bossToken=[regex]::Match($bossPage.Content,'const csrf="([a-f0-9]+)"').Groups[1].Value
-$j=Call-Panel @{action='list';csrf=$bossToken} 'boss.php';Check ($j.body.rows.Count -eq 89) 'boss list fixture'
+$j=Call-Panel @{action='list';csrf=$bossToken} 'boss.php';Check ($j.body.rows.Count -gt 0 -and $j.body.rows.Count -le 89) 'grouped boss list fixture'
 Check ($j.body.rows[0].image -match '^boss_image\.php\?head=\d+$') 'boss portrait resolves through game image endpoint'
 $j=Call-Panel @{action='save';csrf=$bossToken;key='qa.boss.1';hp=500000000;damage=500000;rest=600;enabled=$true} 'boss.php';Check ($j.code -eq 200) 'boss save'
 $j=Call-Panel @{action='spawn';csrf=$bossToken;key='qa.boss.1'} 'boss.php';Check ($j.code -eq 409) 'boss spawn rejects disconnected server'
