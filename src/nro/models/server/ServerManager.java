@@ -296,12 +296,8 @@ public class ServerManager {
         Client.gI().close();
         Logger.success("SUCCESSFULLY MAINTENANCE!\n");
 
-        try {
-            Runtime.getRuntime().exec("cmd /c start restart_server.bat");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.exit(0);
+        // The launcher waits ten seconds and restarts in its existing console.
+        System.exit(42);
     }
 
     private static void activeCommandLine() {
