@@ -111,14 +111,14 @@ if(!$check || $check['is_admin'] != 1){ echo "Không có quyền!"; exit; }
 
         .header-right img { width: 500px; height: 200px; object-fit: contain; }
     </style>
-<link rel="stylesheet" href="/typography.css?v=20261014-1"></head>
-<body>
+<link rel="stylesheet" href="/typography.css?v=20261014-1"><link rel="stylesheet" href="admin-ui.css?v=20261015-4"><script src="admin-ui.js?v=20261015-2" defer></script><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body class="admin-page" data-admin-page="itemshop"><?php require_once __DIR__.'/admin_ui.php'; adminPageToolbar('Cửa hàng'); ?>
 <div class="container">
     <div class="header-box">
         <div class="header-left">
             <img src="/img/account.gif">
             <div class="header-content">
-                <h1>Shop</h1> 
+                <h1>Cửa hàng</h1>
                 <div class="menu-buttons">
                     <button class="home" onclick="location.href='/admin/panel.php'">🏠 Go Panel</button>
                     <button class="refresh" onclick="location.reload()">🔄 Làm Mới</button>

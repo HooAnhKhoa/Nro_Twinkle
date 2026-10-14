@@ -538,9 +538,9 @@ font-size: 1.14em; /* Đây là đoạn tăng 5% */
 .vip{background:#e9d5ff;}
 .active{background:#dcfce7;}
 </style>
-<link rel="stylesheet" href="/typography.css?v=20261014-1"></head>
+<link rel="stylesheet" href="/typography.css?v=20261014-1"><link rel="stylesheet" href="admin-ui.css?v=20261015-4"><script src="admin-ui.js?v=20261015-2" defer></script><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 
-<body>
+<body class="admin-page" data-admin-page="account"><?php require_once __DIR__.'/admin_ui.php'; adminPageToolbar('Tài khoản'); ?>
 
 <div class="container">
 
@@ -548,7 +548,7 @@ font-size: 1.14em; /* Đây là đoạn tăng 5% */
     <div class="header-left">
         <img src="/img/account.gif">
    <div class="header-content">
-    <h1>Account <span style="font-size: 0.5em; vertical-align: middle; background: #2563eb; color: white; padding: 4px 12px; border-radius: 20px;">Tổng: <?= number_format($total_accounts) ?></span></h1>
+    <h1>Tài khoản <span style="font-size: 0.5em; vertical-align: middle; background: #2563eb; color: white; padding: 4px 12px; border-radius: 20px;">Tổng: <?= number_format($total_accounts) ?></span></h1>
     <div class="menu-buttons">
         <button class="home" onclick="location.href='/admin/panel.php'">🏠 Go Panel</button>
         <button class="refresh" onclick="location.reload()">🔄 Làm Mới</button>
@@ -618,7 +618,7 @@ font-size: 1.14em; /* Đây là đoạn tăng 5% */
     <td class="id-cell"><?= $row['id'] ?></td>
     <td><input class="data track" id="pl<?= $row['id'] ?>" value="<?= htmlspecialchars($row['player_name'] ?? '') ?>"></td>
     <td><input class="data track" id="u<?= $row['id'] ?>" value="<?= htmlspecialchars($row['username']) ?>"></td>
-    <td><input class="data track" id="p<?= $row['id'] ?>" value="<?= htmlspecialchars($row['password']) ?>"></td>
+    <td><input type="password" autocomplete="new-password" class="data track" id="p<?= $row['id'] ?>" value="<?= htmlspecialchars($row['password']) ?>"></td>
     <td><input class="data track" id="b<?= $row['id'] ?>" value="<?= $row['ban'] ?>"></td>
     <td><input class="data track" id="a<?= $row['id'] ?>" value="<?= $row['is_admin'] ?>"></td>
     <td class="ip-cell"><?= $row['ip_address'] ?></td>

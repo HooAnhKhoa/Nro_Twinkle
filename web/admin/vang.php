@@ -211,8 +211,8 @@ $all_items_list = $conn->query("SELECT id, NAME, icon_id FROM item_template ORDE
         .update-shop-header:disabled { opacity: .6; cursor: wait; }
         .add-item-header:hover { background-color: var(--green); color: white; box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3); }
     </style>
-<link rel="stylesheet" href="/typography.css?v=20261014-1"></head>
-<body>
+<link rel="stylesheet" href="/typography.css?v=20261014-1"><link rel="stylesheet" href="admin-ui.css?v=20261015-4"><script src="admin-ui.js?v=20261015-2" defer></script><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body class="admin-page" data-admin-page="vang"><?php require_once __DIR__.'/admin_ui.php'; adminPageToolbar('Cửa hàng vàng'); ?>
 
 <div class="wrapper">
     <div class="header-row">

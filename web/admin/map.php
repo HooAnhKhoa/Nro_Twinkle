@@ -149,15 +149,15 @@ $list = $conn->query("SELECT id, NAME, zones, max_player, mobs, npcs FROM map_te
         .select-card div { font-weight: bold; font-size: 13px; color: #1e293b; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .select-card small { color: #64748b; }
     </style>
-<link rel="stylesheet" href="/typography.css?v=20261014-1"></head>
-<body>
+<link rel="stylesheet" href="/typography.css?v=20261014-1"><link rel="stylesheet" href="admin-ui.css?v=20261015-4"><script src="admin-ui.js?v=20261015-2" defer></script><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body class="admin-page" data-admin-page="map"><?php require_once __DIR__.'/admin_ui.php'; adminPageToolbar('Bản đồ'); ?>
 
 <div class="container">
     <div class="header-box">
         <div class="header-left">
             <img src="/img/account.gif"> 
             <div class="header-content">
-                <h1>Maps</h1>
+                <h1>Bản đồ</h1>
                 <div class="menu-buttons">
                     <button class="home" onclick="location.href='/admin/panel.php'">🏠 Go Panel</button>
                     <button class="refresh" onclick="location.reload()">🔄 Làm Mới</button>

@@ -421,15 +421,15 @@ td{ padding:12px; text-align:center; border-bottom:1px solid #e2e8f0; vertical-a
 .full-grid .item-slot { width: 55px; height: 55px; }
 .btn-del-mini { position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; border: 2px solid white; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; font-weight: bold; }
 </style>
-<link rel="stylesheet" href="/typography.css?v=20261014-1"></head>
-<body>
+<link rel="stylesheet" href="/typography.css?v=20261014-1"><link rel="stylesheet" href="admin-ui.css?v=20261015-4"><script src="admin-ui.js?v=20261015-2" defer></script><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body class="admin-page" data-admin-page="player"><?php require_once __DIR__.'/admin_ui.php'; adminPageToolbar('Nhân vật'); ?>
 
 <div class="container">
     <div class="header-box">
         <div class="header-left">
             <img src="/img/account.gif">
           <div class="header-content">
-    <h1>Player <span style="font-size: 0.5em; vertical-align: middle; background: #2563eb; color: white; padding: 4px 12px; border-radius: 20px;">Tổng: <?= number_format($total_players) ?></span></h1>
+    <h1>Nhân vật <span style="font-size: 0.5em; vertical-align: middle; background: #2563eb; color: white; padding: 4px 12px; border-radius: 20px;">Tổng: <?= number_format($total_players) ?></span></h1>
     <div class="menu-buttons">
         <button class="home" onclick="location.href='/admin/panel.php'">🏠 Go Panel</button>
         <button class="refresh" onclick="location.reload()">🔄 Làm Mới</button>
