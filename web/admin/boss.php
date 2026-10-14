@@ -18,16 +18,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action=$data['action'] ?? '';
     if ($action === 'list') {
         $rows=$conn->query('SELECT *, TIMESTAMPDIFF(SECOND,heartbeat,NOW()) AS age FROM boss_web_config ORDER BY name,boss_key')->fetch_all(MYSQLI_ASSOC);
-        $parts=$conn->query('SELECT id,DATA FROM part WHERE TYPE=0')->fetch_all(MYSQLI_ASSOC);
-        $icons=[];
-        foreach($parts as $part) {
-            $frames=json_decode(str_replace('"','',$part['DATA']),true);
-            $frame=$frames[0]??null;
-            if(is_string($frame)) $frame=json_decode($frame,true);
-            $icon=is_array($frame)?($frame[0]??null):null;
-            if(is_numeric($icon)) $icons[(int)$part['id']]='/icon/'.(int)$icon.'.png';
+        $catalog=json_decode(file_get_contents(__DIR__.'/../boss_images.json'),true)??[];
+        foreach($rows as &$row) {
+            $head=(int)$row['head_id'];
+            $name=mb_strtolower(trim($row['name']),'UTF-8');
+            $location=$name.'|'.preg_replace('/\s+/','',$row['map_ids']);
+            if($head===0) $head=$catalog['by_key'][$row['boss_key']]??$catalog['by_name_map'][$location]??$catalog['by_name'][$name]??null;
+            $row['image']=$head===null?'':'boss_image.php?head='.(int)$head;
         }
-        foreach($rows as &$row) $row['image']=$icons[(int)$row['head_id']]??'/img/nm.jpg';
         unset($row);
         reply(['rows'=>$rows]);
     }
@@ -71,7 +69,7 @@ let rows=[], selected=null, dirty=false, busy=false;
 const el=id=>document.getElementById(id), fmt=n=>Number(n).toLocaleString('vi-VN');
 function message(text,error=false){el('message').textContent=text;el('message').className=error?'error':'';}
 async function api(data){const r=await fetch('boss.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...data,csrf})});const j=await r.json();if(!r.ok||j.error)throw Error(j.error||'Không thể thực hiện thao tác');return j;}
-function render(){const q=el('search').value.trim().toLowerCase();const matches=rows.filter(r=>r.name.toLowerCase().includes(q)||String(r.hp).includes(q.replace(/[.,\s]/g,'')));el('count').textContent=matches.length+' boss';el('cards').replaceChildren();el('empty').hidden=rows.length>0;for(const r of matches){const card=document.createElement('button');card.type='button';card.className='card'+(selected?.boss_key===r.boss_key?' selected':'')+(Number(r.enabled)?'':' off');const icon=document.createElement('div');icon.className='portrait';const image=document.createElement('img');image.src=r.image;image.alt=r.name;image.onerror=()=>{image.onerror=null;image.src='/img/nm.jpg';};icon.append(image);const badge=document.createElement('span');badge.className='badge';badge.textContent=Number(r.enabled)?'✓':'×';card.append(badge);const title=document.createElement('strong');title.textContent=r.name;const hp=document.createElement('small');hp.textContent='HP: '+fmt(r.hp);const state=document.createElement('small');state.textContent=(Number(r.enabled)?'● Bật':'○ Tắt')+' · '+r.online_count+' đang xuất hiện';card.append(icon,title,hp,state);card.onclick=()=>choose(r);el('cards').append(card);}}
+function render(){const q=el('search').value.trim().toLowerCase();const matches=rows.filter(r=>r.name.toLowerCase().includes(q)||String(r.hp).includes(q.replace(/[.,\s]/g,'')));el('count').textContent=matches.length+' boss';el('cards').replaceChildren();el('empty').hidden=rows.length>0;for(const r of matches){const card=document.createElement('button');card.type='button';card.className='card'+(selected?.boss_key===r.boss_key?' selected':'')+(Number(r.enabled)?'':' off');const icon=document.createElement('div');icon.className='portrait';const image=document.createElement('img');image.src=r.image;image.alt=r.name;image.onerror=()=>{image.remove();icon.textContent='?';icon.title='Không tìm thấy file ảnh của Boss này';};icon.append(image);const badge=document.createElement('span');badge.className='badge';badge.textContent=Number(r.enabled)?'✓':'×';card.append(badge);const title=document.createElement('strong');title.textContent=r.name;const hp=document.createElement('small');hp.textContent='HP: '+fmt(r.hp);const state=document.createElement('small');state.textContent=(Number(r.enabled)?'● Bật':'○ Tắt')+' · '+r.online_count+' đang xuất hiện';card.append(icon,title,hp,state);card.onclick=()=>choose(r);el('cards').append(card);}}
 function choose(r){if(dirty&&selected?.boss_key!==r.boss_key&&!confirm('Bỏ thay đổi chưa lưu?'))return;selected=r;dirty=false;el('name').value=r.name;el('hp').value=fmt(r.hp);el('damage').value=fmt(r.damage);if(!Array.from(el('rest').options).some(o=>Number(o.value)===Number(r.rest_seconds)))el('rest').append(new Option(fmt(r.rest_seconds)+' giây',r.rest_seconds));el('rest').value=r.rest_seconds;el('enabled').checked=!!Number(r.enabled);el('save').disabled=false;details();render();}
 function details(){if(!selected)return;const online=selected.age!==null&&Number(selected.age)<20;el('detail').textContent='Bản đồ: '+selected.map_ids+'\n'+(online?'Server đang kết nối':'Server chưa kết nối')+' · '+(selected.applied_at?'Đã đồng bộ':'Chờ server nhận');el('spawn').disabled=busy||!online||!Number(selected.can_spawn)||!Number(selected.enabled)||dirty;}
 async function refresh(){try{rows=(await api({action:'list'})).rows;if(selected){const updated=rows.find(r=>r.boss_key===selected.boss_key);if(updated){selected=updated;if(!dirty&&!busy)choose(updated);else details();}}render();}catch(e){message(e.message,true);}}

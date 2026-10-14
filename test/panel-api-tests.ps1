@@ -29,7 +29,7 @@ $j=Call-Panel @{action='kick';player_id=2};Check ($j.code -eq 409) 'offline serv
 $bossPage=Invoke-WebRequest ($base+'boss.php?embed=1') -WebSession $qaSession
 $bossToken=[regex]::Match($bossPage.Content,'const csrf="([a-f0-9]+)"').Groups[1].Value
 $j=Call-Panel @{action='list';csrf=$bossToken} 'boss.php';Check ($j.body.rows.Count -eq 89) 'boss list fixture'
-Check ($j.body.rows[0].image -match '^/icon/') 'boss portrait resolves from part table'
+Check ($j.body.rows[0].image -match '^boss_image\.php\?head=\d+$') 'boss portrait resolves through game image endpoint'
 $j=Call-Panel @{action='save';csrf=$bossToken;key='qa.boss.1';hp=500000000;damage=500000;rest=600;enabled=$true} 'boss.php';Check ($j.code -eq 200) 'boss save'
 $j=Call-Panel @{action='spawn';csrf=$bossToken;key='qa.boss.1'} 'boss.php';Check ($j.code -eq 409) 'boss spawn rejects disconnected server'
 $ratesPage=Invoke-WebRequest ($base+'rates.php') -WebSession $qaSession

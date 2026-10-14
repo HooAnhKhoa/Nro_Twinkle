@@ -15,6 +15,7 @@
 /Lệnh admin.docx
 
 /web/config.php
+/web/game_paths.php
 /web/admin/*.lock
 /web/admin/*.log
 
