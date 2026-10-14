@@ -23,6 +23,8 @@ public final class PanelBridge {
     private static volatile double[] stars = {50,20,10,5,1,.7,.5,.1,.1};
     public static volatile double dropMultiplier = 1;
     private static volatile Map<String, DropConfig> dropRates = Collections.emptyMap();
+    private static volatile Map<String, DropRule> dropRules = Collections.emptyMap();
+    private static final class DropRule {final String category;final double base,value;DropRule(String category,double base,double value){this.category=category;this.base=base;this.value=value;}}
     private static final class DropConfig {String mode;double value;DropConfig(String mode,double value){this.mode=mode;this.value=value;}}
     private static final Map<String, Long> spawnRequests = new ConcurrentHashMap<>();
     private static final Queue<CommandResult> results = new ConcurrentLinkedQueue<>();
@@ -41,6 +43,17 @@ public final class PanelBridge {
         return Math.min(100,Math.max(0,chance));
     }
     public static boolean rollDrop(String category,double numerator,double denominator) {return ThreadLocalRandom.current().nextDouble()*100<dropChance(category,numerator,denominator);}
+    public static double dropChance(String category,String ruleKey,double numerator,double denominator) {
+        if(denominator<=0)return 0;
+        DropConfig group=dropRates.get(category);
+        // Explicit zero still disables the category or the whole random-drop system.
+        if(dropMultiplier<=0 || (group!=null && group.value<=0))return 0;
+        DropRule rule=dropRules.get(ruleKey);
+        if(rule==null || !category.equals(rule.category) || rule.base<=0)return dropChance(category,numerator,denominator);
+        // A regional override replaces the multipliers, retaining the branch's existing bonus ratio.
+        return Math.min(100,Math.max(0,rule.value*(100*numerator/denominator)/rule.base));
+    }
+    public static boolean rollDrop(String category,String ruleKey,double numerator,double denominator) {return ThreadLocalRandom.current().nextDouble()*100<dropChance(category,ruleKey,numerator,denominator);}
     public static long skillDamage(Player p,long original) {
         if(p==null||!p.isPl()||p.playerSkill==null||p.playerSkill.skillSelect==null)return original;
         return (long)Math.min(Integer.MAX_VALUE,Math.max(0,original*skillRates.getOrDefault((int)p.playerSkill.skillSelect.template.id,1d)));
@@ -68,7 +81,7 @@ public final class PanelBridge {
     }
     public static void start() {
         try(Connection c=LocalManager.getConnection();Statement s=c.createStatement()) {
-            for(String file:new String[]{"panel_schema.sql","boss_web.sql","server_rates.sql","drop_rates.sql"}) {
+            for(String file:new String[]{"panel_schema.sql","boss_web.sql","server_rates.sql","drop_rates.sql","drop_rules.sql"}) {
                 for(String sql:Files.readString(Path.of("web",file)).split(";"))if(!sql.trim().isEmpty())s.execute(sql);
             }
             double[] defaults={50,20,10,5,1,.7,.5,.1,.1};
@@ -98,6 +111,12 @@ public final class PanelBridge {
                 if(r.next()){rateRevision=r.getLong("revision");Manager.RATE_EXP_SERVER=(byte)r.getInt("exp_rate");dropMultiplier=r.getDouble("drop_multiplier");double[] next=new double[8];for(int i=0;i<8;i++)next[i]=r.getDouble("upgrade_"+(i+1));upgrades=next;double[] nextStars=new double[9];for(int i=0;i<9;i++)nextStars[i]=r.getDouble("star_"+(i+1));stars=nextStars;}
             }
             Map<String,DropConfig> nextDrops=new HashMap<>();try(Statement s=c.createStatement();ResultSet r=s.executeQuery("SELECT category,mode,value FROM panel_drop_rate")){while(r.next())nextDrops.put(r.getString(1),new DropConfig(r.getString(2),r.getDouble(3)));}dropRates=nextDrops;
+            Map<String,DropRule> nextRules=new HashMap<>();
+            try(Statement s=c.createStatement();ResultSet r=s.executeQuery("SELECT rule_key,category,base_percent,percent_override FROM panel_drop_rule WHERE percent_override IS NOT NULL")) {
+                while(r.next())nextRules.put(r.getString(1),new DropRule(r.getString(2),r.getDouble(3),r.getDouble(4)));
+            }
+            dropRules=nextRules;
+            try(PreparedStatement s=c.prepareStatement("UPDATE panel_drop_runtime SET heartbeat=NOW(),applied_revision=? WHERE id=1")){s.setLong(1,rateRevision);s.executeUpdate();}
             try(PreparedStatement s=c.prepareStatement("UPDATE server_rates SET heartbeat=NOW(),applied_revision=? WHERE id=1")){s.setLong(1,rateRevision);s.executeUpdate();}
             Map<Integer,Double> nextSkills=new HashMap<>();try(Statement s=c.createStatement();ResultSet r=s.executeQuery("SELECT * FROM panel_skill_rate")){while(r.next())nextSkills.put(r.getInt(1),r.getDouble(2));}skillRates=nextSkills;
             publishBosses(c);Map<String,BossConfig> next=new HashMap<>();

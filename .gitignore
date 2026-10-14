@@ -8,6 +8,7 @@
 !/web/boss_web.sql
 !/web/server_rates.sql
 !/web/drop_rates.sql
+!/web/drop_rules.sql
 *.log
 *.class
 /Teamobi2026.jar
@@ -19,6 +20,7 @@
 /Teamobi2026-panel-stones.jar
 /Teamobi2026-panel-no-fragments.jar
 /Teamobi2026-panel-launcher.jar
+/Teamobi2026-panel-regional-drops.jar
 /item.xlsx
 /Lệnh admin.docx
 
