@@ -4,4 +4,4 @@ CREATE TABLE IF NOT EXISTS panel_drop_rate (
  value DECIMAL(7,3) NOT NULL DEFAULT 1,
  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-INSERT IGNORE INTO panel_drop_rate(category) VALUES ('dragon_ball'),('shop'),('god'),('crystal'),('food'),('porata'),('angel'),('skh'),('gold'),('capsule'),('event'),('gem'),('skill');
+INSERT IGNORE INTO panel_drop_rate(category) VALUES ('dragon_ball'),('upgrade_stone'),('shop'),('god'),('crystal'),('food'),('porata'),('angel'),('skh'),('gold'),('capsule'),('event'),('gem'),('skill');

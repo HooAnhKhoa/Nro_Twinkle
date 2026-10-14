@@ -35,10 +35,13 @@ public class PanelBridgeIntegrationTest {
                 s.executeUpdate("UPDATE panel_drop_rate SET mode='multiplier',value=1");
                 s.executeUpdate("UPDATE panel_drop_rate SET value=3 WHERE category='gold'");
                 s.executeUpdate("UPDATE panel_drop_rate SET value=0 WHERE category='skh'");
+                s.executeUpdate("UPDATE panel_drop_rate SET value=2 WHERE category='upgrade_stone'");
             }
             poll.invoke(null);
             check(PanelBridge.dropChance("gold",1,20)==30,"gold group multiplies base chance and global factor");
             check(PanelBridge.dropChance("dragon_ball",1,100)==2,"gold group does not change dragon ball group");
+            check(PanelBridge.dropChance("upgrade_stone",2,100)==8&&PanelBridge.dropChance("upgrade_stone",20,100)==80,"ordinary and cold map stone chances use independent stone multiplier");
+            check(PanelBridge.dropChance("crystal",10,100)==20,"stone multiplier does not change crystal star chance");
             check(!PanelBridge.rollDrop("skh",100,100),"zero group multiplier disables guaranteed random roll");
             check(PanelBridge.dropChance("gold",100,100)==100,"effective drop chance caps at 100 percent");
             check(PanelBridge.dropChance("gold",1,0)==0,"invalid denominator cannot produce a drop");

@@ -998,8 +998,10 @@ public class Mob {
             }
         }
 
-        if (MapService.gI().isMapCold(mapid)) {
-            if (nro.models.server.PanelBridge.rollDrop("crystal",20, 100)) {
+        // Upgrade stones: one roll per defeated mob, including every ordinary map.
+        if (mapid >= 0) {
+            int stoneRate = MapService.gI().isMapCold(mapid) ? 20 : 2;
+            if (nro.models.server.PanelBridge.rollDrop("upgrade_stone",stoneRate, 100)) {
                 int rand = Util.nextInt(0, 4);
                 ItemMap it = new ItemMap(zone, 220 + rand, 1, x, yEnd, player.id);
                 it.options.add(new Item.ItemOption(71 - rand, 0));
@@ -1007,13 +1009,13 @@ public class Mob {
             }
         }
 
-        if (MapService.gI().isMapDoanhTrai(mapid) && (nro.models.server.PanelBridge.rollDrop("crystal",10, 100))) {
+        if (MapService.gI().isMapDoanhTrai(mapid) && (nro.models.server.PanelBridge.rollDrop("upgrade_stone",10, 100))) {
             ItemMap it = new ItemMap(zone, 225, 1, x, yEnd, player.id);
             it.options.add(new Item.ItemOption(74, 0));
             list.add(it);
         }
 
-        if (MapService.gI().isMap3Planets(mapid) && (nro.models.server.PanelBridge.rollDrop("crystal",10, 100))) {
+        if (MapService.gI().isMap3Planets(mapid) && (nro.models.server.PanelBridge.rollDrop("upgrade_stone",10, 100))) {
             ItemMap it = new ItemMap(zone, 225, 1, x, yEnd, player.id);
             it.options.add(new Item.ItemOption(74, 0));
             list.add(it);

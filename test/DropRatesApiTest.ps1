@@ -12,7 +12,7 @@ if([double]$next.groups.gold.value -ne 0 -or [double]$next.groups.crystal.value 
 Write-Output 'PASS: group save is independent of global and other groups'
 if((CallDrop $save).code -ne 409){throw 'Stale revision accepted'}
 Write-Output 'PASS: concurrent edits are protected'
-$save.revision=$next.rates.revision;$save.category='upgrade_stone'
+$save.revision=$next.rates.revision;$save.category='unknown_category'
 if((CallDrop $save).code -ne 422){throw 'Unsupported group accepted'}
 Write-Output 'PASS: unsupported drop branch cannot be configured'
 $save.category='gold';$save.value=-1
@@ -23,3 +23,8 @@ if($reply.code -ne 200){throw 'Global save failed'}
 $final=(CallDrop @{action='read'}).body
 if([double]$final.rates.drop_multiplier -ne 2 -or [double]$final.groups.gold.value -ne 0){throw 'Global changed group'}
 Write-Output 'PASS: global save retains group settings'
+$reply=CallDrop @{action='group';category='upgrade_stone';mode='multiplier';value=2;revision=$final.rates.revision}
+if($reply.code -ne 200){throw 'Stone group save failed'}
+$stones=(CallDrop @{action='read'}).body
+if([double]$stones.groups.upgrade_stone.value -ne 2 -or [double]$stones.groups.crystal.value -ne [double]$final.groups.crystal.value){throw 'Stone and crystal groups not independent'}
+Write-Output 'PASS: stone group is enabled and independent of crystal stars'

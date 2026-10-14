@@ -2,10 +2,10 @@
 // Base rolls from Mob.getItemMobReward. Conditional/combined checks are described explicitly.
 function dropCatalog(): array { return [
  'dragon_ball'=>['name'=>'Ngọc rồng','icon'=>'🐉','base'=>[1,100/7,1,10,10],'detail'=>'1% ở map thường; 10/70 và nhánh tài khoản kích hoạt ở một số map; ngọc nhiệm vụ không thay đổi.'],
- 'upgrade_stone'=>['name'=>'Đá nâng cấp','icon'=>'💎','base'=>[],'detail'=>'Code hiện chưa có nhánh quái rơi đá nâng cấp.','supported'=>false],
+ 'upgrade_stone'=>['name'=>'Đá nâng cấp','icon'=>'💎','base'=>[2,20,10],'detail'=>'Mọi map: 2% rơi ngẫu nhiên 1 trong 5 loại đá (lục bảo, Saphia, Ruby, Titan, thạch anh tím). Map lạnh giữ 20%, chỉ xét một lần. Mảnh đá vụn có nhánh riêng 10% ở doanh trại / ba hành tinh.'],
  'shop'=>['name'=>'Đồ shop có sao','icon'=>'🛍️','base'=>[.0125,100/19999,.1],'detail'=>'Trang bị thường có sao từ randTempItemDoSao / randDoSao. Giữ kiểm tra nối tiếp, giới hạn sức mạnh và điều kiện map SKH.'],
  'god'=>['name'=>'Đồ thần linh','icon'=>'🛡️','base'=>[.002],'detail'=>'Map lạnh: 1/50.000.'],
- 'crystal'=>['name'=>'Sao pha lê','icon'=>'⭐','base'=>[10,20,10],'detail'=>'Map thường 10%; map lạnh 20%; doanh trại và ba hành tinh 10%.'],
+ 'crystal'=>['name'=>'Sao pha lê','icon'=>'⭐','base'=>[10],'detail'=>'10% rơi ngẫu nhiên một trong 7 loại sao pha lê ở mọi map; cỏ bốn lá giữ bonus hiện có.'],
  'food'=>['name'=>'Thức ăn','icon'=>'🍗','base'=>[300/333],'detail'=>'3/333 khi mặc đủ set thần linh.'],
  'porata'=>['name'=>'Mảnh hồn và vỡ bông tai','icon'=>'🧩','base'=>[10,5,.2],'detail'=>'Map bông tai: các nhánh 10%, 5%, 1/500 xét nối tiếp; giữ giới hạn vật phẩm.'],
  'angel'=>['name'=>'Mảnh thiên sứ','icon'=>'🪽','base'=>[200/555,10],'detail'=>'Ngục tù, set hủy diệt: nhánh kích hoạt 2/555 hoặc nhánh 10%.'],
