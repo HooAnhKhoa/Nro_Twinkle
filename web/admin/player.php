@@ -254,7 +254,7 @@ $display_list = array_slice($all_players, $offset, $item_per_page);
 
 function renderItems($jsonData, $templates, $limit = false) {
     $items = json_decode($jsonData, true) ?? [];
-    $html = '<div class="item-grid ' . ($limit ? 'limit-2-rows' : 'full-grid') . '">';
+    $html = '<div class="item-grid ' . ($limit ? 'limit-3-rows' : 'full-grid') . '">';
     foreach($items as $itemStr) {
         $it = json_decode($itemStr, true);
         $id = $it[0] ?? -1;
@@ -404,7 +404,7 @@ td{ padding:12px; text-align:center; border-bottom:1px solid #e2e8f0; vertical-a
 }
 /* ITEM GRID - ĐÃ CHỈNH 7 Ô */
 .item-grid { display: grid; grid-template-columns: repeat(7, 42px); gap: 4px; justify-content: center; cursor: pointer; padding: 5px;}
-.limit-2-rows { max-height: 90px; overflow: hidden; mask-image: linear-gradient(to bottom, black 70%, transparent 100%); }
+.limit-3-rows { max-height: 90px; overflow: hidden; mask-image: linear-gradient(to bottom, black 70%, transparent 100%); }
 .item-slot { width: 42px; height: 42px; background: #f8fafc; border: 1px solid #cbd5e1; position: relative; display: flex; align-items: center; justify-content: center; border-radius: 6px; }
 .item-slot img { width: 32px; height: 32px; }
 .item-slot .qty { position: absolute; bottom: 0; right: 2px; font-size: 10px; color: #1e40af; font-weight: 800; background: rgba(255,255,255,0.7); border-radius: 3px; padding: 0 2px;}
@@ -421,7 +421,7 @@ td{ padding:12px; text-align:center; border-bottom:1px solid #e2e8f0; vertical-a
 .full-grid .item-slot { width: 55px; height: 55px; }
 .btn-del-mini { position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; border: 2px solid white; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; font-weight: bold; }
 </style>
-<link rel="stylesheet" href="/typography.css?v=20261014-1"><link rel="stylesheet" href="admin-ui.css?v=20261015-5"><script src="admin-ui.js?v=20261015-3" defer></script><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<link rel="stylesheet" href="/typography.css?v=20261014-1"><link rel="stylesheet" href="admin-ui.css?v=20261015-6"><script src="admin-ui.js?v=20261015-3" defer></script><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body class="admin-page" data-admin-page="player"><?php require_once __DIR__.'/admin_ui.php'; adminPageToolbar('Nhân vật'); ?>
 
 <div class="container">
@@ -538,11 +538,11 @@ $tn_de = $petInfo['tiemnang'];
 </td>
 
                     <td onclick='viewBox(<?= $row['id'] ?>, "items_bag", <?= $row['items_bag'] ?>)'>
-                        <?= renderItems($row['items_bag'], $item_temp, true) ?>
+                        <?= renderItems($row['items_bag'], $item_temp, true) ?><button type="button" class="inventory-open">Xem hành trang</button>
                     </td>
 
                     <td onclick='viewBox(<?= $row['id'] ?>, "items_box", <?= $row['items_box'] ?>)'>
-                        <?= renderItems($row['items_box'], $item_temp, true) ?>
+                        <?= renderItems($row['items_box'], $item_temp, true) ?><button type="button" class="inventory-open">Xem rương đồ</button>
                     </td>
 
                   <td style="background: #fff5f5;">

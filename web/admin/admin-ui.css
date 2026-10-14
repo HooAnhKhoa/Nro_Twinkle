@@ -8,3 +8,17 @@ body.admin-page{box-sizing:border-box!important;width:auto!important;min-width:0
 body.admin-page.admin-embedded{padding:0!important;margin:0!important;min-height:0!important;background:#f5f7fc!important}
 .admin-embedded>.admin-page-topbar,.admin-embedded>header,.admin-embedded>.wrap>header{display:none!important}
 .admin-embedded>.panel{max-width:none!important}
+
+/* Player inventories use compact slots, independent of the shop product grid. */
+.admin-page[data-admin-page=player] .table-wrap table{min-width:1060px}
+.admin-page[data-admin-page=player] .item-grid.limit-3-rows{display:grid!important;grid-template-columns:repeat(7,36px)!important;grid-auto-flow:row!important;grid-auto-rows:36px!important;gap:4px!important;padding:4px!important;justify-content:start!important;max-height:124px!important;overflow:hidden!important;mask-image:none!important;-webkit-mask-image:none!important}
+.admin-page[data-admin-page=player] .limit-3-rows .item-slot{width:36px!important;height:36px!important;min-width:0;border-radius:6px}
+.admin-page[data-admin-page=player] .item-slot img{width:28px!important;height:28px!important;object-fit:contain;image-rendering:pixelated}
+.admin-page[data-admin-page=player] .inventory-open{display:block;margin:5px 0 0!important;padding:3px 7px!important;font-size:12px!important;background:#f4f8fd!important}
+.admin-page[data-admin-page=player] #itemModal .modal-content{width:920px!important;padding:20px!important;text-align:left}
+.admin-page[data-admin-page=player] #itemModal h2{font-size:18px!important;padding:0 40px 12px 0!important;border-bottom:1px solid #e0e8f1!important}
+.admin-page[data-admin-page=player] #itemModal .close-btn-pop{position:absolute;right:12px;top:12px;width:30px!important;height:30px!important;font-size:18px!important;cursor:pointer}
+.admin-page[data-admin-page=player] #modalBody.full-grid{display:grid!important;grid-template-columns:repeat(auto-fill,40px)!important;grid-auto-flow:row!important;grid-auto-rows:40px!important;gap:8px!important;padding:8px!important;justify-content:start!important;max-height:calc(80vh - 100px)!important;overflow:auto!important;cursor:default;margin-top:12px!important}
+.admin-page[data-admin-page=player] #modalBody .item-slot{width:40px!important;height:40px!important;min-width:0}
+.admin-page[data-admin-page=player] #modalBody .btn-del-mini{width:18px!important;height:18px!important;min-height:0!important;padding:0!important;top:-5px;right:-5px;font-size:10px!important;border-radius:50%!important}
+@media(max-width:650px){.admin-page[data-admin-page=player] #itemModal .modal-content{padding:14px!important}.admin-page[data-admin-page=player] #modalBody.full-grid{gap:7px!important;padding:6px!important}}
