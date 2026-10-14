@@ -16,3 +16,18 @@ body{margin:0;background:#f5f8fc;color:#273c52;padding:24px}.drop-wrap{max-width
 .advanced-rate{border-top:1px solid #dce6ef;padding-top:8px;margin-top:10px}
 .advanced-rate .group-form{margin-top:10px}
 @media(min-width:801px) and (max-width:1150px){.drop-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.drop-grid{align-items:start}
+.admin-page details.drop-card{display:block;padding:0!important;min-height:0}
+.drop-card>.card-heading{display:flex;align-items:center;gap:10px;padding:16px;cursor:pointer;list-style:none;margin:0;color:#3e5878;font-size:14px!important}
+.drop-card>.card-heading::-webkit-details-marker{display:none}
+.drop-card>.card-heading h3{margin:0;flex:1;min-width:0}
+.drop-card>.card-heading .group-icon{width:36px;height:36px;flex-shrink:0}
+.drop-card>.card-heading .group-mode{margin-left:0;white-space:nowrap}
+.rule-count{font-size:11px;color:#889ab0;white-space:nowrap}
+.group-chevron{font-size:20px;color:#6b89af;transition:transform .15s}
+.drop-card[open]>.card-heading .group-chevron{transform:rotate(180deg)}
+.drop-card[open]>.card-heading{border-bottom:1px solid #dfe8f1}
+.group-body{padding:0 16px 16px}
+.drop-card>.card-heading:focus-visible{outline:3px solid #b6d7ff;outline-offset:2px;border-radius:10px}
+@media(max-width:1150px){.drop-card>.card-heading{flex-wrap:wrap}.rule-count{order:1;width:100%;padding-left:46px;margin-top:-7px}.group-chevron{margin-left:0}}
