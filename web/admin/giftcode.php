@@ -97,6 +97,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
 // ===== LOAD DATA =====
 $list = $conn->query("SELECT * FROM giftcode ORDER BY id ASC");
+$giftItemTemplates = [];
+$templateRows = $conn->query("SELECT id, NAME AS name, icon_id FROM item_template");
+if ($templateRows) while ($template = $templateRows->fetch_assoc()) $giftItemTemplates[(int)$template['id']] = $template;
 ?>
 
 <!DOCTYPE html>
@@ -180,7 +183,7 @@ td.id-cell{ background:#93c5fd; font-weight:bold; user-select:none; }
 .detail-input:hover { background: linear-gradient(90deg, #b2ebf2, #80deea); box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
 .detail-input.changed { border: 2px solid #22c55e; background: #d1fae5; }
 </style>
-<link rel="stylesheet" href="/typography.css?v=20261014-1"><link rel="stylesheet" href="admin-ui.css?v=20261015-5"><script src="admin-ui.js?v=20261015-3" defer></script><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<link rel="stylesheet" href="/typography.css?v=20261014-1"><link rel="stylesheet" href="admin-ui.css?v=20261015-8"><script src="admin-ui.js?v=20261015-3" defer></script><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 
 <body class="admin-page" data-admin-page="giftcode"><?php require_once __DIR__.'/admin_ui.php'; adminPageToolbar('Giftcode'); ?>
 <div class="container">
@@ -267,6 +270,41 @@ td.id-cell{ background:#93c5fd; font-weight:bold; user-select:none; }
 </div>
 
 <script>
+const giftItemTemplates = <?= json_encode($giftItemTemplates, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE) ?>;
+function renderGiftItems(input) {
+    let preview = input.parentElement.querySelector('.gift-items-preview');
+    if (!preview) {
+        preview = document.createElement('button');
+        preview.type = 'button';
+        preview.className = 'gift-items-preview';
+        preview.title = 'Bấm để chỉnh sửa nội dung Giftcode';
+        preview.onclick = () => openDetailModal(input);
+        input.after(preview);
+        input.type = 'hidden';
+    }
+    preview.replaceChildren();
+    try {
+        const items = JSON.parse(input.value);
+        if (!Array.isArray(items)) throw Error('Invalid items');
+        for (const item of items) {
+            const template = giftItemTemplates[item.id];
+            const chip = document.createElement('span');
+            chip.className = 'gift-item-chip';
+            const icon = document.createElement('img');
+            icon.alt = '';icon.src = '/icon/' + (Number(template?.icon_id) || 1) + '.png';
+            icon.onerror = () => {icon.onerror = null;icon.src = '/icon/1.png';};
+            const name = document.createElement('span');
+            name.textContent = template?.name || 'Vật phẩm #' + item.id;
+            const quantity = document.createElement('strong');
+            quantity.textContent = '×' + Number(item.quantity ?? 1).toLocaleString('vi-VN');
+            chip.append(icon,name,quantity);preview.append(chip);
+        }
+        if (!items.length) preview.textContent = 'Chưa có vật phẩm · Bấm để chỉnh sửa';
+    } catch (error) {
+        preview.textContent = 'Dữ liệu vật phẩm chưa hợp lệ · Bấm để chỉnh sửa';
+    }
+}
+document.querySelectorAll('.detail-input').forEach(renderGiftItems);
 let currentInput = null;
 const giftcodeCsrf = <?= json_encode($_SESSION['giftcode_csrf']) ?>;
 
@@ -315,7 +353,7 @@ function filterTable() {
             const filter = input.value.toLowerCase().trim();
             if (!filter) return;
             let target = cells[colIndex].querySelector("input");
-            let text = target ? target.value.toLowerCase() : cells[colIndex].innerText.toLowerCase();
+            let text = target ? (target.value + ' ' + (cells[colIndex].querySelector('.gift-items-preview')?.innerText || '')).toLowerCase() : cells[colIndex].innerText.toLowerCase();
             if (!text.includes(filter)) show = false;
         });
         row.style.display = show ? "" : "none";
@@ -381,6 +419,7 @@ function saveDetailFromModal() {
             currentInput.value = newVal;
             currentInput.classList.add("changed");
             currentInput.title = newVal;
+            renderGiftItems(currentInput);
         }
     }
     closeDetailModal();

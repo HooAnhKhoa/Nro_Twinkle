@@ -25,3 +25,9 @@ body.admin-page.admin-embedded{padding:0!important;margin:0!important;min-height
 
 .admin-page[data-admin-page=player] #modalBody .item-slot img{width:36px!important;height:36px!important}
 .admin-page[data-admin-page=player] #modalBody .qty{font-size:12px!important}
+
+.admin-page[data-admin-page=giftcode] .gift-items-preview{display:flex;flex-wrap:wrap;gap:7px;width:100%;padding:7px!important;background:#fbfdff!important;text-align:left;white-space:normal;line-height:1.4!important}
+.admin-page[data-admin-page=giftcode] .gift-item-chip{display:inline-flex;align-items:center;gap:6px;max-width:100%;padding:5px 8px;border:1px solid #dde8f5;border-radius:7px;background:#f0f6ff;color:#4a678a;font-size:13px;font-weight:500}
+.admin-page[data-admin-page=giftcode] .gift-item-chip img{width:24px;height:24px;object-fit:contain;image-rendering:pixelated;flex-shrink:0}
+.admin-page[data-admin-page=giftcode] .gift-item-chip>span{overflow-wrap:anywhere}
+.admin-page[data-admin-page=giftcode] .gift-item-chip strong{color:#996d29;white-space:nowrap;font-size:12px}
