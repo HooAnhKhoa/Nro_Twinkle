@@ -27,8 +27,10 @@ function bossGroupRows(array $rows): array {
         $name=mb_strtolower(preg_replace('/\s+/u',' ',trim($row['name'])),'UTF-8');
         // Yardrat training mobs are not entries in the boss editor.
         if(preg_match('/^(chiến binh|tân binh|tập sự|đội trưởng)(?:\s*-\s*\d+)?$/u',$name)
-            ||preg_match('/^ở dơ(?:\s+\d+)?$/u',$name))continue;
-        $key=$name.'|'.json_encode($maps);$groups[$key][]=$row;
+            ||preg_match('/^ở dơ(?:\s+\d+)?$/u',$name)
+            ||$name==='sói hẹc quyn')continue;
+        $key=preg_match('/^mặt trời(?:\s+\d+)?$/u',$name)?'mặt trời':$name.'|'.json_encode($maps);
+        $groups[$key][]=$row;
     }
     $result=[];
     foreach($groups as $members){
