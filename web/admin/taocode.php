@@ -122,7 +122,7 @@ $options = ($options_res && $options_res->num_rows > 0) ? $options_res->fetch_al
         
         pre { background: var(--dark); color: #38bdf8; padding: 20px; border-radius: 8px; white-space: pre-wrap; border-left: 5px solid var(--primary); font-size: 1rem; }
     </style>
-</head>
+<link rel="stylesheet" href="/typography.css?v=20261014-1"></head>
 <body>
 
 <div class="container">

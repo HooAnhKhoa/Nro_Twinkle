@@ -180,7 +180,7 @@ td.id-cell{ background:#93c5fd; font-weight:bold; user-select:none; }
 .detail-input:hover { background: linear-gradient(90deg, #b2ebf2, #80deea); box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
 .detail-input.changed { border: 2px solid #22c55e; background: #d1fae5; }
 </style>
-</head>
+<link rel="stylesheet" href="/typography.css?v=20261014-1"></head>
 
 <body>
 <div class="container">

@@ -137,7 +137,7 @@ $list = $conn->query($sql);
         .mini-icon { width: 24px; height: 24px; }
         .time-col { font-size: 15px; color: #475569; font-weight: bold; }
     </style>
-</head>
+<link rel="stylesheet" href="/typography.css?v=20261014-1"></head>
 <body>
 <div class="container">
     <div class="header-box">

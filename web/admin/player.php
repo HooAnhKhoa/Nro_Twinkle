@@ -421,7 +421,7 @@ td{ padding:12px; text-align:center; border-bottom:1px solid #e2e8f0; vertical-a
 .full-grid .item-slot { width: 55px; height: 55px; }
 .btn-del-mini { position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; border: 2px solid white; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; font-weight: bold; }
 </style>
-</head>
+<link rel="stylesheet" href="/typography.css?v=20261014-1"></head>
 <body>
 
 <div class="container">

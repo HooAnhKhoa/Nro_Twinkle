@@ -288,7 +288,7 @@ input.data { border: none; background: transparent; text-align: center; font-wei
 }
 .pagination a.active { background: #2563eb; color: white; }
 </style>
-</head>
+<link rel="stylesheet" href="/typography.css?v=20261014-1"></head>
 
 <body>
 

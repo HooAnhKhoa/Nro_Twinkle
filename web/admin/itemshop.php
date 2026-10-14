@@ -111,7 +111,7 @@ if(!$check || $check['is_admin'] != 1){ echo "Không có quyền!"; exit; }
 
         .header-right img { width: 500px; height: 200px; object-fit: contain; }
     </style>
-</head>
+<link rel="stylesheet" href="/typography.css?v=20261014-1"></head>
 <body>
 <div class="container">
     <div class="header-box">

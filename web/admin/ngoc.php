@@ -203,7 +203,7 @@ $all_items_list = $conn->query("SELECT id, NAME, icon_id FROM item_template ORDE
         .update-shop-header:disabled { opacity: .6; cursor: wait; }
         .add-item-header:hover { background-color: var(--green); color: white; box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3); }
     </style>
-</head>
+<link rel="stylesheet" href="/typography.css?v=20261014-1"></head>
 <body>
 
 <div class="wrapper">

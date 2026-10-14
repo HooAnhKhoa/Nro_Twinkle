@@ -149,7 +149,7 @@ $list = $conn->query("SELECT id, NAME, zones, max_player, mobs, npcs FROM map_te
         .select-card div { font-weight: bold; font-size: 13px; color: #1e293b; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .select-card small { color: #64748b; }
     </style>
-</head>
+<link rel="stylesheet" href="/typography.css?v=20261014-1"></head>
 <body>
 
 <div class="container">

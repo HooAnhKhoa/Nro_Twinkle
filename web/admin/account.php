@@ -538,7 +538,7 @@ font-size: 1.14em; /* Đây là đoạn tăng 5% */
 .vip{background:#e9d5ff;}
 .active{background:#dcfce7;}
 </style>
-</head>
+<link rel="stylesheet" href="/typography.css?v=20261014-1"></head>
 
 <body>
 
