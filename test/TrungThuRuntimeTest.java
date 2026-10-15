@@ -94,6 +94,34 @@ public class TrungThuRuntimeTest {
   monkey.arm(normal.zones.get(0));monkey.respawn();monkey.joinMap();check(monkey.zone==normal.zones.get(0),"reserved monkey really joins its selected map and zone");cook.playerSkill.skillSelect=nro.models.utils.SkillUtil.createSkill(Skill.GALICK,1);int ground=monkey.zone.items.size();monkey.reward(cook);monkey.reward(cook);check(monkey.zone.items.size()==ground+1,"duplicate kill reward cannot drop a second set of tails");check(scalar(c,"SELECT monkey_until FROM trung_thu_2026_state WHERE player_id="+(BASE+51))>System.currentTimeMillis(),"monkey kill grants clan X3 to an offline member");
   User menuUser=user(c,9,8);menuUser.zone=Manager.MAPS.stream().filter(m->m.mapId==5).findFirst().get().zones.get(0);var npc=menuUser.zone.map.npcs.stream().filter(n->n.tempId==41).findFirst().get();npc.openBaseMenu(menuUser);check(menuUser.idMark.getIndexMenu()==202610160,"real Trung Thu NPC opens the event menu");checkMenuPortrait(menuUser,41,9976);npc.confirmMenu(menuUser,1);checkMenuPortrait(menuUser,41,9976);npc.createOtherMenu(menuUser,202610160,"QA object menu",new String[]{"OK"},"QA");checkMenuPortrait(menuUser,41,9976);loadShop(c);npc.confirmMenu(menuUser,0);check(menuUser.shopPacket!=null&&menuUser.shopPacket[0]==0&&menuUser.shopPacket[1]==3&&TrungThuShop.TAG.equals(menuUser.idMark.getShopOpen().tagName),"NPC opens native shop with three tabs");nro.models.shop.ShopService.gI().takeItem(menuUser,(byte)0,1305);check(qty(menuUser,1305)==1&&menuUser.inventory.gem==990,"real NPC shop grants moon item for exactly ten gems");
   try(var packet=new java.io.DataInputStream(new java.io.ByteArrayInputStream(menuUser.shopPacket))){packet.readByte();int tabs=packet.readUnsignedByte(),items=0;Set<Integer> sold=new HashSet<>();for(int t=0;t<tabs;t++){packet.readUTF();for(int n=packet.readUnsignedByte();n>0;n--){int id=packet.readShort();sold.add(id);items++;int goldCost=packet.readInt(),gemCost=packet.readInt();if(id==1305)check(goldCost==0&&gemCost==10,"native moon row displays ten green gems");if(id==1310)check(goldCost==10000000&&gemCost==0,"native rabbit row displays ten million gold");for(int options=packet.readUnsignedByte();options>0;options--){packet.readUnsignedByte();packet.readShort();}packet.readByte();if(packet.readByte()==1)for(int part=0;part<4;part++)packet.readShort();}}check(items==8&&sold.size()==8&&packet.available()==0,"native decoder reads eight distinct items with valid icons/costumes/prices");}
+  for(int action=0;action<9;action++){
+   User preview=user(c,20+action,16);preview.zone=menuUser.zone;
+   for(int id:new int[]{886,887,888,889,1312,890,891,1313,1045,462,1311})put(preview,id,999);
+   String before=TrungThuStore.bag(preview);long beforeGold=preview.inventory.gold;int beforeGems=preview.inventory.gem;
+   npc.openBaseMenu(preview);
+   if(action<6){npc.confirmMenu(preview,action<3?1:2);npc.confirmMenu(preview,action%3);}else npc.confirmMenu(preview,action-3);
+   var reader=new java.io.DataInputStream(new java.io.ByteArrayInputStream(preview.menuPacket));reader.readShort();String text=reader.readUTF();
+   var price=action<3?TrungThuCommerce.craftCost(action):action<6?TrungThuCommerce.petCost(action-3):TrungThuCommerce.exchangeCost(new String[]{"tails","carrots","lantern"}[action-6]);
+   for(var entry:price.items().entrySet())check(text.contains(Manager.ITEM_TEMPLATES.get(entry.getKey()).name+" 999/"+entry.getValue()),"confirmation "+action+" shows actual item name and owned/needed count");
+   check(reader.readUnsignedByte()==2&&reader.readUTF().equals("Đồng ý")&&reader.readUTF().equals("Từ chối")&&reader.readUnsignedShort()==9976&&reader.available()==0,"confirmation "+action+" has two buttons and NPC portrait");
+   check(TrungThuStore.bag(preview).equals(before)&&preview.inventory.gold==beforeGold&&preview.inventory.gem==beforeGems,"opening confirmation "+action+" never consumes inventory/payment");
+   npc.confirmMenu(preview,1);npc.confirmMenu(preview,0);
+   check(TrungThuStore.bag(preview).equals(before)&&preview.inventory.gold==beforeGold&&preview.inventory.gem==beforeGems,"cancelled confirmation "+action+" cannot execute later");
+   if(action==0)check(text.contains("Giá vàng: 20.000.000"),"gold price is grouped for readability");
+   if(action==1||action==2)check(text.contains("Giá ngọc xanh: 20"),"premium recipe displays green gem cost");
+  }
+  User confirm=user(c,30,16);confirm.zone=menuUser.zone;confirm.inventory.itemsBag.set(0,item(888,6));confirm.inventory.itemsBag.set(1,item(888,4));put(confirm,889,10);put(confirm,886,2);put(confirm,887,1);
+  npc.openBaseMenu(confirm);npc.confirmMenu(confirm,1);npc.confirmMenu(confirm,0);
+  var confirmReader=new java.io.DataInputStream(new java.io.ByteArrayInputStream(confirm.menuPacket));confirmReader.readShort();String confirmText=confirmReader.readUTF();
+  check(confirmText.contains(Manager.ITEM_TEMPLATES.get(888).name+" 10/10"),"preview sums ingredients split across inventory stacks");
+  npc.confirmMenu(confirm,0);npc.confirmMenu(confirm,0);
+  check(qty(confirm,890)==1&&qty(confirm,888)==0&&confirm.inventory.gold==80000000,"agree crafts once and repeated confirmation cannot buy again");
+  User stale=user(c,31,16);stale.zone=menuUser.zone;put(stale,888,10);put(stale,889,10);put(stale,886,2);put(stale,887,1);
+  npc.openBaseMenu(stale);npc.confirmMenu(stale,1);npc.confirmMenu(stale,0);InventoryService.gI().subQuantityItemsBag(stale,InventoryService.gI().findItemBag(stale,888),1);npc.confirmMenu(stale,0);
+  check(qty(stale,888)==9&&qty(stale,890)==0&&stale.inventory.gold==100000000,"agree rechecks current ingredients after preview");
+  User emptyPreview=user(c,32,16);emptyPreview.zone=menuUser.zone;npc.openBaseMenu(emptyPreview);npc.confirmMenu(emptyPreview,1);npc.confirmMenu(emptyPreview,0);
+  var emptyReader=new java.io.DataInputStream(new java.io.ByteArrayInputStream(emptyPreview.menuPacket));emptyReader.readShort();
+  check(emptyReader.readUTF().contains(ConstFont.BOLD_RED+Manager.ITEM_TEMPLATES.get(888).name+" 0/10"),"missing ingredient count is red in confirmation");
   User goldBuyer=user(c,14,3);TrungThuShop.open(goldBuyer);nro.models.shop.ShopService.gI().takeItem(goldBuyer,(byte)0,1310);check(qty(goldBuyer,1310)==1&&goldBuyer.inventory.gold==90000000,"native shop gold purchase uses atomic event exchange");
   long gemBalance=menuUser.inventory.gem;nro.models.shop.ShopService.gI().takeItem(menuUser,(byte)0,999);check(menuUser.inventory.gem==gemBalance&&qty(menuUser,999)==0,"unlisted native item cannot be purchased");
   User poorBuyer=user(c,15,3);poorBuyer.inventory.gem=9;TrungThuShop.open(poorBuyer);nro.models.shop.ShopService.gI().takeItem(poorBuyer,(byte)0,1305);check(poorBuyer.inventory.gem==9&&qty(poorBuyer,1305)==0,"native purchase with insufficient funds keeps gems");

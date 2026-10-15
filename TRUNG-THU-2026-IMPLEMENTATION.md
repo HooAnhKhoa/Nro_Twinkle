@@ -40,12 +40,18 @@ Hai bảng mới dùng InnoDB: `trung_thu_2026_state`, `trung_thu_2026_daily`. T
 
 ## Kiểm tra
 
-- `TrungThuRuntimeTest`: 69 kiểm tra trên DB QA, có chốt tên DB để tránh ghi vào game chính.
+- `TrungThuRuntimeTest`: 151 kiểm tra trên DB QA, có chốt tên DB để tránh ghi vào game chính.
 - `TrungThuBagExchangeTest`: 13 kiểm tra giao dịch và đa luồng.
 - `TrungThuAssetsTest.php`: 53 kiểm tra tài nguyên thật.
 - Hồi quy Noel 39, Giỗ Tổ 73; ẩn/hiện NPC và 12 kiểm tra nhóm boss đều qua.
-- Kiểm tra JAR có `ConstIgnoreName` và nạp được 617 application class.
+- Kiểm tra JAR có `ConstIgnoreName` và nạp được 620 application class.
 
 Test cố tình gây một lỗi SQL giả (`Expected QA save failure`) để kiểm tra hoàn nguyên; thông báo đó là một phần của test.
 
 Các kiểm tra QA không thay thế việc xem hình/menu bằng client game thật. Các giả định thực thi và cách hoàn tác được ghi rõ trong hướng dẫn chính.
+
+## Hình NPC và bảng nguyên liệu (15/10/2026)
+
+NPC Trung Thu dùng ngoại hình Chi Chi tai thỏ có sẵn (head 1098, body 1099, leg 1100, icon 9976). Chỉ thay bộ hình giữ chỗ ban đầu của NPC 41; bộ hình quản trị viên tự chỉnh được giữ nguyên. Các hộp thoại Trung Thu gửi kèm icon theo giao thức menu gốc.
+
+Làm bánh, đổi pet, đổi đuôi khỉ/cà rốt và treo đèn đều có bảng xác nhận: mỗi nguyên liệu một dòng tên + đang có/cần, thiếu màu đỏ, đủ màu xanh, giá vàng/ngọc riêng. Dùng cùng hàm chi phí với giao dịch nên đổi cấu hình không làm lệch yêu cầu. Mở bảng và Từ chối không trừ đồ; Đồng ý kiểm tra lại túi/tiền và chỉ xử lý một lần cho mỗi xác nhận.

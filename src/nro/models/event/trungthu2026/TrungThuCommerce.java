@@ -22,20 +22,32 @@ public final class TrungThuCommerce {
     public static BagExchange.Cost cost(Map<Integer,Integer> items,long gold,int gems){return new BagExchange.Cost(items,gold,gems);}
     public static BagExchange.Gain gain(Item... items){return new BagExchange.Gain(Arrays.asList(items),0,0,0);}
     public static void buy(Player p,String key,String price,boolean gems){trade(p,cost(Map.of(),gems?0:number(price),gems?number(price):0),gain(TrungThuRewards.item(key,1,0)));}
-    public static void craft(Player p,int recipe){
+    public static BagExchange.Cost craftCost(int recipe){
+        if(recipe<0||recipe>2)throw new IllegalArgumentException("Công thức không hợp lệ");
         Map<Integer,Integer> ingredients=new HashMap<>();ingredients.put(item("flour"),number("recipe.flour"));ingredients.put(item("beans"),number("recipe.beans"));ingredients.put(item("salted-egg"),number("recipe.eggs"));
         ingredients.put(item(recipe==2?"lotus-seed":"chicken"),number(recipe==2?"recipe.lotus-seed":"recipe.chicken"));
+        return cost(ingredients,recipe==0?number("price.chicken-cake-gold"):0,recipe==0?0:number(recipe==1?"price.premium-cake-gems":"price.lotus-cake-gems"));
+    }
+    public static void craft(Player p,int recipe){
+        BagExchange.Cost cost=craftCost(recipe);
         List<Item> rewards=new ArrayList<>();rewards.add(TrungThuRewards.item(recipe==2?"lotus-cake":recipe==1?"premium-chicken-cake":"chicken-cake",1,0));
         if(recipe==1&&RANDOM.nextInt(100)<number("recipe.bonus-mixed-percent"))rewards.add(TrungThuRewards.item("mixed-cake",1,0));
-        trade(p,cost(ingredients,recipe==0?number("price.chicken-cake-gold"):0,recipe==0?0:number(recipe==1?"price.premium-cake-gems":"price.lotus-cake-gems")),new BagExchange.Gain(rewards,0,0,0));
+        trade(p,cost,new BagExchange.Gain(rewards,0,0,0));
     }
-    public static void exchange(Player p,String kind){
+    public static BagExchange.Cost exchangeCost(String kind){
+        if(!Set.of("tails","carrots","lantern").contains(kind))throw new IllegalArgumentException("Đổi thưởng không hợp lệ");
         String ingredient=kind.equals("tails")?"monkey-tail":kind.equals("carrots")?"carrot":"lantern-offering";
         int count=kind.equals("lantern")?1:number(kind.equals("tails")?"exchange.monkey-tails":"exchange.carrots");
-        trade(p,cost(Map.of(item(ingredient),count),0,0),TrungThuRewards.roll(kind,RANDOM));
+        return cost(Map.of(item(ingredient),count),0,0);
     }
-    public static void pet(Player p,int select){String[] cakes={"chicken-cake","mixed-cake","lotus-cake"},pets={"grey-rabbit","white-rabbit","black-cat"},counts={"exchange.grey-rabbit-cakes","exchange.white-rabbit-cakes","exchange.black-cat-cakes"};if(select<0||select>2)return;
-        trade(p,cost(Map.of(item(cakes[select]),number(counts[select])),0,0),gain(TrungThuRewards.item(pets[select],1,TrungThuRewards.petDays(RANDOM))));
+    public static void exchange(Player p,String kind){trade(p,exchangeCost(kind),TrungThuRewards.roll(kind,RANDOM));}
+    public static BagExchange.Cost petCost(int select){
+        if(select<0||select>2)throw new IllegalArgumentException("Pet không hợp lệ");
+        String[] cakes={"chicken-cake","mixed-cake","lotus-cake"},counts={"exchange.grey-rabbit-cakes","exchange.white-rabbit-cakes","exchange.black-cat-cakes"};
+        return cost(Map.of(item(cakes[select]),number(counts[select])),0,0);
+    }
+    public static void pet(Player p,int select){String[] pets={"grey-rabbit","white-rabbit","black-cat"};if(select<0||select>2)return;
+        trade(p,petCost(select),gain(TrungThuRewards.item(pets[select],1,TrungThuRewards.petDays(RANDOM))));
     }
     public static boolean useBox(Player p,Item box){
         String key=box.template.id==item("normal-box")?"normal-box":box.template.id==item("vegetarian-box")?"vegetarian-box":null;
