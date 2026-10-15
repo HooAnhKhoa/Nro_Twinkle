@@ -19,6 +19,7 @@ public class KhiDot extends Boss {
 
     @Override
     public void reward(Player plKill) {
+        if (!nro.models.event.EventManager.bossEnabled(this)) return;
         ItemMap it = new ItemMap(this.zone, 1045, 1, this.location.x, this.zone.map.yPhysicInTop(this.location.x,
                 this.location.y - 24), plKill.id);
         Service.gI().dropItemMap(this.zone, it);
@@ -26,6 +27,7 @@ public class KhiDot extends Boss {
 
     @Override
     public synchronized int injured(Player plAtt, long damage, boolean piercing, boolean isMobAttack) {
+        if (!nro.models.event.EventManager.bossEnabled(this)) return 0;
         if (!this.isDie()) {
             if (!piercing && Util.isTrue(this.nPoint.tlNeDon, 1000)) {
                 this.chat("Xí hụt");

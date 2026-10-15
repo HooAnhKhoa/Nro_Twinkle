@@ -69,6 +69,22 @@ public class Boss extends Player implements IBoss {
     public boolean panelCanSpawn() { return this.panelIndependent && this.parentBoss == null; }
     public void panelSetRest(int seconds) { this.secondsRest = seconds; }
     public void panelSpawn() { this.currentLevel = -1; this.changeStatus(BossStatus.RESPAWN); }
+    private boolean eventSuspended;
+    /** Exit without death rewards, stage advancement or waking a linked boss. */
+    public synchronized void suspendEvent() {
+        if (this.zone != null) ChangeMapService.gI().exitMap(this);
+        if (!eventSuspended) {
+            resetEventState();
+            this.currentLevel = -1;
+            this.lastZone = null;
+            this.zoneFinal = null;
+            this.playerTarger = null;
+            this.lastTimeRest = 0;
+            this.changeStatus(BossStatus.REST);
+            eventSuspended = true;
+        }
+    }
+    protected void resetEventState() { this.playerReward = null; }
     public int currentLevel = -1;
     public final BossData[] data;
 
@@ -344,6 +360,8 @@ public class Boss extends Player implements IBoss {
 
     @Override
     public void update() {
+        if (!nro.models.event.EventManager.bossEnabled(this)) { suspendEvent(); return; }
+        eventSuspended = false;
         nro.models.server.PanelBridge.tickBoss(this);
         if (!nro.models.server.PanelBridge.enabled(this)) { if (this.zone != null) this.leaveMap(); return; }
         if (prepareBom) {
@@ -642,6 +660,7 @@ public class Boss extends Player implements IBoss {
 
     @Override
     public void die(Player plKill) {
+        if (!nro.models.event.EventManager.bossEnabled(this)) return;
 
         if (plKill != null
                 && (this.zone.map.mapId != 140 || !MapService.gI().isMapMaBu(this.zone.map.mapId)

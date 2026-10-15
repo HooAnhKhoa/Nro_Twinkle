@@ -24,6 +24,7 @@ public class XeNuocMia extends Npc {
 
     @Override
     public void openBaseMenu(Player player) {
+        if (!EventManager.allowNpc(player,"summer")) return;
         createOtherMenu(player, 0, "Cậu muốn uống gì nào",
                 "Mua 1 ly\nnước mía",
                 "Mua 10 ly\nnước mía");
@@ -31,6 +32,7 @@ public class XeNuocMia extends Npc {
 
     @Override
     public void confirmMenu(Player pl, int select) {
+        if (!EventManager.allowNpc(pl,"summer")) return;
         if (canOpenNpc(pl)) {
             switch (pl.idMark.getIndexMenu()) {
                 case 0 -> {

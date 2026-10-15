@@ -20,6 +20,14 @@ public class LanCon extends Boss {
     private long lastTimeAtt;
     private long playerId;
     private boolean afk;
+    @Override
+    protected void resetEventState() {
+        super.resetEventState();
+        Player owner = Client.gI().getPlayer(playerId);
+        if (owner != null) owner.canReward = false;
+        playerId = -1;
+        afk = false;
+    }
 
     public LanCon() throws Exception {
         super(TET_EVENT, BossID.LAN_CON - Util.nextInt(1000000), BossesData.LAN_CON);
@@ -180,6 +188,7 @@ public class LanCon extends Boss {
 
     @Override
 public synchronized int injured(Player plAtt, long damage, boolean piercing, boolean isMobAttack) {
+        if (!nro.models.event.EventManager.bossEnabled(this)) return 0;
     if (!this.isDie()) {
         if (!piercing && Util.isTrue(100, 1000)) {
             this.chat("Xí hụt");
@@ -218,5 +227,6 @@ private boolean isPlayerChatThang(Player plAtt) {
 
     @Override
     public void reward(Player plKill) {
+        if (!nro.models.event.EventManager.bossEnabled(this)) return;
     }
 }

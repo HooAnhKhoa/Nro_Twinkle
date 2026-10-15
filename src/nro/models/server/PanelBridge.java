@@ -37,14 +37,14 @@ public final class PanelBridge {
     public static double star(int level,double original) {return level>=0&&level<stars.length?stars[level]:original;}
     public static boolean rollDrop(double numerator,double denominator) {return denominator>0 && ThreadLocalRandom.current().nextDouble()*denominator<Math.min(denominator,Math.max(0,numerator*dropMultiplier));}
     public static double dropChance(String category,double numerator,double denominator) {
-        if(denominator<=0)return 0;
+        if(denominator<=0 || ("event".equals(category) && !nro.models.event.EventManager.enabled("mob_rewards")))return 0;
         DropConfig config=dropRates.get(category);
         double chance=config!=null&&"percent".equals(config.mode)?config.value:100*numerator/denominator*dropMultiplier*(config==null?1:config.value);
         return Math.min(100,Math.max(0,chance));
     }
     public static boolean rollDrop(String category,double numerator,double denominator) {return ThreadLocalRandom.current().nextDouble()*100<dropChance(category,numerator,denominator);}
     public static double dropChance(String category,String ruleKey,double numerator,double denominator) {
-        if(denominator<=0)return 0;
+        if(denominator<=0 || ("event".equals(category) && !nro.models.event.EventManager.enabled("mob_rewards")))return 0;
         DropConfig group=dropRates.get(category);
         // Explicit zero still disables the category or the whole random-drop system.
         if(dropMultiplier<=0 || (group!=null && group.value<=0))return 0;
@@ -59,7 +59,7 @@ public final class PanelBridge {
         return (long)Math.min(Integer.MAX_VALUE,Math.max(0,original*skillRates.getOrDefault((int)p.playerSkill.skillSelect.template.id,1d)));
     }
     public static boolean canSpawn(Boss b) {return b.panelCanSpawn() && b.data[0].getTypeAppear()==AppearType.DEFAULT_APPEAR && b.data[0].getMapJoin()!=null && b.data[0].getMapJoin().length>0;}
-    public static boolean enabled(Boss b) {BossConfig c=bossConfig.get(key(b));return c==null||c.enabled;}
+    public static boolean enabled(Boss b) {BossConfig c=bossConfig.get(key(b));return nro.models.event.EventManager.bossEnabled(b)&&(c==null||c.enabled);}
     public static void configure(Boss b) {
         BossConfig c=bossConfig.get(key(b));
         if(c!=null){BossData d=b.data[0];d.setHp(new int[]{c.hp});d.setDame(c.damage);d.setSecondsRest(c.rest);b.panelSetRest(c.rest);}
@@ -81,9 +81,10 @@ public final class PanelBridge {
     }
     public static void start() {
         try(Connection c=LocalManager.getConnection();Statement s=c.createStatement()) {
-            for(String file:new String[]{"panel_schema.sql","boss_web.sql","server_rates.sql","drop_rates.sql","drop_rules.sql","intrinsic_schema.sql"}) {
+            for(String file:new String[]{"panel_schema.sql","boss_web.sql","server_rates.sql","drop_rates.sql","drop_rules.sql","intrinsic_schema.sql","event_schema.sql"}) {
                 for(String sql:Files.readString(Path.of("web",file)).split(";"))if(!sql.trim().isEmpty())s.execute(sql);
             }
+            nro.models.event.EventManager.reload(c);
             double[] defaults={50,20,10,5,1,.7,.5,.1,.1};
             for(int i=1;i<=9;i++)try(ResultSet columns=s.executeQuery("SHOW COLUMNS FROM server_rates LIKE 'star_"+i+"'")) {
                 if(!columns.next())try(Statement migration=c.createStatement()){migration.execute("ALTER TABLE server_rates ADD star_"+i+" DECIMAL(6,3) NOT NULL DEFAULT "+defaults[i-1]);}
@@ -120,6 +121,7 @@ public final class PanelBridge {
             try(PreparedStatement s=c.prepareStatement("UPDATE server_rates SET heartbeat=NOW(),applied_revision=? WHERE id=1")){s.setLong(1,rateRevision);s.executeUpdate();}
             Map<Integer,Double> nextSkills=new HashMap<>();try(Statement s=c.createStatement();ResultSet r=s.executeQuery("SELECT * FROM panel_skill_rate")){while(r.next())nextSkills.put(r.getInt(1),r.getDouble(2));}skillRates=nextSkills;
             try{nro.models.services.IntrinsicService.gI().reloadCatalog(c);}catch(SQLException error){Logger.logException(PanelBridge.class,error);}
+            try{nro.models.event.EventManager.reload(c);}catch(SQLException error){Logger.logException(PanelBridge.class,error);}
             publishBosses(c);Map<String,BossConfig> next=new HashMap<>();
             try(Statement s=c.createStatement();ResultSet r=s.executeQuery("SELECT * FROM boss_web_config WHERE customized=1")){while(r.next()){BossConfig cfg=new BossConfig();cfg.hp=r.getInt("hp");cfg.damage=r.getInt("damage");cfg.rest=r.getInt("rest_seconds");cfg.enabled=r.getBoolean("enabled");next.put(r.getString("boss_key"),cfg);}}bossConfig=next;
             Set<Long> activeRequests=new HashSet<>();

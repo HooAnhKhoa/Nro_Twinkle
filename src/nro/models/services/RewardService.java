@@ -182,6 +182,7 @@ public class RewardService {
     }
 
     public void rewardLancon(Player player) {
+        if (!nro.models.event.EventManager.enabled("tet")) return;
         if (InventoryService.gI().getCountEmptyBag(player) > 0) {
             player.canReward = false;
             player.haveReward = true;

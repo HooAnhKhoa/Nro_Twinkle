@@ -30,3 +30,5 @@
 /web/admin/*.lock
 /web/admin/*.log
 
+
+/Teamobi2026-panel-events.jar

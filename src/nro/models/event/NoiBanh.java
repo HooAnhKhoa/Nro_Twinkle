@@ -18,6 +18,7 @@ public class NoiBanh extends Npc {
 
     @Override
     public void openBaseMenu(Player player) {
+        if (!EventManager.allowNpc(player,"hung_vuong")) return;
         createOtherMenu(player, 0, "Xin chào " + player.name + "\nTôi là nồi nấu bánh.\nBạn cần gì?",
                 "Tự nấu\nbánh",
                 "Từ chối");
@@ -25,6 +26,7 @@ public class NoiBanh extends Npc {
 
     @Override
     public void confirmMenu(Player pl, int select) {
+        if (!EventManager.allowNpc(pl,"hung_vuong")) return;
         if (canOpenNpc(pl)) {
             switch (pl.idMark.getIndexMenu()) {
                 case 0 -> {

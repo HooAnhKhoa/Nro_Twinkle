@@ -35,6 +35,7 @@ public class SonTinh extends Boss {
 
     @Override
     public void reward(Player plKill) {
+        if (!nro.models.event.EventManager.bossEnabled(this)) return;
         int diem = 5;
         plKill.event.addEventPoint(diem);
         Service.gI().sendThongBao(plKill, "+5 Point");
@@ -69,6 +70,7 @@ public class SonTinh extends Boss {
 
     @Override
     public synchronized int injured(Player plAtt, long damage, boolean piercing, boolean isMobAttack) {
+        if (!nro.models.event.EventManager.bossEnabled(this)) return 0;
         if (!this.isDie()) {
             if (!piercing && Util.isTrue(this.nPoint.tlNeDon, 1000)) {
                 this.chat("Xí hụt");
@@ -96,6 +98,7 @@ public class SonTinh extends Boss {
 
     @Override
     public void joinMap() {
+        this.isReward = false;
         super.joinMap(); //To change body of generated methods, choose Tools | Templates.
         st = System.currentTimeMillis();
         Service.gI().changeFlag(this, 2);

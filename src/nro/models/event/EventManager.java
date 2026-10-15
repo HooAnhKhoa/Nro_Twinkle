@@ -1,61 +1,85 @@
 package nro.models.event;
 
-import nro.models.event_list.TopUp;
-import nro.models.event_list.TrungThu;
-import nro.models.event_list.HungVuong;
-import nro.models.event_list.Christmas;
-import nro.models.event_list.Halloween;
-import nro.models.event_list.LunarNewYear;
-import nro.models.event_list.Default;
-import nro.models.event_list.InternationalWomensDay;
+import java.sql.*;
+import java.util.*;
+import nro.models.boss.Boss;
+import nro.models.boss.Boss_Manager.*;
+import nro.models.event_list.*;
+import nro.models.player.Player;
+import nro.models.services.Service;
+import nro.models.server.ServerManager;
+import nro.models.utils.Logger;
 
-public class EventManager {
-
-    private static EventManager instance;
-
-    public static boolean LUNNAR_NEW_YEAR = true;
-
-    public static boolean INTERNATIONAL_WOMANS_DAY = true;
-
-    public static boolean CHRISTMAS = true;
-
-    public static boolean HALLOWEEN = true;
-
-    public static boolean HUNG_VUONG = true;
-
-    public static boolean TRUNG_THU = true;
-
-    public static boolean TOP_UP = true;
-
-    public static EventManager gI() {
-        if (instance == null) {
-            instance = new EventManager();
-        }
-        return instance;
+/** Independent event switches. Boss populations are allocated once, never on each toggle. */
+public final class EventManager {
+    private static final EventManager INSTANCE = new EventManager();
+    private static final Map<String, Boolean> DEFAULTS = Map.of(
+        "broly",true,"hung_vuong",true,"halloween",false,"christmas",false,
+        "tet",false,"trung_thu",false,"summer",true,"mob_rewards",true);
+    private static volatile Map<String, Boolean> switches = DEFAULTS;
+    private static volatile boolean initialized;
+    public static EventManager gI() { return INSTANCE; }
+    public static boolean enabled(String key) { return switches.getOrDefault(key, false); }
+    public static String bossEvent(String className) {
+        if(className.startsWith("nro.models.boss.Broly."))return "broly";
+        if(className.startsWith("nro.models.boss.event_hung_vuong."))return "hung_vuong";
+        if(className.startsWith("nro.models.boss.event.Halloween."))return "halloween";
+        if(className.startsWith("nro.models.boss.event_noel."))return "christmas";
+        if(className.startsWith("nro.models.boss.event_tet."))return "tet";
+        if(className.startsWith("nro.models.boss.event_trung_thu."))return "trung_thu";
+        return null;
     }
-
-    public void init() {
-        new Default().init();
-        if (LUNNAR_NEW_YEAR) {
-           // new LunarNewYear().init();
-        }
-        if (INTERNATIONAL_WOMANS_DAY) {
-           // new InternationalWomensDay().init();
-        }
-        if (HALLOWEEN) {
-          //  new Halloween().init();
-        }
-        if (CHRISTMAS) {
-          //  new Christmas().init();
-        }
-        if (HUNG_VUONG) {
-            new HungVuong().init();
-        }
-        if (TRUNG_THU) {
-           // new TrungThu().init();
-        }
-        if (TOP_UP) {
-            new TopUp().init();
-        }
+    public static boolean bossEnabled(Boss boss) {
+        String key=bossEvent(boss.getClass().getName());
+        return key==null || enabled(key);
+    }
+    public static boolean allowNpc(Player player,String key) {
+        if(enabled(key))return true;
+        Service.gI().sendThongBao(player,"Sự kiện hiện đang tắt.");
+        return false;
+    }
+    public static void reload(Connection connection) throws SQLException {
+        Map<String,Boolean> next=new HashMap<>(DEFAULTS);
+        long revision;
+        boolean auto=connection.getAutoCommit();
+        if(!auto)throw new SQLException("Event reload requires an independent transaction");
+        connection.setAutoCommit(false);
+        try(Statement statement=connection.createStatement()) {
+            try(ResultSet rows=statement.executeQuery("SELECT revision FROM panel_event_runtime WHERE id=1 FOR UPDATE")) {
+                if(!rows.next())throw new SQLException("Missing event runtime");
+                revision=rows.getLong(1);
+            }
+            try(ResultSet rows=statement.executeQuery("SELECT event_key,enabled FROM panel_event_config")) {
+                while(rows.next())if(DEFAULTS.containsKey(rows.getString(1)))next.put(rows.getString(1),rows.getBoolean(2));
+            }
+            switches=Collections.unmodifiableMap(next);
+            if(initialized)try(PreparedStatement update=connection.prepareStatement("UPDATE panel_event_runtime SET heartbeat=NOW(),applied_revision=? WHERE id=1")) {
+                update.setLong(1,revision);update.executeUpdate();
+            }
+            connection.commit();
+        }catch(SQLException error){connection.rollback();throw error;}
+        finally{connection.setAutoCommit(auto);}
+    }
+    public synchronized void init() {
+        if(initialized)return;
+        new nro.models.event_list.Default().boss();
+        new HungVuong().boss();
+        new Halloween().boss();
+        new Christmas().boss();
+        // Legacy LunarNewYear.npc() points to unrelated NPC 49; create only its bosses.
+        new LunarNewYear().boss();
+        new TrungThu().boss();
+        BossManager[] managers={HungVuongEventManager.gI(),HalloweenEventManager.gI(),
+            ChristmasEventManager.gI(),LunarNewYearEventManager.gI(),TrungThuEventManager.gI()};
+        initialized=true;
+        Thread worker=new Thread(()->{
+            while(ServerManager.isRunning){
+                for(BossManager manager:managers)for(Boss boss:manager.getBosses())try{
+                    boss.update();
+                }catch(Exception error){Logger.logException(EventManager.class,error);}
+                try{Thread.sleep(1000);}catch(InterruptedException stop){Thread.currentThread().interrupt();return;}
+            }
+        },"Seasonal Event Bosses");
+        worker.setDaemon(true);worker.start();
     }
 }

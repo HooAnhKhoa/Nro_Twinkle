@@ -166,10 +166,12 @@ public class OngGiaNoel extends Boss {
 
     @Override
     public synchronized int injured(Player plAtt, long damage, boolean piercing, boolean isMobAttack) {
+        if (!nro.models.event.EventManager.bossEnabled(this)) return 0;
         return 0;
     }
 
     @Override
     public void reward(Player plKill) {
+        if (!nro.models.event.EventManager.bossEnabled(this)) return;
     }
 }

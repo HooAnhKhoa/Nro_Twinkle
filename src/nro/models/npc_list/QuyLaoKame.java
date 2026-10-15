@@ -92,7 +92,7 @@ public class QuyLaoKame extends Npc {
         Item ruacon = InventoryService.gI().findItemBag(player, 874);
         if (canOpenNpc(player)) {
             ArrayList<String> menu = new ArrayList<>();
-            if (!player.canReward) {
+            if (!player.canReward || !nro.models.event.EventManager.enabled("tet")) {
                 menu.add("Nói\nchuyện");
                 menu.add("Đổi điểm\nsự kiện\n[" + player.event.getEventPoint() + "]");
                 menu.add("Nhận quà\nKOL");
@@ -116,7 +116,7 @@ public class QuyLaoKame extends Npc {
             return;
         }
 
-        if (player.canReward) {
+        if (player.canReward && nro.models.event.EventManager.enabled("tet")) {
             RewardService.gI().rewardLancon(player);
             return;
         }
