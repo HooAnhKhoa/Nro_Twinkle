@@ -1,23 +1,22 @@
-# Hành trang 150 ô
+# Hành trang tối đa 100 ô
 
-Hành trang có giới hạn **150 ô liền nhau**, dùng giao diện túi gốc của client. Đã bỏ chia trang, lệnh `tui` và nút Trang Túi đồ tại Santa. Rương đồ giữ nguyên giới hạn 100 ô.
+Hành trang có giới hạn **100 ô liền nhau**, dùng giao diện túi gốc của client, không chia trang. Rương đồ giữ nguyên tối đa 100 ô.
 
-- Nhân vật `222552`, tài khoản đăng nhập `11`, được chuyển từ 300 ô về 150 ô sau khi bảo trì lưu dữ liệu mới nhất; giữ nguyên đồ thử Trung Thu và các món còn lại.
-- Nhân vật khác giữ số ô đã mở; vật phẩm mở rộng hành trang 517 tiếp tục tăng từng ô đến tối đa 150.
-- Đọc chỉ số ô dạng unsigned cho dùng đồ, cất rương, mặc đồ, đệ tử và ghép đồ. Giao dịch đổi byte có dấu về chỉ số 0–149, vẫn giữ byte255/-1 cho vàng; ký gửi giữ chỉ số149 ở dạng số nguyên dương.
-- Gói đăng nhập và cập nhật hành trang gửi toàn bộ các ô đã mở, tối đa150, cùng các ô rỗng đúng định dạng. Không thay giao thức thành 2 byte.
+- Túi trên 100 ô được thu gọn sau khi game bảo trì lưu và dừng. Giữ nguyên toàn bộ vật phẩm, số lượng, chỉ số và thứ tự tương đối; chỉ bỏ ô rỗng. Nếu thực tế hơn 100 ô có đồ thì từ chối chuyển dữ liệu và không nạp JAR mới.
+- Túi đã mở ít hơn hoặc bằng 100 ô giữ nguyên kích thước. Vật phẩm mở rộng hành trang 517 tăng từng ô đến 100 rồi từ chối mở thêm.
+- Gói đăng nhập/cập nhật gửi toàn bộ các ô đang có, tối đa 100. Chỉ số hợp lệ 0–99. Giữ cách đọc unsigned và sentinel255/-1 cho các lệnh gốc; không thay giao thức thành 2 byte.
 - Giữ kiểm tra xác nhận bán/dùng/bỏ đồ một lần và cột LONGTEXT để lưu đầy đủ vật phẩm nhiều chỉ số.
 
 ## Kiểm tra
 
-`test/BagInventory150Test.java`: 30 kiểm tra gói native và các thao tác tại ô127/128/149, gồm dùng, dùng theo ID, mặc, bỏ, bán, cất rương, giao dịch, ký gửi, ghép, ô rỗng, túi cũ nhỏ hơn và giới hạn150.
+`test/BagInventory100Test.java`: 30 kiểm tra gói native và các thao tác tại ô80/90/99, gồm dùng, dùng theo ID, mặc, bỏ, bán, cất rương, giao dịch, ký gửi, ghép, ô rỗng, túi cũ nhỏ hơn và giới hạn 100.
 
-Công cụ chuyển túi 300 → 150 đã chạy xong và được dọn khỏi source theo yêu cầu. Mã cùng kết quả kiểm tra được lưu trong bản sao dọn file một lần ở C:/Downloads/NroFreeSetup/Backups/cleanup-once-20261015.
+`test/GiftCodeRedemptionTest.java`: hành trang mẫu 100 ô, kiểm tra trao thưởng/lưu dữ liệu, đầy túi, nhận trùng và hoàn tác lỗi trên DB QA riêng. `test/BagStorageTest.java` giữ kiểm tra lưu tiếng Việt và hơn64KB trong bảng tạm QA.
 
-`test/BagStorageTest.java`: bảng tạm trong kết nối QA, xác minh giữ nguyên dữ liệu tiếng Việt và lưu hơn64KB. Luồng Trung Thu được kiểm tra trên database QA riêng.
+Công cụ chuyển chạy một lần được lưu trong bản sao để hoàn tác, không để lại trong source. Có kiểm tra bảo toàn món ở ô100/149 cũ, túi nhỏ hơn, túi đúng100, túi rỗng và từ chối hơn100 món.
 
 ## Bản sao để hoàn tác
 
-`C:/Downloads/NroFreeSetup/Backups/bag150-20261015` chứa JAR300 cũ, cấu hình, dữ liệu túi đã lưu trước thu gọn và biên nhận. Thao tác database chỉ chạy sau khi JVM cũ lưu và dừng; nếu số vật phẩm thực vượt150 thì từ chối thay đổi, không cắt bỏ vật phẩm.
+`C:/Downloads/NroFreeSetup/Backups/bag100-20261015` giữ JAR150 cũ, dữ liệu hành trang được đọc lại sau khi JVM lưu và dừng, biên nhận chuyển100 và kết quả kiểm tra. Chỉ thay JAR sau khi chuyển dữ liệu thành công; nếu chuyển thất bại, giữ JAR cũ để launcher khởi động lại bình thường.
 
-Giữ LONGTEXT khi quay lại JAR cũ. Không phục hồi đè bản sao túi lên dữ liệu sau khi người chơi đã nhận, dùng hoặc giao dịch thêm vật phẩm. Việc quay lại chế độ300 phải nạp JAR tương ứng trước khi mở lại300 ô.
+Các bản sao lịch sử 300→150 vẫn giữ tại `Backups/bag150-20261015` và `Backups/cleanup-once-20261015`. Giữ LONGTEXT khi quay lại JAR cũ. Không phục hồi đè bản sao túi lên dữ liệu sau khi người chơi đã nhận, dùng hoặc giao dịch thêm vật phẩm.

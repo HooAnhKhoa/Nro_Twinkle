@@ -6,7 +6,7 @@ import nro.models.item.Item;
 import nro.models.player.Player;
 import nro.models.player.Inventory;
 
-/** Native one-byte bag indices, with a single bag of up to 150 slots. */
+/** Native one-byte bag indices, with a single bag of up to 100 slots. */
 public final class BagProtocol {
     public static final int SELL = 100;
     private record Confirmation(Item item, int action, int where, int wire) {}

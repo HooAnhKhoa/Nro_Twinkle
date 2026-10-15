@@ -45,11 +45,11 @@ public class GiftCodeRedemptionTest {
             }
             var service=GiftCodeService.gI();String expiry="2030-01-01 00:00:00";
             String balls="[";for(int id=14;id<=20;id++){if(id>14)balls+=",";balls+=reward(id,10).substring(1,reward(id,10).length()-1);}balls+="]";
-            seed(c,1,"p52a2v",2,balls,expiry);User first=user(c,1,150);
+            seed(c,1,"p52a2v",2,balls,expiry);User first=user(c,1,100);
             check(service.redeem(first," P52A2V ").success(),"new code redeems without cache reload; accepts case and outside whitespace");
             check(java.util.stream.IntStream.rangeClosed(14,20).allMatch(id->qty(first,id)==10),"p52a2v grants all seven dragon balls with quantity ten");
             check(scalar(c,"SELECT count_left FROM giftcode WHERE id="+(BASE+1))==1,"successful claim decrements exactly one use");
-            check(scalar(c,"SELECT JSON_LENGTH(giftcode) FROM player WHERE id="+first.id)==1&&scalar(c,"SELECT JSON_LENGTH(items_bag) FROM player WHERE id="+first.id)==150,"receipt and complete bag persist together");
+            check(scalar(c,"SELECT JSON_LENGTH(giftcode) FROM player WHERE id="+first.id)==1&&scalar(c,"SELECT JSON_LENGTH(items_bag) FROM player WHERE id="+first.id)==100,"receipt and complete bag persist together");
             User reconnect=new User((int)first.id);check(!service.redeem(reconnect,"p52a2v").success(),"persisted receipt prevents reclaim after reconnect with empty memory");
             check(scalar(c,"SELECT count_left FROM giftcode WHERE id="+(BASE+1))==1,"duplicate claim never consumes another use");
             seed(c,2,"old_name",2,reward(888,3),expiry);try(Statement s=c.createStatement()){s.executeUpdate("UPDATE giftcode SET code='new_name' WHERE id="+(BASE+2));}
