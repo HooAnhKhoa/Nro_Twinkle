@@ -17,14 +17,18 @@ Mã liên quan: `src/nro/models/player/PlayerEvent.java`, `src/nro/models/servic
 
 ## Bò Mộng
 
-Dữ liệu đã đặt NPC 17 ở Nhà Gôhan (21), Nhà Moori (22), Nhà Broly (23), Rừng Karin (47), Siêu Thị (84). Nhưng cả hàm mở và xử lý menu chỉ chấp nhận map 47/84 ngay từ bản source nhập ban đầu. Vì vậy NPC ở ba nhà hiện mà không mở được chức năng.
+Bò Mộng ở Nhà Gôhan (21), Nhà Moori (22), Nhà Broly (23) chỉ có Đổi thỏi vàng, Đổi ngọc xanh và Đóng. Dùng menu riêng, không nhận các lệnh nhiệm vụ/thành tích/điểm danh của menu cũ.
 
-Khôi phục bằng cách cho phép ba map nhà dùng cùng luồng dịch vụ cũ:
+Bò Mộng ở Rừng Karin (47) và Siêu Thị (84) giữ nhiệm vụ hằng ngày, thành tích, Nạp Ngọc và điểm danh. Nhiệm vụ giới hạn gốc 10/ngày; điểm danh gốc 10.000 ngọc + 100 thỏi vàng/ngày. Khi bật Trung Thu, trả nhiệm vụ Khó/Siêu khó vẫn đi qua nhánh TrungThuQuest hiện có.
 
-- Nhiệm vụ hằng ngày: chọn Dễ/Bình thường/Khó/Siêu khó, xem tiến độ, trả hoặc hủy. Giới hạn gốc 10 nhiệm vụ/ngày.
-- Nhiệm vụ thành tích: giao diện thành tích sẵn có.
-- Nạp Ngọc: form đổi số dư VNĐ sang ngọc, có cộng điểm sự kiện theo công thức trên.
-- Điểm danh: 10.000 ngọc + 100 thỏi vàng, kiểm tra không nhận lại cùng ngày. Bản khôi phục giữ nguyên phần thưởng.
-- Khi bật Trung Thu, trả nhiệm vụ Khó/Siêu khó vẫn đi qua nhánh TrungThuQuest hiện có để nhận thêm đèn treo/hạt sen theo hạn mỗi ngày.
+Hai lựa chọn tại nhà dùng số dư `account.vnd` trực tiếp trong database:
 
-`test/BoMongHomeTest.java`: 52 kiểm tra không kết nối DB, gồm cả ba nhà và hai vị trí cũ; mở menu, nhận nhiệm vụ, tiến độ/hủy, thành tích, form đổi ngọc, điểm danh và chống nhận lại; từ chối map ngoài phạm vi và NPC khác map.
+- 10.000 VNĐ = 40 thỏi vàng hoặc 10.000 ngọc xanh.
+- Giữ thưởng cũ: mỗi 10.000 VNĐ thêm 10 vé tặng ngọc (718) và 50 điểm sự kiện; lấy phần nguyên theo code cũ.
+- Nhập từ 10.000 đến 5.000.000 VNĐ/lần. Đổi thỏi vàng yêu cầu tài khoản đã kích hoạt theo điều kiện gốc.
+- `VndExchangeService` khóa hàng tài khoản, đọc lại số dư hiện tại, rồi lưu trừ VNĐ, túi, ngọc và điểm sự kiện trong cùng transaction InnoDB. Bản sao số dư trong phiên chơi được cập nhật theo database. Đầy túi, tràn ngọc/điểm, sai tài khoản, bảo trì hoặc lỗi lưu không tiêu hao VNĐ và không nhận thưởng một phần.
+
+Kiểm tra:
+
+- `test/BoMongHomeTest.java`: 43 kiểm tra không DB cho menu riêng ở cả ba nhà, đúng loại form đổi, chặn menu cũ ở nhà, và hồi quy chức năng tại hai NPC bên ngoài.
+- `test/VndExchangeTest.java`: 23 kiểm tra chỉ trong DB QA `nro_panel_qa_20261013`, gồm số dư phiên chơi lệch DB, tỷ lệ quà, giới hạn, tài khoản kích hoạt, túi đầy, tràn tiền/điểm, sai tài khoản, lỗi SQL, đồng thời và packet nhập thực tế. Lỗi SQL giả trong test được tạo có chủ đích để xác minh hoàn nguyên.

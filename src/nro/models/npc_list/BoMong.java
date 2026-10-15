@@ -21,17 +21,24 @@ import nro.models.services_func.Input;
  *
  */
 public class BoMong extends Npc {
+    private static final int HOME_EXCHANGE = 202610210;
 
     public BoMong(int mapId, int status, int cx, int cy, int tempId, int avartar) {
         super(mapId, status, cx, cy, tempId, avartar);
     }
 
-    private boolean supportsServices() {
-        return mapId == 21 || mapId == 22 || mapId == 23 || mapId == 47 || mapId == 84;
-    }
+    private boolean isHome() { return mapId == 21 || mapId == 22 || mapId == 23; }
+
+    private boolean supportsServices() { return mapId == 47 || mapId == 84; }
 
     @Override
     public void openBaseMenu(Player player) {
+        if (isHome()) {
+            if (canOpenNpc(player)) createOtherMenu(player, HOME_EXCHANGE,
+                    "Đổi số dư VNĐ của tài khoản thành thỏi vàng hoặc ngọc xanh.\n10.000 VNĐ = 40 thỏi vàng hoặc 10.000 ngọc xanh.",
+                    "Đổi\nthỏi vàng", "Đổi\nngọc xanh", "Đóng");
+            return;
+        }
         if (!TaskService.gI().checkDoneTaskTalkNpc(player, this)) {
             if (canOpenNpc(player)) {
                 if (supportsServices()) {
@@ -45,6 +52,13 @@ public class BoMong extends Npc {
     @Override
     public void confirmMenu(Player player, int select) {
         if (canOpenNpc(player)) {
+            if (isHome()) {
+                if (player.idMark.getIndexMenu() == HOME_EXCHANGE) {
+                    if (select == 0) Input.gI().createFormTradeGold(player);
+                    else if (select == 1) Input.gI().createFormTradeGem(player);
+                }
+                return;
+            }
             if (supportsServices()) {
                 if (player.idMark.isBaseMenu()) {
                     switch (select) {

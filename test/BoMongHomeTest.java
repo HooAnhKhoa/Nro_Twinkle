@@ -32,6 +32,15 @@ public class BoMongHomeTest {
    User p=new User(map);p.zone=Manager.MAPS.stream().filter(m->m.mapId==map).findFirst().get().zones.get(0);
    BoMong npc=new BoMong(map,1,0,0,ConstNpc.BO_MONG,0);npc.openBaseMenu(p);
    var packet=new DataInputStream(new ByteArrayInputStream(p.menu));check(packet.readUnsignedShort()==17,"map "+map+" opens Bò Mộng menu");packet.readUTF();int count=packet.readUnsignedByte();List<String> buttons=new ArrayList<>();for(int n=0;n<count;n++)buttons.add(packet.readUTF());
+   if(map==21||map==22||map==23){
+    check(count==3&&buttons.get(0).contains("thỏi vàng")&&buttons.get(1).contains("ngọc xanh")&&buttons.get(2).equals("Đóng"),"home "+map+" shows only gold bars, green gems and close");
+    npc.confirmMenu(p,0);check(p.form&&p.idMark.getTypeInput()==Input.TRADE_GOLD,"home "+map+" routes gold bars to the existing exchange input");
+    p.form=false;npc.openBaseMenu(p);npc.confirmMenu(p,1);check(p.form&&p.idMark.getTypeInput()==Input.TRADE_GEM,"home "+map+" routes gems to exchange input");
+    p.form=false;npc.openBaseMenu(p);npc.confirmMenu(p,2);check(!p.form&&!p.achievement&&p.lastCheckIn==null&&p.inventory.gem==100&&bars(p)==0,"home "+map+" close never grants old check-in rewards");
+    p.idMark.setIndexMenu(ConstNpc.BASE_MENU);npc.confirmMenu(p,3);check(p.lastCheckIn==null&&p.inventory.gem==100,"home "+map+" rejects the old daily check-in selection");
+    p.playerTask.sideTask.template=daily;p.idMark.setIndexMenu(ConstNpc.MENU_OPTION_PAY_SIDE_TASK);npc.confirmMenu(p,1);check(p.playerTask.sideTask.template==daily,"home "+map+" rejects old quest actions");
+    continue;
+   }
    check(count==5&&buttons.get(0).contains("hàng ngày")&&buttons.get(1).contains("thành tích")&&buttons.get(2).equals("Nạp Ngọc")&&buttons.get(3).equals("Điểm danh"),"map "+map+" retains all four existing services");
    npc.confirmMenu(p,0);check(p.idMark.getIndexMenu()==ConstNpc.MENU_OPTION_LEVEL_SIDE_TASK,"map "+map+" opens daily difficulty selection");
    npc.confirmMenu(p,2);check(p.playerTask.sideTask.template==daily&&p.playerTask.sideTask.level==ConstTask.HARD&&p.playerTask.sideTask.leftTask==ConstTask.MAX_SIDE_TASK-1,"map "+map+" accepts a hard daily task with the original quota");

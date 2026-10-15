@@ -142,73 +142,8 @@ public class Input {
                     }
                 }
 
-                case TRADE_GOLD -> {
-                    int cuantity1 = Integer.parseInt(text[0]);
-                    if (!player.getSession().actived) {
-                        Service.gI().sendThongBao(player, "Vui lòng kích hoạt tài khoản!");
-                        break;
-                    }
-                    if (cuantity1 < 10000 || cuantity1 > 5_000_000) {
-                        Service.gI().sendThongBao(player, "Tối thiểu 10.000Đ và tối đa 5.000.000Đ");
-                        break;
-                    }
-                    if (player.getSession().vnd < cuantity1) {
-                        Service.gI().sendThongBao(player, "Số dư không đủ, vui lòng nạp thêm");
-                    } else {
-                        PlayerDAO.subvnd(player, cuantity1);
-
-                        int soLuongThoiVang = (cuantity1 / 1000) * 4;
-                        Item item457 = ItemService.gI().createNewItem((short) 457, soLuongThoiVang);
-                        InventoryService.gI().addItemBag(player, item457);
-
-                        int soLuongVe = (cuantity1 / 10000) * 10;
-                        Item item718 = ItemService.gI().createNewItem((short) 718, soLuongVe);
-                        InventoryService.gI().addItemBag(player, item718);
-
-                        InventoryService.gI().sendItemBags(player);
-
-                        BadgesTaskService.updateCountBagesTask(player, ConstTaskBadges.DAI_GIA_MOI_NHU, cuantity1);
-                        BadgesTaskService.updateCountBagesTask(player, ConstTaskBadges.EM_XINH_EM_DEP, cuantity1);
-
-                        int eventPointBonus = (cuantity1 / 10000) * 50;
-                        player.event.addEventPoint(eventPointBonus);
-
-                        Service.gI().sendThongBao(player, "Bạn nhận thêm " + eventPointBonus + " điểm sự kiện!");
-                        Service.gI().sendThongBao(player, "Đã đổi thành công. Bạn nhận được " + soLuongThoiVang + " thỏi vàng và " + soLuongVe + " vé tặng ngọc.");
-                    }
-                }
-
-                case TRADE_GEM -> {
-                    int quantity = Integer.parseInt(text[0]);
-                    if (quantity < 10000 || quantity > 5_000_000) {
-                        Service.gI().sendThongBao(player, "Tối thiểu 10.000Đ và tối đa 5.000.000Đ");
-                        break;
-                    }
-                    if (player.getSession().vnd < quantity) {
-                        Service.gI().sendThongBao(player, "Số dư không đủ, vui lòng nạp thêm");
-                    } else {
-                        PlayerDAO.subvnd(player, quantity);
-
-                        player.inventory.gem += quantity;
-                        Service.gI().sendMoney(player);
-
-                        int soLuongVe = (quantity / 10000) * 10;
-                        Item item718 = ItemService.gI().createNewItem((short) 718, soLuongVe);
-                        InventoryService.gI().addItemBag(player, item718);
-
-                        InventoryService.gI().sendItemBags(player);
-
-                        BadgesTaskService.updateCountBagesTask(player, ConstTaskBadges.DAI_GIA_MOI_NHU, quantity);
-                        BadgesTaskService.updateCountBagesTask(player, ConstTaskBadges.EM_XINH_EM_DEP, quantity);
-
-                        int eventPointBonus = (quantity / 10000) * 50;
-                        player.event.addEventPoint(eventPointBonus);
-
-                        Service.gI().sendThongBao(player, "Bạn nhận thêm " + eventPointBonus + " điểm sự kiện!");
-                        Service.gI().sendThongBao(player, "Đã nạp thành công. Bạn nhận được " + quantity + " ngọc và " + soLuongVe + " vé tặng ngọc.");
-                    }
-                }
-
+                case TRADE_GOLD -> nro.models.services.VndExchangeService.exchange(player,text[0],true);
+                case TRADE_GEM -> nro.models.services.VndExchangeService.exchange(player,text[0],false);
                 case SEND_ITEM_OP -> {
                     if (player.isAdmin()) {
                         int idItemBuff = Integer.parseInt(text[1]);
