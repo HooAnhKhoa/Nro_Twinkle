@@ -30,6 +30,7 @@ public class ItemTimeService {
     }
 
     public void sendAllItemTime(Player player) {
+        nro.models.event.trungthu2026.TrungThuCakeBuff.sendTimers(player);
         ItemTimeService.gI().sendTextBanDoKhoBau(player);
         ItemTimeService.gI().sendTextDoanhTrai(player);
         ItemTimeService.gI().sendTextConDuongRanDoc(player);

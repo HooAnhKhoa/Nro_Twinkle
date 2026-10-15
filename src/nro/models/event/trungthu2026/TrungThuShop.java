@@ -12,6 +12,22 @@ public final class TrungThuShop {
     public static final String TAG = "TRUNG_THU_2026";
 
     public static void ensureData(Connection c) throws SQLException {
+        boolean own = c.getAutoCommit();
+        if (own) c.setAutoCommit(false);
+        Savepoint checkpoint = c.setSavepoint();
+        try {
+            ensureRows(c);
+            if (own) c.commit();
+            else c.releaseSavepoint(checkpoint);
+        } catch (SQLException | RuntimeException error) {
+            c.rollback(checkpoint);
+            throw error;
+        } finally {
+            if (own) c.setAutoCommit(true);
+        }
+    }
+
+    private static void ensureRows(Connection c) throws SQLException {
         int shop = id(c, "SELECT id FROM shop WHERE tag_name=?", TAG);
         if (shop < 0) {
             execute(c, "INSERT INTO shop(npc_id,tag_name,type_shop) VALUES(41,?,0)", TAG);
@@ -28,6 +44,19 @@ public final class TrungThuShop {
         int[] rabbits = numbers("item.rabbit-costumes");
         for (int i = 0; i < rabbits.length; i++) seed(c, outfits, rabbits[i], number("shop.rabbit-costume-gems"), 1, i);
         seed(c, outfits, item("parade-lantern"), number("price.parade-lantern-gems"), 1, rabbits.length);
+        int cakes = tab(c, shop, "Bánh tăng chỉ số");
+        int order = 0;
+        for (var cake : TrungThuCakeBuff.kinds()) {
+            if (id(c, "SELECT id FROM item_shop WHERE tab_id=? AND temp_id=?", cakes, cake.id()) < 0) {
+                seed(c, cakes, cake.id(), cake.gems(), 1, order);
+                int sale = id(c, "SELECT id FROM item_shop WHERE tab_id=? AND temp_id=?", cakes, cake.id());
+                for (int option : new int[]{50,77,103}) execute(c, "INSERT INTO item_shop_option(item_shop_id,option_id,param) VALUES(?,?,?)", sale, option, cake.percent());
+                execute(c, "INSERT INTO item_shop_option(item_shop_id,option_id,param) VALUES(?,65,10)", sale);
+            }
+            execute(c, "UPDATE item_template SET description=? WHERE id=? AND TYPE=31",
+                    "SD, HP và KI +"+cake.percent()+"% trong 10 phút. Chỉ một cấp bánh có hiệu lực.", cake.id());
+            order++;
+        }
     }
 
     private static int tab(Connection c, int shop, String name) throws SQLException {

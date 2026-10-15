@@ -11,3 +11,9 @@ CREATE TABLE IF NOT EXISTS trung_thu_2026_daily (
  reward_kind VARCHAR(32) NOT NULL,
  PRIMARY KEY(owner_id,reward_day,reward_kind)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS trung_thu_2026_cake (
+ player_id BIGINT NOT NULL PRIMARY KEY,
+ cake_id INT NOT NULL DEFAULT 0,
+ until_ms BIGINT NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

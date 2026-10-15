@@ -50,7 +50,7 @@ Trước khi nạp: sao lưu JAR, config, hai file PHP của web và SQL các b�
 
 ## Cửa hàng chuẩn và chỉnh tỷ lệ rơi trên web
 
-NPC Trung Thu → Cửa hàng mở cửa sổ shop giống các NPC thường: ba tab **Triệu hồi**, **Đồ sự kiện**, **Trang phục**, tám món có ảnh và giá vàng/ngọc. Shop có tag `TRUNG_THU_2026`, NPC41. Có thể quản lý giá và các món bán trong mục Cửa hàng trên web. Giá từ file cấu hình chỉ dùng khi tạo món lần đầu; khởi động lại không ghi đè giá admin đã chỉnh. Các mục làm bánh, đổi pet, đổi nguyên liệu và chọn phe vẫn ở menu NPC. Tắt Trung Thu thì cửa hàng đang mở cũng không mua được. Mua hàng tiếp tục dùng giao dịch lưu tiền/vật phẩm cùng lúc, không thu tiền khi đầy túi hoặc lưu thất bại.
+NPC Trung Thu → Cửa hàng mở cửa sổ shop giống các NPC thường: bốn tab **Triệu hồi**, **Đồ sự kiện**, **Trang phục**, **Bánh tăng chỉ số**, mười một món có ảnh và giá vàng/ngọc. Shop có tag `TRUNG_THU_2026`, NPC41. Có thể quản lý giá và các món bán trong mục Cửa hàng trên web. Giá từ file cấu hình chỉ dùng khi tạo món lần đầu; khởi động lại không ghi đè giá admin đã chỉnh. Các mục làm bánh, đổi pet, đổi nguyên liệu và chọn phe vẫn ở menu NPC. Tắt Trung Thu thì cửa hàng đang mở cũng không mua được. Mua hàng tiếp tục dùng giao dịch lưu tiền/vật phẩm cùng lúc, không thu tiền khi đầy túi hoặc lưu thất bại.
 
 Web → Rơi đồ → **Vật phẩm Trung Thu** có 10 dòng chỉnh % độc lập, mặc định thu gọn:
 
@@ -61,3 +61,17 @@ Web → Rơi đồ → **Vật phẩm Trung Thu** có 10 dòng chỉnh % độc 
 - Ván bay thay thế:1%, chỉnh riêng Gogeta/Omega. Khi đã rơi, vẫn giữ1% vĩnh viễn,99% hạn7ngày.
 
 Các % trên là tỷ lệ gốc khi hệ số nhóm và toàn server đều x1. Có thể nhập % riêng thay hệ số, hoặc bấm Mặc định để trở lại cách tính hệ số. x0 vẫn tắt rơi. Phải bật Trung Thu và Vật phẩm EV. Không đổi điều kiện kiếm gỗ/cờ phe, nguồn nhận hạt sen từ nhiệm vụ hay bảng thưởng mở hộp. Game nhận thay đổi tỷ lệ trong khoảng3giây.
+
+## Bánh tăng chỉ số tạm thời
+
+| Bánh | Tăng đồng thời SD / HP / KI | Thời gian mỗi bánh | Giá mặc định |
+| --- | --- | --- | --- |
+| Bánh Trung Thu 1 trứng (465) | 20% | 10 phút | 20 ngọc xanh |
+| Bánh Trung Thu 2 trứng (466) | 25% | 10 phút | 30 ngọc xanh |
+| Bánh Trung Thu Đặc Biệt (472) | 30% | 10 phút | 40 ngọc xanh |
+
+Chỉ có một cấp bánh hiệu lực, không cộng dồn phần trăm. Dùng cùng cấp cộng 10 phút thời gian; dùng cấp cao hơn thay buff cũ bằng 10 phút ở cấp mới. Khi đang có cấp cao hơn, bánh yếu hơn không bị tiêu hao và không gia hạn cấp mạnh. Tăng HP/KI tối đa, không tự hồi đầy. Hết hạn sẽ đưa HP/KI hiện tại về trong giới hạn tối đa mới.
+
+Bảng `trung_thu_2026_cake` lưu cấp và mốc hết hạn tuyệt đối. Đăng xuất, khởi động lại hoặc tắt event thì thời gian vẫn trôi. Tắt Trung Thu dừng hiệu lực và chặn dùng bánh; bật lại tiếp tục nếu chưa hết hạn. Buff và trừ bánh lưu cùng transaction, lỗi lưu không mất bánh. Có icon và thời gian còn lại trên client. Dữ liệu item được nâng phiên bản 11 để client cập nhật mô tả 10 phút.
+
+Giá mặc định chỉ dùng khi thêm món mới. Giá/chỉ số shop đã quản trị viên chỉnh không bị ghi đè khi khởi động. Chỉ số có hiệu lực của ba bánh được quy định trong `config/trung-thu-2026.properties`; option trên món là nội dung hiển thị của shop, không thể dùng sửa option để tạo buff vượt cấp đã cấu hình.

@@ -463,6 +463,12 @@ public class NPoint {
                 }
             }
         }
+        int cakeBonus = nro.models.event.trungthu2026.TrungThuCakeBuff.percent(this.player);
+        if (cakeBonus > 0) {
+            this.tlDame.add(cakeBonus);
+            this.tlHp.add(cakeBonus);
+            this.tlMp.add(cakeBonus);
+        }
         setDameTrainArmor();
         setBasePoint();
         setOutfitFusion();

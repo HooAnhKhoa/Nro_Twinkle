@@ -19,6 +19,7 @@ public final class TrungThuRuntime {
     private static final java.util.Map<Player,Boolean> CARROTS=Collections.synchronizedMap(new WeakHashMap<>());
     public static void tickPlayer(Player p){
         if(!p.isPl()||p.id<=0||p.zone==null)return;
+        TrungThuCakeBuff.tick(p);
         boolean active=TrungThuStore.carrot(p);Boolean before=CARROTS.put(p,active);
         if(before!=null&&before!=active)Service.gI().Send_Caitrang(p);
     }
@@ -34,6 +35,7 @@ public final class TrungThuRuntime {
         }
     }
     public static boolean use(Player p,Item used){
+        if(TrungThuCakeBuff.use(p,used))return true;
         int id=used.template.id;
         if(id==item("monkey-tail")){Service.gI().sendThongBao(p,"Gom "+number("exchange.monkey-tails")+" đuôi khỉ, đổi tại NPC Trung Thu.");return true;}
         if(id==item("normal-box")||id==item("vegetarian-box"))return TrungThuCommerce.useBox(p,used);
