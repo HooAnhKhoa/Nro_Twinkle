@@ -56,6 +56,10 @@ public abstract class Npc implements IAtionNpc {
         }
     }
 
+    protected int menuAvatar() {
+        return -1;
+    }
+
     public void createOtherMenu(Player player, int indexMenu, String npcSay, String... menuSelect) {
         Message msg;
         try {
@@ -67,6 +71,7 @@ public abstract class Npc implements IAtionNpc {
             for (String menu : menuSelect) {
                 msg.writer().writeUTF(menu);
             }
+            if (menuAvatar() >= 0) msg.writer().writeShort(menuAvatar());
             player.sendMessage(msg);
             msg.cleanup();
         } catch (Exception e) {
@@ -86,6 +91,7 @@ public abstract class Npc implements IAtionNpc {
             for (String menu : menuSelect) {
                 msg.writer().writeUTF(menu);
             }
+            if (menuAvatar() >= 0) msg.writer().writeShort(menuAvatar());
             player.sendMessage(msg);
             msg.cleanup();
         } catch (Exception e) {

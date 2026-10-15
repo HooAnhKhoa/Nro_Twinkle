@@ -22,6 +22,8 @@ public final class TrungThuStore {
             }
             for(String sql:Files.readString(Path.of("web/trung_thu_schema.sql")).split(";"))if(!sql.isBlank())s.execute(sql);
             TrungThuShop.ensureData(connection);
+            // Replace only the original placeholder; keep any administrator-customized appearance.
+            s.executeUpdate("UPDATE npc_template SET head=1098,body=1099,leg=1100,avatar=9976 WHERE id=41 AND head=120 AND body=121 AND leg=122 AND avatar=0");
         }catch(Exception error){throw new IllegalStateException("Không tạo được dữ liệu Trung Thu",error);}
     }
     public static State state(Player player){

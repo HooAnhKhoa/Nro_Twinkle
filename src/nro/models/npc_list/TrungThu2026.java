@@ -8,6 +8,7 @@ import static nro.models.event.trungthu2026.TrungThuConfig.*;
 public final class TrungThu2026 extends Npc {
     private static final int HOME=202610160,CRAFT=HOME+2,PET=HOME+3,SIDE=HOME+4;
     public TrungThu2026(int map,int status,int x,int y,int id,int avatar){super(map,status,x,y,id,avatar);}
+    @Override protected int menuAvatar(){return avartar;}
     @Override public void openBaseMenu(Player p){if(canOpenNpc(p)&&nro.models.event.EventManager.allowNpc(p,"trung_thu"))createOtherMenu(p,HOME,"Trung Thu: săn Khỉ, truy tìm Thỏ, treo đèn, làm bánh và rước đèn bang hội. Không có đua top.\nKhỉ/Thỏ chỉ xuất hiện khi dùng vật phẩm triệu hồi.","Cửa hàng","Làm bánh","Đổi pet","Đổi "+number("exchange.monkey-tails")+" đuôi khỉ","Đổi "+number("exchange.carrots")+" cà rốt","Treo đèn","Chọn phe","Đóng");}
     @Override public void confirmMenu(Player p,int select){
         if(!canOpenNpc(p)||!nro.models.event.EventManager.allowNpc(p,"trung_thu"))return;
