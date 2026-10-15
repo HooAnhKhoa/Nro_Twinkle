@@ -324,6 +324,7 @@ public class Zone {
 
     public void pickItem(Player player, int itemMapId) {
         ItemMap itemMap = getItemMapByItemMapId(itemMapId);
+        if(itemMap!=null&&itemMap.itemTemplate!=null&&itemMap.itemTemplate.id==648){nro.models.event.ChristmasGifts.pickup(player,itemMap);return;}
         if (itemMap != null && !itemMap.isPickedUp) {
             synchronized (itemMap) {
                 if (!itemMap.isPickedUp) {
@@ -336,12 +337,7 @@ public class Zone {
                             Item item = ItemService.gI().createItemFromItemMap(itemMap);
                             boolean picked = false;  // Variable to track if the item was successfully picked
 
-                            if (item.template.id == 648) {
-                                if (!InventoryService.gI().findItemTatVoGiangSinh(player)) {
-                                    Service.gI().sendThongBao(player, "Cần thêm Tất,vớ giáng sinh");
-                                    return;
-                                }
-                            }
+
 
                             if (InventoryService.gI().addItemBag(player, item)) {
                                 int itemType = item.template.type;
@@ -366,9 +362,7 @@ public class Zone {
                                                     if (item.template.type >= 0 && item.template.type < 5) {
                                                         msg.writer().writeUTF("Bạn nhận được " + item.template.name);
                                                     }
-                                                    if (item.template.id == 648) {
-                                                        InventoryService.gI().subQuantityItemsBag(player, InventoryService.gI().findItemBag(player, 649), 1);
-                                                    }
+
                                                     InventoryService.gI().sendItemBags(player);
                                                 }
                                             }

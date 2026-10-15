@@ -843,7 +843,7 @@ public class UseItem {
                                 UseItem.gI().OpenHopThanlinh(pl, item.template.id);
                                 break;
                             case 648:
-                                UseItem.gI().NoelItemBox(pl, item);
+                                nro.models.event.ChristmasGifts.open(pl,item);
                                 break;
                             case 1171:
                                 UseItem.gI().ChuLunBox(pl, item);
@@ -2352,96 +2352,8 @@ public class UseItem {
 
     }
 
-    public void NoelItemBox(Player pl, Item item) {
-        if (InventoryService.gI().getCountEmptyBag(pl) > 0) {
-            int spl = Util.nextInt(441, 445);
-            int dnc = Util.nextInt(381, 384);
-            int nr = Util.nextInt(17, 20);
-            int nrBang = Util.nextInt(925, 931);
-            int mts = Util.nextInt(1066, 1070);
-
-            if (Util.isTrue(5, 90)) {
-                int ruby = Util.nextInt(10, 20);
-                pl.inventory.gem += ruby;
-                PlayerService.gI().sendInfoHpMpMoney(pl);
-                InventoryService.gI().subQuantityItemsBag(pl, item, 1);
-                InventoryService.gI().sendItemBags(pl);
-                Service.gI().sendThongBao(pl, "Bạn nhận được " + ruby + "  Ngọc");
-            } else {
-                int[] temp = {spl, dnc, nr, nrBang, mts, 533, 380};
-                byte index = (byte) Util.nextInt(0, temp.length - 1);
-                short[] icon = new short[2];
-                icon[0] = item.template.iconID;
-                Item it = ItemService.gI().createNewItem((short) temp[index]);
-                /*
-                # Item Vặt
-                 */
-                if (temp[index] >= 441 && temp[index] <= 443) {// sao pha le
-                    it.itemOptions.add(new ItemOption(temp[index] - 346, 5));
-                    it.quantity = Util.nextInt(1, 5);
-                } else if (temp[index] >= 444 && temp[index] <= 445) {
-                    it.itemOptions.add(new ItemOption(temp[index] - 346, 3));
-                    it.quantity = Util.nextInt(1, 5);
-                } else if (temp[index] >= 381 && temp[index] <= 384) { // da nang cap
-                    it.quantity = Util.nextInt(1, 5);
-                } else if (temp[index] >= 1066 && temp[index] <= 1070) { // da nang cap
-                    it.quantity = Util.nextInt(1, 5);
-
-                    /*
-                   # Item Cải Trang
-                     */
-                } else if (temp[index] >= 387 && temp[index] <= 393) { // mu noel do
-                    it.itemOptions.add(new ItemOption(50, Util.nextInt(30, 40)));
-                    it.itemOptions.add(new ItemOption(77, Util.nextInt(30, 40)));
-                    it.itemOptions.add(new ItemOption(103, Util.nextInt(30, 40)));
-                    it.itemOptions.add(new ItemOption(80, Util.nextInt(10, 20)));
-                    it.itemOptions.add(new ItemOption(106, 0));
-                    it.itemOptions.add(new ItemOption(93, Util.nextInt(1, 3)));
-                    it.itemOptions.add(new ItemOption(199, 0));
-                    /*
-                    # Item Pet
-                  # Nếu Muốn Random Item Thì:  } else if (temp[index] == 936 && temp[index] == 936) {
-                     */
-                } else if (temp[index] == 936) { // tuan loc
-                    it.itemOptions.add(new ItemOption(50, Util.nextInt(5, 10)));
-                    it.itemOptions.add(new ItemOption(77, Util.nextInt(5, 10)));
-                    it.itemOptions.add(new ItemOption(103, Util.nextInt(5, 10)));
-                    it.itemOptions.add(new ItemOption(93, Util.nextInt(3, 30)));
-                    /*
-                    # Item Flag
-                    # Nếu Muốn Random Item Thì:  } else if (temp[index] == 822 && temp[index] == 822) {
-                     */
-                } else if (temp[index] == 822) { // cay thong noel
-                    it.itemOptions.add(new ItemOption(50, Util.nextInt(10, 20)));
-                    it.itemOptions.add(new ItemOption(77, Util.nextInt(10, 20)));
-                    it.itemOptions.add(new ItemOption(103, Util.nextInt(10, 20)));
-                    it.itemOptions.add(new ItemOption(93, Util.nextInt(3, 30)));
-                    it.itemOptions.add(new ItemOption(30, 0));
-                    it.itemOptions.add(new ItemOption(74, 0));
-                    /*
-                      # Item VanBay
-                      # Nếu Muốn Random Item Thì:  } else if (temp[index] == 746 && temp[index] == 746) {
-                     */
-                } else if (temp[index] == 746) { // xe truot tuyet
-                    it.itemOptions.add(new ItemOption(74, 0));
-                    it.itemOptions.add(new ItemOption(30, 0));
-                    if (Util.isTrue(99, 100)) {
-                        it.itemOptions.add(new ItemOption(93, Util.nextInt(30, 360)));
-                    }
-
-                } else if (temp[index] == 821) {
-                    it.itemOptions.add(new ItemOption(30, 0));
-                } else {
-                    it.itemOptions.add(new ItemOption(73, 0));
-                }
-                InventoryService.gI().subQuantityItemsBag(pl, item, 1);
-                icon[1] = it.template.iconID;
-                InventoryService.gI().addItemBag(pl, it);
-                InventoryService.gI().sendItemBags(pl);
-            }
-        } else {
-            Service.gI().sendThongBao(pl, "Hàng trang đã đầy");
-        }
+    public void NoelItemBox(Player player, Item item) {
+        nro.models.event.ChristmasGifts.open(player,item);
     }
 
     public void HopQuaChinhChu(Player pl, Item item) {

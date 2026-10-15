@@ -37,6 +37,7 @@ public class Santa extends Npc {
             if (soLuong >= 1) {
                 menu.add(1, "Giảm giá\n80%");
             }
+            if(nro.models.event.EventManager.enabled("christmas"))menu.add("Giáng sinh");
 
             String[] menus = menu.toArray(new String[0]);
 
@@ -56,6 +57,16 @@ public class Santa extends Npc {
             }
 
             if (this.mapId == 5 || this.mapId == 13 || this.mapId == 20) {
+                if(player.idMark.getIndexMenu()==nro.models.event.ChristmasGifts.MENU){
+                    if(!nro.models.event.EventManager.allowNpc(player,"christmas"))return;
+                    if(select==0)ShopService.gI().opendShop(player,"SANTA_NOEL",false);
+                    return;
+                }
+                if(player.idMark.isBaseMenu()&&select==(soLuong>=1?7:6)){
+                    if(!nro.models.event.EventManager.allowNpc(player,"christmas"))return;
+                    createOtherMenu(player,nro.models.event.ChristmasGifts.MENU,"Đến gần Ông già Noel để nhận quà. Mỗi 60 giây, ông xét thả 3 hộp độc lập với tỷ lệ 1/3, 1/5 và 1/7. Cần 1 tất để nhặt 1 hộp quà. Tất giá 20 ngọc, giữ giá từ shop sự kiện cũ.","Mua tất\nGiáng sinh","Đóng");
+                    return;
+                }
                 if (player.idMark.isBaseMenu()) {
                     switch (select) {
                         case 0:

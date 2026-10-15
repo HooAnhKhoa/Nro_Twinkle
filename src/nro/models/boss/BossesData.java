@@ -2284,7 +2284,7 @@ public class BossesData {
             new int[][]{
                 {Skill.TAI_TAO_NANG_LUONG, 7, Util.nextInt(5000, 10000)}},
             new String[]{}, //text chat 1
-            new String[]{"|-1|Mé ri chịch mệt",
+            new String[]{"|-1|Mừng Giáng sinh an lành!",
                 "|-1|Hô hô hô",
                 "|-1|Giáng sinh vui vẻ!"}, //text chat 2
             new String[]{"|-1|Giáng sinh vui vẻ!"},
