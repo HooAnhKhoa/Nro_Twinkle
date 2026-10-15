@@ -1,5 +1,11 @@
 # Admin panel
 
+## Trung Thu 2026 preparation — 15 October 2026 (not deployed)
+
+Approved rewards are recorded in `TRUNG-THU-2026-REWARD-PROPOSAL.md`. The user authorized equivalent existing assets; `TRUNG-THU-2026-ASSETS.md` and `config/trung-thu-2026.properties` map the missing resources to existing templates 1047, 735, 1685, 890, 1316/1317 and NPC 41. No client IDs or live templates were changed. `test/TrungThuAssetsTest.php` passed 53 checks against actual templates and image files, using read-only queries.
+
+The preparation includes an isolated in-memory `BagExchange` implementation with 13 passing safety checks. It is not yet connected to NPCs, shops, persistent event state or the running game; the new Trung Thu event remains incomplete. No deployment, restart or live DB mutation was performed for this checkpoint.
+
 The dashboard now follows the supplied light blue panel reference. Boss editing opens a six-column portrait grid and a compact editor. Portraits resolve `BossData.outfit[0]` through the database `part` table to existing `/icon/<id>.png` files.
 
 Boss image update (14 October 2026): `boss_image.php` reads the original game PNG files directly, preferring `data/icon/x4`, then x2/x1 and the website icon directory. Copy `web/game_paths.example.php` to `game_paths.php` in the deployed website root and set the game directory. Empty icon frames are skipped. Legacy Boss rows with head_id=0 resolve from the generated `boss_images.json` catalog by Boss key, then unambiguous name/map or name. The exporter reads Java metadata without starting the game or altering the database. The main-PC browser check confirmed all 237 configured Boss images load. Original boss.php is backed up in `C:\Downloads\NroFreeSetup\Backups\boss-images-20261014`.
