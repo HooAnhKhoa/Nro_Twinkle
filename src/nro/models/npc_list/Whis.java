@@ -238,8 +238,6 @@ public class Whis extends Npc {
     }
 
     private void sendLearnSkillEffect(Player player, int iconSkill, int usedBk) throws IOException {
-        Item skillItem=InventoryService.gI().findItemBag(player,1229);
-        if(skillItem!=null&&!nro.models.services.BagPages.showItemPage(player,skillItem))return;
         Message msg = new Message(-81);
         msg.writer().writeByte(0);
         msg.writer().writeUTF("Skill 9");

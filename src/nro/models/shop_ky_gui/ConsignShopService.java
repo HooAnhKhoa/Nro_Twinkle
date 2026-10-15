@@ -328,7 +328,7 @@ public class ConsignShopService {
         ConsignShopManager.gI().listItem.stream().filter((it) -> (it != null && it.player_sell == pl.id)).forEachOrdered((it) -> {
             its.add(it);
         });
-        nro.models.services.BagPages.visible(pl).stream().filter((it) -> (itemCanConsign(it))).forEachOrdered((it) -> {
+        nro.models.services.BagProtocol.items(pl).stream().filter((it) -> (itemCanConsign(it))).forEachOrdered((it) -> {
             its.add(new ConsignItem(InventoryService.gI().getIndexBag(pl, it), it.template.id, (int) pl.id, (byte) 4, -1, -1, it.quantity, (byte) -1, it.itemOptions, false));
         });
         return its;
@@ -379,7 +379,7 @@ public class ConsignShopService {
     }
 
     public void KiGui(Player pl, int id, int money, byte moneyType, int quantity) {
-        id=nro.models.services.BagPages.global(pl,id);
+        id=nro.models.services.BagProtocol.index(pl,id);
         if(id<0||id>=pl.inventory.itemsBag.size())return;
         Item trungThuItem=pl.inventory.itemsBag.get(id);
         if(trungThuItem.isNotNullItem()&&nro.models.event.trungthu2026.TrungThuRuntime.goldMaterial(trungThuItem.template.id)&&moneyType!=0){

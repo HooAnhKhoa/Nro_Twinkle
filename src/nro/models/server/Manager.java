@@ -292,7 +292,7 @@ public final class Manager {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try (Connection ConnectionDatabase = LocalManager.getConnection()) {
-            nro.models.services.BagPages.ensureStorage(ConnectionDatabase);
+            nro.models.services.BagProtocol.ensureStorage(ConnectionDatabase);
             nro.models.event.ThanhCo.ensureData(ConnectionDatabase);
             nro.models.event.ChristmasGifts.ensureData(ConnectionDatabase);
             nro.models.event.trungthu2026.TrungThuStore.ensureData(ConnectionDatabase);

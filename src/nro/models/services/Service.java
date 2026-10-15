@@ -869,7 +869,7 @@ public class Service {
                 }
 
             }
-            List<Item> itemsBag = BagPages.visible(pl);
+            List<Item> itemsBag = BagProtocol.items(pl);
             msg.writer().writeByte(itemsBag.size());
             for (int i = 0; i < itemsBag.size(); i++) {
                 Item item = itemsBag.get(i);

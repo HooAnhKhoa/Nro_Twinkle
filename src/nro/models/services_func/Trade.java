@@ -102,7 +102,7 @@ public class Trade {
                     goldTrade2 = quantity;
                 }
             } else { // Giao dịch vật phẩm
-                int globalIndex=nro.models.services.BagPages.global(pl,index);
+                int globalIndex=nro.models.services.BagProtocol.index(pl,index & 0xff);
                 if(globalIndex<0)return;
                 Item item = null;
                 if (pl.equals(this.player1)) {

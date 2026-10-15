@@ -96,11 +96,11 @@ public class UseItem {
         TransactionService.gI().cancelTrade(player);
         try {
             int type = msg.reader().readByte();
-            int index = msg.reader().readByte();
-            if (index == -1) {
+            int index = msg.reader().readUnsignedByte();
+            if (index == 255) {
                 return;
             }
-            if(type==ITEM_BAG_TO_BOX||type==ITEM_BAG_TO_BODY||type==ITEM_BAG_TO_PET_BODY){index=nro.models.services.BagPages.global(player,index);if(index<0)return;}
+            if(type==ITEM_BAG_TO_BOX||type==ITEM_BAG_TO_BODY||type==ITEM_BAG_TO_PET_BODY){index=nro.models.services.BagProtocol.index(player,index);if(index<0)return;}
             switch (type) {
                 case ITEM_BOX_TO_BODY_OR_BAG:
                     InventoryService.gI().itemBoxToBodyOrBag(player, index);
@@ -157,9 +157,10 @@ public class UseItem {
         try {
             type = _msg.reader().readByte();
             int where = _msg.reader().readByte();
-            int index = _msg.reader().readByte();
+            int index = _msg.reader().readUnsignedByte();
+            if(index==255)index=-1;
             int wireIndex=index;
-            if(index!=-1&&(type==DO_USE_ITEM||type==ACCEPT_USE_ITEM||where!=0)){index=nro.models.services.BagPages.global(player,index);if(index<0)return;}
+            if(index!=-1&&(type==DO_USE_ITEM||type==ACCEPT_USE_ITEM||where!=0)){index=nro.models.services.BagProtocol.index(player,index);if(index<0)return;}
             switch (type) {
                 case DO_USE_ITEM -> {
                     if (player != null && player.inventory != null) {
@@ -169,7 +170,7 @@ public class UseItem {
                             }
                             Item item = player.inventory.itemsBag.get(index);
                             if (item.isNotNullItem()) {
-                                nro.models.services.BagPages.remember(player,item,ACCEPT_USE_ITEM,where,wireIndex);
+                                nro.models.services.BagProtocol.remember(player,item,ACCEPT_USE_ITEM,where,wireIndex);
                                 if (item.template.type == 7) {
                                     msg = new Message(-43);
                                     msg.writer().writeByte(type);
@@ -234,7 +235,7 @@ public class UseItem {
                         msg.writer().writeByte(type);
                         msg.writer().writeByte(where);
                         msg.writer().writeByte(wireIndex);
-                        nro.models.services.BagPages.remember(player,item,ACCEPT_THROW_ITEM,where,wireIndex);
+                        nro.models.services.BagProtocol.remember(player,item,ACCEPT_THROW_ITEM,where,wireIndex);
                         msg.writer().writeUTF("Bạn chắc chắn muốn vứt " + item.template.name + "?");
                         player.sendMessage(msg);
                     } else {
@@ -243,14 +244,14 @@ public class UseItem {
                 }
                 case ACCEPT_THROW_ITEM -> {
                     Item selected=where==0?(index>=0&&index<player.inventory.itemsBody.size()?player.inventory.itemsBody.get(index):null):(index>=0?player.inventory.itemsBag.get(index):null);
-                    if(!nro.models.services.BagPages.confirm(player,selected,ACCEPT_THROW_ITEM,where,wireIndex))return;
+                    if(!nro.models.services.BagProtocol.confirm(player,selected,ACCEPT_THROW_ITEM,where,wireIndex))return;
                     InventoryService.gI().throwItem(player, where, index);
                     Service.gI().point(player);
                     InventoryService.gI().sendItemBags(player);
                 }
                 case ACCEPT_USE_ITEM -> {
                     if(index<0)return;Item selected=player.inventory.itemsBag.get(index);
-                    if(nro.models.services.BagPages.confirm(player,selected,ACCEPT_USE_ITEM,where,wireIndex))UseItem.gI().useItem(player,selected,index);
+                    if(nro.models.services.BagProtocol.confirm(player,selected,ACCEPT_USE_ITEM,where,wireIndex))UseItem.gI().useItem(player,selected,index);
                 }
             }
         } catch (Exception e) {

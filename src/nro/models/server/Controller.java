@@ -407,7 +407,7 @@ public class Controller implements IMessageHandler {
                             _msg.reader().readByte();
                             int[] indexItem = new int[_msg.reader().readByte()];
                             for (int i = 0; i < indexItem.length; i++) {
-                                indexItem[i] = nro.models.services.BagPages.global(player,_msg.reader().readByte());
+                                indexItem[i] = nro.models.services.BagProtocol.index(player,_msg.reader().readUnsignedByte());
                                 if(indexItem[i]<0)return;
                             }
                             CombineService.gI().showInfoCombine(player, indexItem);

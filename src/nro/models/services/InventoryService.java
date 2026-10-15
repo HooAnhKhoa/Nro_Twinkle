@@ -565,9 +565,9 @@ public class InventoryService {
         try {
             msg = new Message(-36);
             msg.writer().writeByte(0);
-            List<Item> page=BagPages.visible(player);
-            msg.writer().writeByte(page.size());
-            for (Item item:page) {
+            List<Item> items=BagProtocol.items(player);
+            msg.writer().writeByte(items.size());
+            for (Item item:items) {
                 if (!item.isNotNullItem()) {
                     msg.writer().writeShort(-1);
                     continue;
@@ -935,8 +935,8 @@ public class InventoryService {
         return count;
     }
 
-    public byte getIndexBag(Player pl, Item it) {
-        return (byte)BagPages.local(pl,pl.inventory.itemsBag.indexOf(it));
+    public int getIndexBag(Player pl, Item it) {
+        return BagProtocol.index(pl,pl.inventory.itemsBag.indexOf(it));
     }
 
     public boolean finditemWoodChest(Player player) {
@@ -1130,7 +1130,7 @@ public class InventoryService {
     }
 
     public int getIndexItemBag(Player player, Item item) {
-        return BagPages.local(player,getIndexItem(player, player.inventory.itemsBag, item));
+        return BagProtocol.index(player,getIndexItem(player, player.inventory.itemsBag, item));
     }
 
     public int getIndexItemBody(Player player, Item item) {

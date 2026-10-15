@@ -38,7 +38,6 @@ public class Santa extends Npc {
                 menu.add(1, "Giảm giá\n80%");
             }
             if(nro.models.event.EventManager.enabled("christmas"))menu.add("Giáng sinh");
-            menu.add("Trang\nTúi đồ");
 
             String[] menus = menu.toArray(new String[0]);
 
@@ -58,8 +57,6 @@ public class Santa extends Npc {
             }
 
             if (this.mapId == 5 || this.mapId == 13 || this.mapId == 20) {
-                int bagMenuIndex=(soLuong>=1?7:6)+(nro.models.event.EventManager.enabled("christmas")?1:0);
-                if(player.idMark.isBaseMenu()&&select==bagMenuIndex){nro.models.services.BagPages.menu(player);return;}
                 if(player.idMark.getIndexMenu()==nro.models.event.ChristmasGifts.MENU){
                     if(!nro.models.event.EventManager.allowNpc(player,"christmas"))return;
                     if(select==0)ShopService.gI().opendShop(player,"SANTA_NOEL",false);

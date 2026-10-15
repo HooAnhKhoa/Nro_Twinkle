@@ -1022,7 +1022,7 @@ public class ShopService {
             if (pl.getSession().version < 220) {
                 index -= (pl.inventory.itemsBody.size() - 7);
             }
-            wireIndex=index;index=nro.models.services.BagPages.global(pl,index);if(index<0)return;
+            wireIndex=index;index=nro.models.services.BagProtocol.index(pl,index);if(index<0)return;
             item = pl.inventory.itemsBag.get(index);
         }
         if (item != null && item.isNotNullItem()) {
@@ -1053,7 +1053,7 @@ public class ShopService {
                 msg = new Message(7);
                 msg.writer().writeByte(where);
                 msg.writer().writeShort(wireIndex);
-                nro.models.services.BagPages.remember(pl,item,nro.models.services.BagPages.SELL,where,wireIndex);
+                nro.models.services.BagProtocol.remember(pl,item,nro.models.services.BagProtocol.SELL,where,wireIndex);
                 msg.writer().writeUTF(text);
                 pl.sendMessage(msg);
             } catch (Exception e) {
@@ -1081,10 +1081,10 @@ public class ShopService {
             if(index>=pl.inventory.itemsBody.size())return;
             item = pl.inventory.itemsBody.get(index);
         } else {
-            index=nro.models.services.BagPages.global(pl,index);if(index<0)return;
+            index=nro.models.services.BagProtocol.index(pl,index);if(index<0)return;
             item = pl.inventory.itemsBag.get(index);
         }
-        if(!nro.models.services.BagPages.confirm(pl,item,nro.models.services.BagPages.SELL,where,wireIndex))return;
+        if(!nro.models.services.BagProtocol.confirm(pl,item,nro.models.services.BagProtocol.SELL,where,wireIndex))return;
         if (item != null) {
             if (item.template.id == 570) {
                 Service.gI().sendThongBao(pl, "Bạn không thể bán vật phẩm này");

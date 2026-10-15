@@ -1,6 +1,6 @@
 import java.sql.*;
 import nro.models.data.LocalManager;
-import nro.models.services.BagPages;
+import nro.models.services.BagProtocol;
 
 public class BagStorageTest {
     static void check(boolean yes,String text){if(!yes)throw new AssertionError(text);System.out.println("PASS: "+text);}
@@ -11,7 +11,7 @@ public class BagStorageTest {
             s.execute("CREATE TEMPORARY TABLE player(id INT PRIMARY KEY,items_bag TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Túi đồ')");
             String before="Đá nâng cấp ".repeat(2500);
             try(PreparedStatement q=c.prepareStatement("INSERT INTO player VALUES(1,?)")){q.setString(1,before);q.executeUpdate();}
-            BagPages.ensureStorage(c);BagPages.ensureStorage(c);
+            BagProtocol.ensureStorage(c);BagProtocol.ensureStorage(c);
             try(ResultSet r=s.executeQuery("SHOW FULL COLUMNS FROM player LIKE 'items_bag'")){r.next();check("longtext".equals(r.getString("Type"))&&"NO".equals(r.getString("Null"))&&"utf8mb4_unicode_ci".equals(r.getString("Collation"))&&"Túi đồ".equals(r.getString("Comment")),"migration is idempotent and retains nullability, Vietnamese collation and comment");}
             try(ResultSet r=s.executeQuery("SELECT items_bag FROM player WHERE id=1")){r.next();check(before.equals(r.getString(1)),"existing Unicode inventory preserved exactly");}
             String large="Vật phẩm Trung Thu ".repeat(10000);

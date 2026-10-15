@@ -320,7 +320,6 @@ public class NpcFactory {
             @Override
             public void confirmMenu(Player player, int select) {
                 switch (player.idMark.getIndexMenu()) {
-                    case nro.models.services.BagPages.MENU -> {if(select>=0&&select<3)nro.models.services.BagPages.select(player,select+1);}
                     case ConstNpc.IGNORE_MENU -> {
                         // Không làm gì
                     }
