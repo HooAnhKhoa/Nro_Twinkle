@@ -1,6 +1,6 @@
 # Bảng thưởng Trung Thu — đã duyệt
 
-Người dùng đã duyệt toàn bộ bảng đề xuất ngày 15/10/2026, gồm phần thưởng, tỷ lệ rơi nguyên liệu và HP/sát thương boss. Sau đó người dùng cho phép dùng tài nguyên tương đương. Các tên theo đặc tả bên dưới được ánh xạ sang vật phẩm thực tế theo `TRUNG-THU-2026-ASSETS.md`, giữ nguyên xác suất và thời hạn. Chưa áp dụng vào game; không còn chờ ID/hình chính xác.
+Người dùng đã duyệt toàn bộ bảng đề xuất ngày 15/10/2026, gồm phần thưởng, tỷ lệ rơi nguyên liệu và HP/sát thương boss. Sau đó người dùng cho phép dùng tài nguyên tương đương. Các tên theo đặc tả bên dưới được ánh xạ sang vật phẩm thực tế theo `TRUNG-THU-2026-ASSETS.md`, giữ nguyên xác suất và thời hạn. Đã được triển khai vào source/config và kiểm tra trên QA; hướng dẫn và trạng thái nạp game xem `TRUNG-THU-2026.md`.
 
 ## 99 đuôi khỉ
 

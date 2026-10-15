@@ -613,6 +613,7 @@ public class Mob {
         }
         int mapid = player.zone.map.mapId;
         nro.models.event.EventDrops.appendMobDrops(this,player,list,x,yEnd);
+        nro.models.event.trungthu2026.TrungThuRuntime.drops(this,player,list,x,yEnd);
         //========================Capsul Kì Bí========================
         if (player.itemTime.isUseMayDo
                 && (nro.models.server.PanelBridge.rollDrop("capsule","capsule.detector",20, 100))

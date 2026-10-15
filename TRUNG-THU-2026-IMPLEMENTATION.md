@@ -1,69 +1,51 @@
-# Trung Thu 2026 — phạm vi và tiến độ
+# Trung Thu 2026 — triển khai
 
-## Quyết định đã chốt
+Đã tích hợp source, kiểm tra trên DB QA và nạp máy chính ngày 15/10/2026. Hướng dẫn chơi, giá, giả định, bằng chứng nạp và hoàn tác nằm trong `TRUNG-THU-2026.md`. Bảng thưởng đã duyệt nằm trong `TRUNG-THU-2026-REWARD-PROPOSAL.md`; hình/ID thay thế được người dùng cho phép nằm trong `TRUNG-THU-2026-ASSETS.md`.
 
-- Bỏ toàn bộ đua top, bảng xếp hạng, chốt top, thưởng top và khuyến mãi X3.
-- Thử nghiệm bằng công tắc Trung Thu hiện có trên web; lịch 21/08–21/09 là cấu hình tùy chọn, không ép áp dụng trong chế độ thử.
-- Gogeta–Omega là hạ boss đối lập, không phải cơ chế giết người chơi.
-- Ngày 15/10/2026 người dùng cho phép thay bằng tài nguyên tương đương hiện có. Mapping đã chốt trong `TRUNG-THU-2026-ASSETS.md`; không cấp ID mới hoặc sửa template dùng chung.
-- Thỏ Đại Ca chỉ xuất hiện ở Siêu Thị84 trong đợt này.
-- Người dùng đã duyệt bảng thưởng đề xuất ngày 15/10/2026, gồm tỷ lệ nguyên liệu, phần thưởng và HP/sát thương boss. Chưa áp dụng vào game, vẫn chờ đủ ID/hình chính xác.
+## Quyết định
 
-## Đối chiếu ID thật
+- Bỏ toàn bộ đua top và khuyến mãi X3. X3 EXP từ hạ Khỉ vẫn là cơ chế sự kiện.
+- Bật/tắt thủ công bằng công tắc web hiện có, không ép lịch cũ.
+- Gogeta–Omega là hạ boss phe đối lập; không thêm cơ chế giết người chơi để nhận quà.
+- Thỏ chỉ ở Siêu Thị 84. Dùng ID/hình có sẵn, không tạo ID client mới.
+- Bánh hảo hạng dùng cùng bánh 890; công thức ngọc có thưởng phụ 30% như đã duyệt.
+- Hộp VIP chưa triển khai theo lựa chọn đã duyệt.
 
-| Mục | ID | Ghi chú |
-|---|---:|---|
-| Ánh trăng tròn | 1305 | Vật phẩm có sẵn, 10 ngọc theo đặc tả |
-| Thỏ ngọc | 1310 | Có sẵn, 10 triệu vàng |
-| Đuôi khỉ | 1045 | Hiện đang dùng như buff EXP cũ; phải tách/điều chỉnh nhánh sử dụng khi nối cơ chế mới |
-| Củ cà rốt | 462 | Đúng tên; 192 và 670 là các template cà rốt khác |
-| Lồng đèn treo | 1311 | Đúng vật phẩm nguyên liệu treo đèn |
-| Trứng vịt muối / Gà quay nguyên con | 886 / 887 | Cặp nguyên liệu Trung Thu có sẵn |
-| Bột mì / Đậu xanh | 888 / 889 | Không nhầm với Đậu xanh 1548 của Giỗ Tổ |
-| Hạt sen | 1312 | Có sẵn |
-| Bánh gà quay / Thập cẩm / Hạt sen | 890 / 891 / 1313 | Chưa có bánh gà quay hảo hạng đúng tên |
-| Thỏ xám / Thỏ trắng / Mèo đen đuôi vàng | 892 / 893 / 1188 | Có template và nhánh sử dụng pet trong source |
-| Kiếm gỗ / Cải trang Gogeta | 1304 / 1697 | Có sẵn |
-| Cải trang thỏ | 1042 / 1043 | Thỏ đỏ Chi Chi / Thỏ đen Android 18 |
-| NPC Trung Thu / Giùma đầu bò | 41 / 47 | NPC47 là NPC đã có ở Lãnh địa Bang Hội, phù hợp vai trò Ngưu Ma Vương |
-| NPC Bò Mộng / Quy Lão | 17 / 13 | Có sẵn |
-| Thung lũng đen / Vách núi đen / TP Vegeta | 37 / 20 / 19 | Đã xác minh map thật |
-| Siêu Thị / Lãnh địa Bang Hội | 84 / 153 | Có sẵn |
+## File và điểm nối
 
-Chưa tìm thấy đúng tên Đảo Santa: chỉ có Thành phố Santa126 và149, và người dùng đã chọn chỉ dùng Siêu Thị trước. Các template Lồng đèn lon1047 và Hộp bánh1701 không tự coi là Lồng Đèn 2 Lon hoặc hộp2026 vì chưa đúng đặc tả; item1701 còn mô tả đua top cũ.
-
-## File/class sẽ thêm hoặc sửa
-
-| Cơ chế | Thêm | Điểm nối hiện có |
+| Phần | Class/file chính | Điểm nối |
 |---|---|---|
-| Cấu hình, trạng thái | `TrungThu2026Config`, `TrungThu2026State`, schema SQL, config mẫu | `Manager`, `EventManager`, nạp nhân vật trong `MrBlue` |
-| Khỉ triệu hồi, X3 EXP | `MoonMonkey`, dịch vụ triệu hồi, cấp buff cho thành viên kể cả offline | `UseItem`, `Boss`, `SkillService`, `EffectSkillService`, `NPoint`, `Clan` |
-| Thỏ Đại Ca | `RabbitBoss`, trạng thái hóa cà rốt theo timestamp | `UseItem`, `NPoint`, `Player`, dịch vụ hiệu ứng |
-| Treo đèn | NPC Cây Lồng Đèn, bảng thưởng cấu hình | `NpcFactory`, `TaskService.paySideTask`, `BoMong` |
-| Gogeta–Omega | Hai boss và lựa chọn phe theo người chơi | NPC Trung Thu, `SkillService`, `UseItem`, `Boss` |
-| Nấu bánh / đổi pet | `TrungThuCrafting`, lõi `BagExchange` | NPC Trung Thu, `ItemService`, `InventoryService` |
-| Rước đèn / điểm danh | Dịch vụ phiên bang hội, receipt ngày và buff | `QuyLaoKame`, `GiuMaDauBo`, `Clan`, `NPoint` |
-| Shop / hộp bánh | Shop riêng, bảng thưởng hộp | `ShopService`, `UseItem`, schema SQL |
-| Ký gửi bằng vàng | Guard vật phẩm Trung Thu theo config | `ConsignShopService` |
+| Cấu hình | `TrungThuConfig`, `config/trung-thu-2026.properties` | Nạp/kiểm tra khi khởi tạo sự kiện |
+| Trạng thái, giao dịch | `TrungThuStore`, `BagExchange`, `web/trung_thu_schema.sql` | `Manager.loadDatabase`, khóa autosave trong `PlayerDAO` |
+| Boss | `event_trung_thu/MoonBoss` với bốn subclass riêng | `EventManager.init`, manager Trung Thu hiện có; thay pool cũ tự sinh Khỉ/Nguyệt/Nhật |
+| Triệu hồi, nguyên liệu | `TrungThuRuntime` | `UseItem`, `Mob.getItemMobReward` |
+| Menu, shop, bánh, pet, treo đèn | `TrungThu2026`, `TrungThuCommerce`, `TrungThuRewards` | `NpcFactory`, NPC 41 tại Kame/Siêu Thị |
+| Nhiệm vụ ngày | `TrungThuQuest` | `TaskService.paySideTask`, thêm mức Siêu khó ở `BoMong` |
+| Bang hội | `TrungThuClan` | Menu riêng tại `GiuMaDauBo`, giữ các chức năng thường |
+| EXP, cà rốt | `TrungThuStore.State` | `NPoint`, `Player` outfit/update, `PanelBridge.skillDamage` |
+| Khống chế, chọn mục tiêu | `MoonBoss.immune/accepts` | `EffectSkillService`, `SkillService` |
+| Ký gửi vàng | `TrungThuMarket` | `ConsignShopService`, khóa lưu `ConsignShopManager` |
+| Web | `event_catalog.php`, `boss_group.php` | Mô tả mới; ẩn định nghĩa boss cũ khi runtime mới xuất hiện, giữ dữ liệu cấu hình cũ |
 
-Không sửa các phần không liên quan. EXP cần tính theo thời điểm hết hạn tuyệt đối để thời gian offline cũng trôi; buff sự kiện lấy hệ số cao nhất và không cộng với bùa trí tuệ/X2 liên quan. Đuôi/cà rốt nằm trong túi theo cơ chế lưu vật phẩm hiện có; trạng thái buff và nhận thưởng ngày lưu riêng trong DB.
+## Lưu và chống nhận trùng
 
-## Phần nền đã viết và kiểm tra
+Hai bảng mới dùng InnoDB: `trung_thu_2026_state`, `trung_thu_2026_daily`. Túi và tiền vẫn dùng cột player hiện có, cùng format JSON của `PlayerDAO`. Không có bảng top.
 
-- `src/nro/models/event/trungthu2026/BagExchange.java`: giao dịch trong bộ nhớ, khóa theo người chơi; đếm nguyên liệu qua nhiều chồng; kiểm tra vàng/ngọc; khôi phục cả túi và tiền nếu thêm thưởng thất bại; chống bấm liên tiếp theo thời gian cấu hình.
-- `test/TrungThuBagExchangeTest.java`: 13 kiểm tra, gồm rollback khi đã cộng dở vào chồng vật phẩm và khi thưởng phụ không còn chỗ; cạnh tranh hai luồng; bảo toàn metadata của item.
-- `config/trung-thu-2026.properties`: các ID, công thức, giá và thời gian đã xác minh, gồm tài nguyên thay thế được người dùng cho phép.
-- `test/TrungThuAssetsTest.php`: 53 kiểm tra đúng loại template, icon ở bốn mức zoom, hoạt ảnh thú cưỡi và tách riêng hai hộp; chỉ đọc DB và ảnh thật, không sửa dữ liệu.
+- Đổi nguyên liệu qua nhiều chồng, khóa theo người chơi, hoàn nguyên nếu thêm thưởng hoặc lưu lỗi.
+- Lưu túi và tiền cùng transaction trước khi gửi thông báo.
+- Trả nhiệm vụ lưu cả reset nhiệm vụ, thưởng và biên nhận ngày cùng transaction.
+- Hoàn tất hoạt động bang lưu biên nhận và buff cho toàn bộ thành viên cùng transaction, gồm offline.
+- Buff lưu hạn tuyệt đối; nhận lại lấy hạn dài hơn, offline vẫn trôi giờ. Cache bị vô hiệu khi phát buff mới.
+- Nhận tiền ký gửi nguyên liệu xóa giao dịch đã bán và cộng vàng trong cùng transaction; không trả thỏi vàng thay vàng.
 
-Lõi BagExchange chưa xử lý lưu DB/receipt hoặc gửi gói tin; đó là trách nhiệm dịch vụ cơ chế khi tích hợp. Chưa đăng ký các class mới vào game đang chạy.
+## Kiểm tra
 
-## Cần chốt trước khi hoàn thiện
+- `TrungThuRuntimeTest`: 69 kiểm tra trên DB QA, có chốt tên DB để tránh ghi vào game chính.
+- `TrungThuBagExchangeTest`: 13 kiểm tra giao dịch và đa luồng.
+- `TrungThuAssetsTest.php`: 53 kiểm tra tài nguyên thật.
+- Hồi quy Noel 39, Giỗ Tổ 73; ẩn/hiện NPC và 12 kiểm tra nhóm boss đều qua.
+- Kiểm tra JAR có `ConstIgnoreName` và nạp được 617 application class.
 
-1. Tài nguyên đã đủ theo phương án tương đương: lồng đèn1047, thú cưỡi735, cải trang1685, bánh890, hộp1316/1317; treo đèn qua NPC41. Không còn chờ ID/hình người dùng. Cần tích hợp các cơ chế còn lại và kiểm thử trước khi nạp game.
-2. Bảng thưởng, tỷ lệ vật phẩm vĩnh viễn và HP/sát thương boss đã duyệt trong `TRUNG-THU-2026-REWARD-PROPOSAL.md`, chưa có hiệu lực trong game. Hộp VIP2026 tạm không triển khai theo đề xuất đã duyệt; muốn bổ sung sau cần chốt công thức/giá.
-3. Map Thỏ đã chốt: chỉ Siêu Thị84; không còn chờ chọn map Santa.
-4. Các mặc định cần duyệt cùng bảng thưởng: kỹ năng cơ bản là đấm/chưởng của ba hành tinh; nguyên liệu dùng cặp886/887; thời gian buff không cộng nối vô hạn, nhận lại lấy hạn dài hơn; ảnh hóa cà rốt phải có tài nguyên được xác minh; không giả báo hiệu ứng hình ảnh nếu chưa có.
+Test cố tình gây một lỗi SQL giả (`Expected QA save failure`) để kiểm tra hoàn nguyên; thông báo đó là một phần của test.
 
-## Cách kiểm tra phần nền
-
-Biên dịch BagExchange và test vào thư mục build riêng, đặt classes mới trước JAR hiện tại trong classpath. Test dùng template giả trong bộ nhớ, không mở server và không chạm DB game chính. Các kiểm tra cơ chế tích hợp sau đó phải dùng DB QA, rồi mới backup và nạp game thật.
+Các kiểm tra QA không thay thế việc xem hình/menu bằng client game thật. Các giả định thực thi và cách hoàn tác được ghi rõ trong hướng dẫn chính.

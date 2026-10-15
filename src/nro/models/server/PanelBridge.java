@@ -61,6 +61,7 @@ public final class PanelBridge {
     public static boolean rollDrop(String category,String ruleKey,double numerator,double denominator) {return ThreadLocalRandom.current().nextDouble()*100<dropChance(category,ruleKey,numerator,denominator);}
     public static long skillDamage(Player p,long original) {
         if(p==null||!p.isPl()||p.playerSkill==null||p.playerSkill.skillSelect==null)return original;
+        if(nro.models.event.trungthu2026.TrungThuStore.carrot(p))original=original*(100-nro.models.event.trungthu2026.TrungThuConfig.number("buff.carrot-damage-reduction-percent"))/100;
         return (long)Math.min(Integer.MAX_VALUE,Math.max(0,original*skillRates.getOrDefault((int)p.playerSkill.skillSelect.template.id,1d)));
     }
     public static boolean canSpawn(Boss b) {return b.panelCanSpawn() && b.data[0].getTypeAppear()==AppearType.DEFAULT_APPEAR && b.data[0].getMapJoin()!=null && b.data[0].getMapJoin().length>0;}

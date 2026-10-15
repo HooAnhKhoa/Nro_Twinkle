@@ -350,6 +350,10 @@ public class PlayerDAO {
     }
 
     public static void updatePlayer(Player player) {
+        if(player==null)return;
+        synchronized(player){updatePlayerLocked(player);}
+    }
+    private static void updatePlayerLocked(Player player) {
         if (player != null && player.idMark.isLoadedAllDataPlayer()) {
             long st = System.currentTimeMillis();
             try {

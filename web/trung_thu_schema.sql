@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS trung_thu_2026_state (
+ player_id BIGINT NOT NULL PRIMARY KEY,
+ monkey_until BIGINT NOT NULL DEFAULT 0,
+ double_until BIGINT NOT NULL DEFAULT 0,
+ carrot_until BIGINT NOT NULL DEFAULT 0,
+ side TINYINT NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS trung_thu_2026_daily (
+ owner_id BIGINT NOT NULL,
+ reward_day DATE NOT NULL,
+ reward_kind VARCHAR(32) NOT NULL,
+ PRIMARY KEY(owner_id,reward_day,reward_kind)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

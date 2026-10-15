@@ -133,7 +133,8 @@ public final class EventManager {
         new Christmas().boss();
         // Legacy LunarNewYear.npc() points to unrelated NPC 49; create only its bosses.
         new LunarNewYear().boss();
-        new TrungThu().boss();
+        try{nro.models.event.trungthu2026.TrungThuRuntime.init();}
+        catch(Exception error){throw new IllegalStateException("Không khởi tạo được Trung Thu 2026",error);}
         BossManager[] managers={HungVuongEventManager.gI(),HalloweenEventManager.gI(),
             ChristmasEventManager.gI(),LunarNewYearEventManager.gI(),TrungThuEventManager.gI()};
         initialized=true;

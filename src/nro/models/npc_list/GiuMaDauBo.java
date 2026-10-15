@@ -30,14 +30,26 @@ public class GiuMaDauBo extends Npc {
     @Override
     public void openBaseMenu(Player player) {
         if (canOpenNpc(player)) {
+            if(nro.models.event.trungthu2026.TrungThuConfig.enabled()){
+                createOtherMenu(player,202610170,"Hoạt động Trung Thu: đeo lồng đèn, bang chủ bắt đầu rồi mọi người cùng xác nhận. Mỗi loại nhận X2 EXP 1 giờ, một lần/ngày.","Rước đèn\nTrung Thu","Điểm danh\nTrung Thu","Chức năng\nthường","Đóng");return;
+            }
+            openRegularMenu(player);
+        }
+    }
+    private void openRegularMenu(Player player){
             this.createOtherMenu(player, ConstNpc.BASE_MENU, "Ngươi đang muốn tìm mảnh vỡ và mảnh hồn bông tai Porata trong truyền thuyết, ta sẽ đưa ngươi đến đó ?",
                     "Khiêu chiến\nBoss", "Điểm danh\n+1 Capsule\nBang", "OK", "Cửa Hàng\nBang hội","Từ chối");
-        }
     }
 
     @Override
     public void confirmMenu(Player player, int select) {
         if (canOpenNpc(player)) {
+            if(player.idMark.getIndexMenu()==202610170){
+                if(select==0)nro.models.event.trungthu2026.TrungThuClan.click(player,"parade");
+                else if(select==1)nro.models.event.trungthu2026.TrungThuClan.click(player,"attendance");
+                else if(select==2)openRegularMenu(player);
+                return;
+            }
             switch (select) {
                 case 0 -> {
                     Zone zone = player.zone;

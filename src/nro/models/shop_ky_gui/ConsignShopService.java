@@ -303,6 +303,9 @@ public class ConsignShopService {
                     return;
                 }
                 if (it.goldSell > 0) {
+                    if(nro.models.event.trungthu2026.TrungThuRuntime.goldMaterial(it.itemId)){
+                        nro.models.event.trungthu2026.TrungThuMarket.claim(pl,it);openShopKyGui(pl);return;
+                    }
                     Item tvAdd = ItemService.gI().createNewItem((short) 457);
                     tvAdd.quantity = it.goldSell - it.goldSell * 10 / 100;
                     InventoryService.gI().addItemBag(pl, tvAdd);
@@ -376,6 +379,12 @@ public class ConsignShopService {
     }
 
     public void KiGui(Player pl, int id, int money, byte moneyType, int quantity) {
+        if(id<0||id>=pl.inventory.itemsBag.size())return;
+        Item trungThuItem=pl.inventory.itemsBag.get(id);
+        if(trungThuItem.isNotNullItem()&&nro.models.event.trungthu2026.TrungThuRuntime.goldMaterial(trungThuItem.template.id)&&moneyType!=0){
+            Service.gI().sendThongBao(pl,"Nguyên liệu Trung Thu này chỉ được ký gửi bằng vàng theo đơn vị của shop ký gửi.");return;
+        }
+        if(quantity<=0||quantity>99||money<=0||!trungThuItem.isNotNullItem()||quantity>trungThuItem.quantity)return;
         try {
             if (!SubThoiVang(pl, 1)) {
                 Service.gI().sendThongBao(pl, "Bạn cần có ít nhất 1 thỏi vàng để làm phí đăng bán");

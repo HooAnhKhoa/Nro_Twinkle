@@ -22,7 +22,9 @@ function bossTaskOrder(array $row): int {
 // Pure display grouping. Keeps the live configuration key and never modifies game data.
 function bossGroupRows(array $rows): array {
     $groups=[];
+    $trungThu2026=count(array_filter($rows,fn($row)=>str_starts_with($row['boss_key'],'nro.models.boss.event_trung_thu.MoonBoss$')))>0;
     foreach($rows as $row){
+        if($trungThu2026&&in_array($row['boss_key'],['nro.models.boss.event_trung_thu.KhiDot','nro.models.boss.event_trung_thu.NguyetThan','nro.models.boss.event_trung_thu.NhatThan'],true))continue;
         $maps=json_decode($row['map_ids'],true);$maps=is_array($maps)?array_values(array_unique(array_map('intval',$maps))):[];sort($maps,SORT_NUMERIC);
         $name=mb_strtolower(preg_replace('/\s+/u',' ',trim($row['name'])),'UTF-8');
         // Yardrat training mobs are not entries in the boss editor.

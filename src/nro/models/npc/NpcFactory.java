@@ -229,6 +229,8 @@ public class NpcFactory {
                     new XeNuocMia(mapId, status, cx, cy, tempId, avatar);
                 case ConstNpc.BARDOCK ->
                     new Bardock(mapId, status, cx, cy, tempId, avatar);
+                case ConstNpc.TRUNG_THU ->
+                    new nro.models.npc_list.TrungThu2026(mapId,status,cx,cy,tempId,avatar);
                 default ->
                     new Npc(mapId, status, cx, cy, tempId, avatar) {
                         @Override

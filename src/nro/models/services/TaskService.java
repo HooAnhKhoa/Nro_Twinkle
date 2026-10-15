@@ -1273,6 +1273,10 @@ public class TaskService {
     }
 
     public void paySideTask(Player player) {
+        synchronized(player){paySideTaskLocked(player);}
+    }
+    private void paySideTaskLocked(Player player){
+        if(nro.models.event.trungthu2026.TrungThuQuest.pay(player))return;
         if (player.playerTask.sideTask.template != null) {
             if (player.playerTask.sideTask.isDone()) {
                 int goldReward = 0;

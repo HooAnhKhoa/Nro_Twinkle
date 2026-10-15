@@ -59,6 +59,7 @@ public class EffectSkillService {
     }
 
     public void sendEffectPlayer(Player plUseSkill, Player plTarget, byte toggle, byte effect) {
+        if(toggle==TURN_ON_EFFECT&&nro.models.boss.event_trung_thu.MoonBoss.immune(plTarget))return;
         Message msg;
         try {
             msg = new Message(-124);
@@ -116,6 +117,7 @@ public class EffectSkillService {
     }
 
     public void setAnTroi(Player player, Player plTroi, long lastTimeAnTroi, int timeAnTroi) {
+        if(nro.models.boss.event_trung_thu.MoonBoss.immune(player))return;
         player.effectSkill.anTroi = true;
         player.effectSkill.plTroi = plTroi;
     }
@@ -127,6 +129,7 @@ public class EffectSkillService {
     }
 
     public void setThoiMien(Player player, long lastTimeThoiMien, int timeThoiMien) {
+        if(nro.models.boss.event_trung_thu.MoonBoss.immune(player))return;
         player.effectSkill.isThoiMien = true;
         player.effectSkill.lastTimeThoiMien = lastTimeThoiMien;
         player.effectSkill.timeThoiMien = timeThoiMien;
@@ -138,6 +141,7 @@ public class EffectSkillService {
     }
 
     public void startStun(Player player, long lastTimeStartBlind, int timeBlind) {
+        if(nro.models.boss.event_trung_thu.MoonBoss.immune(player))return;
         player.effectSkill.lastTimeStartStun = lastTimeStartBlind;
         player.effectSkill.timeStun = timeBlind;
         player.effectSkill.isStun = true;
@@ -150,6 +154,7 @@ public class EffectSkillService {
     }
 
     public void setSocola(Player player, long lastTimeSocola, int timeSocola) {
+        if(nro.models.boss.event_trung_thu.MoonBoss.immune(player))return;
         player.effectSkill.lastTimeSocola = lastTimeSocola;
         player.effectSkill.timeSocola = timeSocola;
         player.effectSkill.isSocola = true;
@@ -177,6 +182,7 @@ public class EffectSkillService {
     }
 
     public void setBlindDCTT(Player player, long lastTimeDCTT, int timeBlindDCTT) {
+        if(nro.models.boss.event_trung_thu.MoonBoss.immune(player))return;
         player.effectSkill.isBlindDCTT = true;
         player.effectSkill.lastTimeBlindDCTT = lastTimeDCTT;
         player.effectSkill.timeBlindDCTT = timeBlindDCTT;
@@ -271,6 +277,7 @@ public class EffectSkillService {
     }
 
     public void setIsBinh(Player plAtt, Player player, int time) {
+        if(nro.models.boss.event_trung_thu.MoonBoss.immune(player))return;
         if (player.effectSkill != null) {
             int typeBinh = plAtt.newSkill.typeItem;
             player.effectSkill.isBinh = true;
@@ -340,6 +347,7 @@ public class EffectSkillService {
     }
 
     public void setIsStone(Player player, int time) {
+        if(nro.models.boss.event_trung_thu.MoonBoss.immune(player))return;
         if (MapService.gI().isMapMaBu(player.zone.map.mapId)) {
             player.nPoint.hp /= 2;
             PlayerService.gI().sendInfoHp(player);
@@ -360,6 +368,7 @@ public class EffectSkillService {
     }
 
     public void setIsLamCham(Player player, int time) {
+        if(nro.models.boss.event_trung_thu.MoonBoss.immune(player))return;
         player.nPoint.speed = 1;
         Service.gI().point(player);
         Service.gI().sendSpeedPlayer(player, -1);
@@ -442,6 +451,7 @@ public class EffectSkillService {
     }
 
     public void setChibi(Player player, int time) {
+        if(nro.models.boss.event_trung_thu.MoonBoss.immune(player))return;
         player.effectSkill.isChibi = true;
         player.effectSkill.timeChibi = time;
         player.typeChibi = Util.nextInt(0, 3);
@@ -499,6 +509,7 @@ public class EffectSkillService {
     }
 
     public void sendEffectBlindThaiDuongHaSan(Player plUseSkill, List<Player> players, List<Mob> mobs, int timeStun) {
+        players=players.stream().filter(p->!nro.models.boss.event_trung_thu.MoonBoss.immune(p)).toList();
         Message msg;
         try {
             msg = new Message(-45);
@@ -595,6 +606,7 @@ public class EffectSkillService {
     }
 
     public void setIsBodyChangeTechnique(Player player) {
+        if(nro.models.boss.event_trung_thu.MoonBoss.immune(player))return;
         player.effectSkill.isBodyChangeTechnique = true;
         Service.gI().sendThongBao(player, "Bạn đã bị biến thành Tiểu Đội Trưởng");
         PlayerService.gI().changeAndSendTypePK(player, 5);

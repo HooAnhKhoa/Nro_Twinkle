@@ -30,7 +30,7 @@ public class ConsignShopManager {
 
     public List<ConsignItem> listItem = new ArrayList<>();
 
-    public void save() {
+    public synchronized void save() {
         try (Connection con = LocalManager.getConnection();) {
             Statement s = con.createStatement();
             s.execute("TRUNCATE shop_ky_gui");

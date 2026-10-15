@@ -1213,6 +1213,8 @@ public class SkillService {
     }
 
     public boolean canAttackPlayer(Player p1, Player p2) {
+        if(p2 instanceof nro.models.boss.event_trung_thu.MoonBoss moon&&!moon.accepts(p1))return false;
+        if(p1 instanceof nro.models.boss.event_trung_thu.MoonBoss&&p2.isBoss)return false;
         if (p1.isDie() || p2.isDie()) {
             return false;
         }

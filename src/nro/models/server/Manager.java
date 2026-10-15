@@ -294,6 +294,7 @@ public final class Manager {
         try (Connection ConnectionDatabase = LocalManager.getConnection()) {
             nro.models.event.ThanhCo.ensureData(ConnectionDatabase);
             nro.models.event.ChristmasGifts.ensureData(ConnectionDatabase);
+            nro.models.event.trungthu2026.TrungThuStore.ensureData(ConnectionDatabase);
             //load part
             ps = ConnectionDatabase.prepareStatement("select * from part");
             rs = ps.executeQuery();

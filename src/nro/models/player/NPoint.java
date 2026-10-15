@@ -1583,6 +1583,9 @@ public class NPoint {
                 }
             }
             long tn = tiemNang;
+            int trungThuMultiplier=nro.models.event.trungthu2026.TrungThuStore.multiplier(this.player);
+            if(trungThuMultiplier>1)tiemNang=tn*trungThuMultiplier;
+            if(trungThuMultiplier<=1){
             if (this.player.charms.tdTriTue > System.currentTimeMillis()) {
                 tiemNang += tn;
             }
@@ -1595,7 +1598,9 @@ public class NPoint {
             if (this.player.charms.tdTriTue4 > System.currentTimeMillis()) {
                 tiemNang += tn * 4;
             }
+            }
             if (this.player.timevip > System.currentTimeMillis()) {
+                // Other VIP and equipment modifiers retain their existing rules.
                 tiemNang += tn * 3;
             }
             if (this.player.effectSkill.isChibi && this.player.typeChibi == 2) {
@@ -1605,11 +1610,11 @@ public class NPoint {
                     && ((Pet) this.player).master.getSession() != null && ((Pet) this.player).master.getSession().vip > 0) {
                 tiemNang += tn * 3;
             }
-            if (this.player.itemTime != null && this.player.itemTime.isUseDK) {
+            if (trungThuMultiplier<=1&&this.player.itemTime != null && this.player.itemTime.isUseDK) {
                 tiemNang += tn * 2;
             }
             if (player.zone.map.mapId >= 135 && player.zone.map.mapId <= 138) {
-                if (this.player.itemTime != null && this.player.itemTime.isUseKhoBauX2) {
+                if (trungThuMultiplier<=1&&this.player.itemTime != null && this.player.itemTime.isUseKhoBauX2) {
                     tiemNang += tn * 2;
                 }
             }
@@ -1623,7 +1628,7 @@ public class NPoint {
                 tiemNang -= ((long) tiemNang * 80 / 100);
             }
             if (this.player.isPet) {
-                if (((Pet) this.player).master.itemTime.isUseBuaSanta) {
+                if (trungThuMultiplier<=1&&((Pet) this.player).master.itemTime.isUseBuaSanta) {
                     tiemNang += tn * 2;
                 }
                 if (((Pet) this.player).master.nPoint != null && ((Pet) this.player).master.nPoint.tlTNSMPet > 0) {

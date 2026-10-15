@@ -19,8 +19,8 @@ Cải trang Gogeta tiếp tục dùng 1697. Thỏ Đại Ca chỉ ở Siêu Th�
 - Giữ nguyên tỷ lệ thưởng, thời hạn và giá đã duyệt; chỉ thay vật phẩm nhận được bằng tài nguyên tương đương nêu trên.
 - Không chạy SQL sửa template, không đổi ảnh hoặc tên vật phẩm của người chơi đang có.
 - Hai công thức bánh gà quay tạo cùng ID 890 nên dùng chung khi đổi pet thỏ xám. Phần phân biệt công thức trả ngọc là 30% thưởng bánh thập cẩm.
-- Giỏ bánh 1316 và 1317 hiện chưa có nhánh mở trong source. Cần nối nhánh mở với hai bảng thưởng riêng khi triển khai cơ chế shop; chỉ sửa config chưa làm chúng mở được trong game.
-- Kiểm tra này xác nhận tài nguyên đầu vào. Sự kiện Trung Thu 2026 mới chưa được tích hợp đầy đủ, chưa build/nạp vào game chính.
+- Giỏ bánh 1316 và 1317 đã được nối vào hai bảng thưởng riêng qua `TrungThuCommerce.useBox`; không thay đổi nhánh hộp cũ khác.
+- Kiểm tra tài nguyên đầu vào đã hoàn tất. Trạng thái triển khai và hướng dẫn hiện tại xem `TRUNG-THU-2026.md` và `TRUNG-THU-2026-IMPLEMENTATION.md`.
 
 ## Kiểm tra
 

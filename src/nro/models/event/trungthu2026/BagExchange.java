@@ -9,7 +9,11 @@ import nro.models.services.ItemService;
 
 /** In-memory bag/currency exchange. Callers own event gating, persistence and network notifications. */
 public final class BagExchange {
-    public enum Result {SUCCESS,COOLDOWN,MISSING_ITEMS,MISSING_GOLD,MISSING_GEMS,BAG_FULL,INVALID_REWARD}
+    public enum Result {SUCCESS,COOLDOWN,MISSING_ITEMS,MISSING_GOLD,MISSING_GEMS,BAG_FULL,INVALID_REWARD,CURRENCY_LIMIT,SAVE_FAILED}
+    public record Gain(List<Item> items,long gold,int gems,int ruby){
+        public Gain{items=List.copyOf(items);if(gold<0||gems<0||ruby<0)throw new IllegalArgumentException("Thưởng không hợp lệ");}
+    }
+    @FunctionalInterface public interface Commit {void save(Player player)throws Exception;}
     public record Cost(Map<Integer,Integer> items,long gold,int gems){
         public Cost {
             items=Map.copyOf(items);
@@ -24,11 +28,15 @@ public final class BagExchange {
         this.cooldownMillis=cooldownMillis;this.clock=Objects.requireNonNull(clock);
     }
     public Result execute(Player player,Cost cost,List<Item> rewards){
+        return execute(player,cost,new Gain(rewards,0,0,0),p->{});
+    }
+    public Result execute(Player player,Cost cost,Gain gain,Commit commit){
+        List<Item> rewards=gain.items;
         Objects.requireNonNull(player);Objects.requireNonNull(cost);Objects.requireNonNull(rewards);
         synchronized(player){
             Long previous=lastSuccess.get(player);
             if(previous!=null&&clock.getAsLong()-previous<cooldownMillis)return Result.COOLDOWN;
-            if(rewards.isEmpty())return Result.INVALID_REWARD;
+            if(rewards.isEmpty()&&gain.gold==0&&gain.gems==0&&gain.ruby==0&&cost.items.isEmpty()&&cost.gold==0&&cost.gems==0)return Result.INVALID_REWARD;
             for(Item reward:rewards)if(reward==null||!reward.isNotNullItem()||reward.quantity<1||reward.quantity>99999
                 ||reward.template.type==9||reward.template.type==10||reward.template.type==34||reward.template.id==517||reward.template.id==518)return Result.INVALID_REWARD;
             for(var entry:cost.items.entrySet()){
@@ -37,8 +45,11 @@ public final class BagExchange {
             }
             if(player.inventory.gold<cost.gold)return Result.MISSING_GOLD;
             if(player.inventory.gem<cost.gems)return Result.MISSING_GEMS;
+            if(gain.gold>nro.models.player.Inventory.LIMIT_GOLD-(player.inventory.gold-cost.gold)
+                ||(long)player.inventory.gem-cost.gems+gain.gems>Integer.MAX_VALUE
+                ||(long)player.inventory.ruby+gain.ruby>Integer.MAX_VALUE)return Result.CURRENCY_LIMIT;
             List<Item> snapshot=new ArrayList<>();for(Item item:player.inventory.itemsBag)snapshot.add(copy(item));
-            long goldBefore=player.inventory.gold;int gemsBefore=player.inventory.gem;
+            long goldBefore=player.inventory.gold;int gemsBefore=player.inventory.gem,rubyBefore=player.inventory.ruby;
             boolean committed=false;
             try{
                 for(var entry:cost.items.entrySet()){
@@ -48,12 +59,13 @@ public final class BagExchange {
                         InventoryService.gI().subQuantityItemsBag(player,item,take);remaining-=take;
                     }
                 }
-                player.inventory.gold-=cost.gold;player.inventory.gem-=cost.gems;
+                player.inventory.gold=player.inventory.gold-cost.gold+gain.gold;player.inventory.gem=player.inventory.gem-cost.gems+gain.gems;player.inventory.ruby+=gain.ruby;
                 // Plain bag items only: avoid special-item services with external side effects.
                 for(Item reward:rewards)if(!InventoryService.gI().addItemList(player.inventory.itemsBag,copy(reward)))return Result.BAG_FULL;
+                try{commit.save(player);}catch(Exception error){nro.models.utils.Logger.logException(BagExchange.class,error);return Result.SAVE_FAILED;}
                 committed=true;lastSuccess.put(player,clock.getAsLong());return Result.SUCCESS;
             }finally{
-                if(!committed){player.inventory.itemsBag.clear();player.inventory.itemsBag.addAll(snapshot);player.inventory.gold=goldBefore;player.inventory.gem=gemsBefore;}
+                if(!committed){player.inventory.itemsBag.clear();player.inventory.itemsBag.addAll(snapshot);player.inventory.gold=goldBefore;player.inventory.gem=gemsBefore;player.inventory.ruby=rubyBefore;}
             }
         }
     }

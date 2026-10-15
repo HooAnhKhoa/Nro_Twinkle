@@ -1,5 +1,15 @@
 # Admin panel
 
+## Trung Thu 2026 implementation — 15 October 2026
+
+Implemented manual event control with the existing web switch, NPC 41 at Kame/supermarket, paid monkey/rabbit summons, opposing Gogeta/Omega bosses, persisted EXP/carrot effects, crafting/pet exchanges, lantern offerings, separate box reward tables, daily quest rewards and clan parade/check-in receipts. Uses the approved existing asset replacements; no new client IDs, rankings or X3 promotion. See `TRUNG-THU-2026.md` for rules, configuration, assumptions and undo.
+
+Inventory/currency exchanges save together before acknowledgement and roll back on failure. Daily quest rewards also persist the task reset and receipt atomically. Clan rewards include offline members. Flour/beans/lotus consignments require gold and pay actual gold, retaining the existing 10% fee. Other consignments keep their existing payout behavior.
+
+Validation: 69 QA integration assertions, 13 exchange safety checks, 53 real resource checks; Noel (39), Hung offerings (73), NPC visibility and Boss grouping regressions passed. Packaged JAR includes ConstIgnoreName and 617 loadable application classes. Runtime SHA256: `4EB31E96DF88C81B445B5529859DFA541B5D03FE0579606DD53E66EA66F0C74E`. Pre-deployment JAR/web/config/SQL backup: `C:\Downloads\NroFreeSetup\Backups\trung-thu-20261015-131337`.
+
+Installed and verified on the main PC using graceful maintenance and the existing launcher window. Game PID 26036 has the same launcher parent 17752; the two new InnoDB tables exist, all four event boss definitions publish fresh heartbeats, Gogeta/Omega are alive in supermarket zones, and unsummoned monkey/rabbit counts remain zero. Existing event switches were preserved (Trung Thu and EV materials already ON). No real-client visual interaction was automated.
+
 ## Trung Thu 2026 preparation — 15 October 2026 (not deployed)
 
 Approved rewards are recorded in `TRUNG-THU-2026-REWARD-PROPOSAL.md`. The user authorized equivalent existing assets; `TRUNG-THU-2026-ASSETS.md` and `config/trung-thu-2026.properties` map the missing resources to existing templates 1047, 735, 1685, 890, 1316/1317 and NPC 41. No client IDs or live templates were changed. `test/TrungThuAssetsTest.php` passed 53 checks against actual templates and image files, using read-only queries.

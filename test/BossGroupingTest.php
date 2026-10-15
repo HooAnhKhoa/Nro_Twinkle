@@ -18,3 +18,5 @@ $questNames=['Baby','Android 13','Số 1','Pic','Kuku','Android 15','Poc','Số 
 $quest=bossGroupRows(array_map(fn($name)=>row($name,$name,[1],1,[]),$questNames));
 check(array_column($quest,'name')===['Kuku','Số 4','Số 1','Android 15','Android 14','Android 13','Poc','Pic','Xên con 1','Xên con 7','Baby'],'boss order follows main task and subtask rather than alphabetical order');
 check($quest[0]['task_group']==='Nhiệm vụ 19'&&end($quest)['task_group']==='Nhiệm vụ 29','quest headers identify mission bosses and other bosses');
+check(count(bossGroupRows([row('nro.models.boss.event_trung_thu.KhiDot','Khỉ đột',[1],100,[]),row('nro.models.boss.event_trung_thu.MoonBoss$Monkey','Khỉ đêm trăng',[19,20,37],1,[])]))===1,'new Trung Thu runtime hides its obsolete boss definitions without deleting settings');
+check(count(bossGroupRows([row('nro.models.boss.event_trung_thu.KhiDot','Khỉ đột',[1],1,[])]))===1,'old runtime remains visible when new Trung Thu definitions are absent');

@@ -430,6 +430,7 @@ public class Player implements Runnable {
     }
 
     public void update() {
+        nro.models.event.trungthu2026.TrungThuRuntime.tickPlayer(this);
         if (!this.beforeDispose) {
             try {
                 if (this.isPl()) nro.models.event.EventManager.syncNpcVisibility(this);
@@ -823,6 +824,7 @@ public class Player implements Runnable {
     }
 
     public short getHead() {
+        if(nro.models.event.trungthu2026.TrungThuStore.carrot(this))return (short)nro.models.event.trungthu2026.TrungThuConfig.numbers("boss.carrot-outfit")[0];
         if (this.isPl() && this.pet != null && this.fusion.typeFusion == ConstPlayer.HOP_THE_GOGETA || this.fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA2 || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA3) {
             Item item = inventory.itemsBody.get(5);
             Item petItem = pet.inventory.itemsBody.get(5);
@@ -877,6 +879,7 @@ public class Player implements Runnable {
     }
 
     public short getBody() {
+        if(nro.models.event.trungthu2026.TrungThuStore.carrot(this))return (short)nro.models.event.trungthu2026.TrungThuConfig.numbers("boss.carrot-outfit")[1];
         if (this.isPl() && this.pet != null && this.fusion.typeFusion == ConstPlayer.HOP_THE_GOGETA || this.fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA2 || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA3) {
             Item item = inventory.itemsBody.get(5);
             Item petItem = pet.inventory.itemsBody.get(5);
@@ -937,6 +940,7 @@ public class Player implements Runnable {
     }
 
     public short getLeg() {
+        if(nro.models.event.trungthu2026.TrungThuStore.carrot(this))return (short)nro.models.event.trungthu2026.TrungThuConfig.numbers("boss.carrot-outfit")[2];
         if (this.isPl() && this.pet != null && this.fusion.typeFusion == ConstPlayer.HOP_THE_GOGETA || this.fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA2 || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA3) {
             Item item = inventory.itemsBody.get(5);
             Item petItem = pet.inventory.itemsBody.get(5);
