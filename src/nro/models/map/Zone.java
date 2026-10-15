@@ -682,7 +682,7 @@ public class Zone {
                 List<Npc> npcs = NpcManager.getNpcsByMapPlayer(pl);
                 msg.writer().writeByte(npcs.size());
                 for (Npc npc : npcs) {
-                    msg.writer().writeByte(npc.status);
+                    msg.writer().writeByte(nro.models.event.EventManager.npcStatus(npc));
                     msg.writer().writeShort(npc.cx);
                     msg.writer().writeShort(npc.cy);
                     msg.writer().writeByte(npc.tempId);
@@ -727,6 +727,8 @@ public class Zone {
             msg.writer().writeByte(pl.idMark.getIdSpaceShip());
             msg.writer().writeByte(this.map.mapId == 148 ? 1 : 0);
             pl.sendMessage(msg);
+            // Reconcile after the map packet, including a toggle racing with map entry.
+            nro.models.event.EventManager.refreshNpcVisibility(pl);
 
             msg.cleanup();
 

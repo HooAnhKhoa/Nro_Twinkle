@@ -37,7 +37,7 @@ public class MenuController {
         } else {
             npc = player.zone.map.getNpc(player, idnpc);
         }
-        if (npc != null) {
+        if (npc != null && nro.models.event.EventManager.npcEnabled(npc)) {
             npc.openBaseMenu(player);
         } else {
             Service.gI().hideWaitDialog(player);
@@ -58,7 +58,7 @@ public class MenuController {
                 } else if (player.zone != null) {
                     npc = player.zone.map.getNpc(player, npcId);
                 }
-                if (npc != null) {
+                if (npc != null && nro.models.event.EventManager.npcEnabled(npc)) {
                     npc.confirmMenu(player, select);
                 } else {
                     Service.gI().hideWaitDialog(player);

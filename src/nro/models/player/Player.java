@@ -432,6 +432,7 @@ public class Player implements Runnable {
     public void update() {
         if (!this.beforeDispose) {
             try {
+                if (this.isPl()) nro.models.event.EventManager.syncNpcVisibility(this);
                 if (this.zone != null || (!this.isPl() && this.zone == null)) {
                     if (itemTime != null) {
                         itemTime.update();
