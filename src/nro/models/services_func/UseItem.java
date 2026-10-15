@@ -290,6 +290,9 @@ public class UseItem {
                     }
                     default:
                         switch (item.template.id) {
+                            case nro.models.event.ThanhCo.TICKET:
+                                nro.models.event.ThanhCo.useTicket(pl,item);
+                                break;
                             case 992: // Nhan thoi khong
                                 pl.type = 2;
                                 pl.maxTime = 5;

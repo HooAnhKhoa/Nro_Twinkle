@@ -292,6 +292,7 @@ public final class Manager {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try (Connection ConnectionDatabase = LocalManager.getConnection()) {
+            nro.models.event.ThanhCo.ensureData(ConnectionDatabase);
             //load part
             ps = ConnectionDatabase.prepareStatement("select * from part");
             rs = ps.executeQuery();

@@ -126,6 +126,7 @@ public final class EventManager {
         if(initialized)return;
         new nro.models.event_list.Default().boss();
         new HungVuong().npc();
+        ThanhCo.seedRoutes();
         OfferingMobs.seed();
         new HungVuong().boss();
         new Halloween().boss();
