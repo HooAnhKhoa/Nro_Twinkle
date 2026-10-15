@@ -37,6 +37,7 @@ public class NpcManager {
     List<Npc> list = new ArrayList<>();
     if (player.zone != null) {
         for (Npc npc : player.zone.map.npcs) {
+            if (npc == null || !nro.models.event.EventManager.npcEnabled(npc)) continue;
             // Điều kiện loại trừ NPC QUẢ TRỨNG
             if (npc.tempId == ConstNpc.QUA_TRUNG && player.mabuEgg == null && player.zone.map.mapId == (21 + player.gender)) {
                 continue;

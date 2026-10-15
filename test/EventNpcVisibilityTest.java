@@ -14,13 +14,13 @@ import nro.models.server.MenuController;
 public class EventNpcVisibilityTest {
  static void check(boolean ok,String text){if(!ok)throw new AssertionError(text);System.out.println("PASS: "+text);}
  static class TestPlayer extends Player {
-  final List<byte[]> visibility=new ArrayList<>();byte[] mapPacket;Runnable mapCallback;
+  int clearPackets,mapPackets,hidePackets;byte[] mapPacket;Runnable mapCallback;
   TestPlayer(){isPlayer=true;}
   @Override public void sendMessage(Message message){
-   if(message.command==-73)visibility.add(message.getData().clone());
-   if(message.command==-24){mapPacket=message.getData().clone();if(mapCallback!=null){Runnable callback=mapCallback;mapCallback=null;callback.run();}}
+   if(message.command==-73)hidePackets++;
+   if(message.command==-22)clearPackets++;
+   if(message.command==-24){mapPackets++;mapPacket=message.getData().clone();if(mapCallback!=null){Runnable callback=mapCallback;mapCallback=null;callback.run();}}
   }
-  int status(int id){for(int i=visibility.size()-1;i>=0;i--){byte[] packet=visibility.get(i);if((packet[0]&255)==id)return packet[1];}return -1;}
  }
  static class TestNpc extends Npc {
   int opened,selected;
@@ -28,12 +28,13 @@ public class EventNpcVisibilityTest {
   @Override public void openBaseMenu(Player player){opened++;}
   @Override public void confirmMenu(Player player,int select){selected++;}
  }
- static Map<Integer,Integer> initialStatuses(byte[] packet)throws Exception{
+ static Set<Integer> renderedNpcs(byte[] packet)throws Exception{
+  // Model the observed client: every transmitted NPC is drawn, even when its status is 0.
   DataInputStream input=new DataInputStream(new ByteArrayInputStream(packet));
   for(int i=0;i<5;i++)input.readByte();input.readUTF();input.readByte();input.readShort();input.readShort();
-  check(input.readUnsignedByte()==0,"map fixture has no waypoints");check(input.readUnsignedByte()==0,"map fixture has no mobs");input.readByte();
-  int count=input.readUnsignedByte();Map<Integer,Integer> statuses=new HashMap<>();
-  for(int i=0;i<count;i++){int status=input.readUnsignedByte();input.readShort();input.readShort();int id=input.readUnsignedByte();input.readShort();statuses.put(id,status);}return statuses;
+  if(input.readUnsignedByte()!=0||input.readUnsignedByte()!=0)throw new AssertionError("Nonempty QA waypoint/mob fixture");input.readByte();
+  int count=input.readUnsignedByte();Set<Integer> ids=new HashSet<>();
+  for(int i=0;i<count;i++){input.readByte();input.readShort();input.readShort();int id=input.readUnsignedByte();input.readShort();ids.add(id);}return ids;
  }
  public static void main(String[] args)throws Exception{
   try(Connection c=LocalManager.getConnection();Statement s=c.createStatement()){
@@ -43,28 +44,35 @@ public class EventNpcVisibilityTest {
     s.executeUpdate("UPDATE panel_event_config SET enabled=0 WHERE event_key IN ('hung_vuong','summer','tet','trung_thu')");EventManager.reload(c);
     nro.models.map.Map map=new nro.models.map.Map(1,"QA NPC EV",(byte)0,(byte)0,(byte)0,(byte)0,(byte)0,new int[][]{{0}},new int[]{0},0,10,new ArrayList<>());
     Manager.MAPS.add(map);Zone zone=new Zone(map,0,10);TestPlayer player=new TestPlayer();player.zone=zone;
-    int[] eventIds={52,66,51,84,41,72};for(int id:eventIds)map.npcs.add(new TestNpc(1,id));TestNpc santa=new TestNpc(1,39);map.npcs.add(santa);
-    int definitions=Manager.NPCS.size();zone.mapInfo(player);Map<Integer,Integer> statuses=initialStatuses(player.mapPacket);
-    for(int id:eventIds)check(statuses.get(id)==0&&player.status(id)==0,"OFF hides NPC in initial map and live packets: "+id);
-    check(statuses.get(39)==1&&player.status(39)==-1,"ordinary Santa shop remains visible");
-    check(NpcManager.getNpcsByMapPlayer(player).size()==7,"hidden definitions retained for in-place show");
+    int[] eventIds={52,66,51,84,41,72};for(int id:eventIds)map.npcs.add(new TestNpc(1,id));map.npcs.add(new TestNpc(1,39));
+    int definitions=Manager.NPCS.size();zone.mapInfo(player);Set<Integer> ids=renderedNpcs(player.mapPacket);
+    for(int id:eventIds)check(!ids.contains(id),"OFF omits NPC even on client ignoring status: "+id);
+    check(ids.contains(39)&&ids.size()==1,"ordinary Santa shop remains visible");
+    check(NpcManager.getNpcsByMapPlayer(player).size()==1,"disabled NPCs excluded from outgoing list");
     TestNpc hung=(TestNpc)map.npcs.get(0);MenuController.gI().openMenuNPC(null,52,player);MenuController.gI().doSelectMenu(player,52,0);
-    check(hung.opened==0&&hung.selected==0,"hidden NPC rejects new and previously-open menus");
-    int packets=player.visibility.size();EventManager.syncNpcVisibility(player);EventManager.reload(c);EventManager.syncNpcVisibility(player);
-    check(player.visibility.size()==packets,"unchanged polls and player ticks do not spam packets");
+    check(hung.opened==0&&hung.selected==0,"hidden NPC rejects new and stale menus");
+    int packets=player.mapPackets;EventManager.syncNpcVisibility(player);EventManager.reload(c);EventManager.syncNpcVisibility(player);
+    check(player.mapPackets==packets&&player.clearPackets==0,"unchanged polls do not reload map");
     s.executeUpdate("UPDATE panel_event_config SET enabled=1 WHERE event_key IN ('hung_vuong','summer','tet','trung_thu')");EventManager.reload(c);EventManager.syncNpcVisibility(player);
-    for(int id:eventIds)check(player.status(id)==1,"ON shows existing NPC without map change: "+id);
-    check(map.npcs.size()==7&&Manager.NPCS.size()==definitions,"toggle never duplicates NPCs or alters map definitions");
-    MenuController.gI().openMenuNPC(null,52,player);MenuController.gI().doSelectMenu(player,52,0);check(hung.opened==1&&hung.selected==1,"ON restores NPC menu interaction");
-    // Simulate a switch changing after the initial map packet was built but before it completed sending.
+    ids=renderedNpcs(player.mapPacket);for(int id:eventIds)check(ids.contains(id),"ON sends NPC in refreshed current map: "+id);
+    check(player.clearPackets==1&&player.mapPackets==packets+1,"live toggle clears stale client list then reloads current map once");
+    check(player.zone==zone&&player.location.x==0&&player.location.y==0,"refresh preserves zone and coordinates");
+    player.thongBaoChangeMap=true;player.textThongBaoChangeMap="QA normal transition notification";
+    nro.models.map.service.ChangeMapService.gI().finishLoadMap(player);
+    check(player.thongBaoChangeMap,"NPC-only refresh does not replay normal map-transition actions");
+    check(!EventManager.consumeNpcRefresh(player),"actual map-load completion consumes refresh marker once");
+    check(map.npcs.size()==7&&Manager.NPCS.size()==definitions,"toggle never duplicates or removes server NPC definitions");
+    MenuController.gI().openMenuNPC(null,52,player);MenuController.gI().doSelectMenu(player,52,0);check(hung.opened==1&&hung.selected==1,"ON restores menus");
     player.mapCallback=()->{try{s.executeUpdate("UPDATE panel_event_config SET enabled=0 WHERE event_key='summer'");EventManager.reload(c);}catch(Exception error){throw new RuntimeException(error);}};
-    zone.mapInfo(player);check(player.status(84)==0,"post-map refresh reconciles toggle racing with map entry");
-    player.zone=new Zone(map,1,10);packets=player.visibility.size();EventManager.syncNpcVisibility(player);
-    check(player.visibility.size()>packets&&player.status(84)==0,"zone change resynchronizes hidden NPCs");
-    player.zone=null;EventManager.syncNpcVisibility(player);player.zone=zone;packets=player.visibility.size();EventManager.syncNpcVisibility(player);
-    check(player.visibility.size()>packets,"leaving and returning to same zone resynchronizes");
-    map.mapId=21;player.DuaHauEgg=null;player.visibility.clear();EventManager.refreshNpcVisibility(player);
-    check(player.status(51)==-1,"personal fruit NPC is not revealed to players without a tree");
+    zone.mapInfo(player);EventManager.syncNpcVisibility(player);
+    check(!renderedNpcs(player.mapPacket).contains(84),"toggle racing map send is reconciled by actual transmitted IDs");
+    check(player.hidePackets==0,"visibility no longer depends on unsupported -73/status behavior");
+    packets=player.mapPackets;EventManager.syncNpcVisibility(player);check(player.mapPackets==packets,"completed refresh does not loop");
+    player.zone=new Zone(map,1,10);zone=player.zone;zone.mapInfo(player);EventManager.syncNpcVisibility(player);
+    check(!EventManager.consumeNpcRefresh(player),"normal zone change retains normal completion and tasks");
+    check(!renderedNpcs(player.mapPacket).contains(84),"new zone also excludes disabled sugarcane NPC");
+    map.mapId=21;player.DuaHauEgg=null;zone.mapInfo(player);
+    check(!renderedNpcs(player.mapPacket).contains(51),"personal fruit stays absent without owned tree");
    }finally{for(Map.Entry<String,Integer> row:before.entrySet())try(PreparedStatement restore=c.prepareStatement("UPDATE panel_event_config SET enabled=? WHERE event_key=?")){restore.setInt(1,row.getValue());restore.setString(2,row.getKey());restore.executeUpdate();}EventManager.reload(c);}
   }catch(Throwable error){error.printStackTrace();System.exit(1);}System.exit(0);
  }

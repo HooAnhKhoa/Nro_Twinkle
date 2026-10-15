@@ -524,8 +524,9 @@ public class ChangeMapService {
     }
 
     public void finishLoadMap(Player player) {
+        boolean npcRefresh=nro.models.event.EventManager.consumeNpcRefresh(player);
         try {
-            player.zone.load_Me_To_Another(player);
+            if(!npcRefresh)player.zone.load_Me_To_Another(player);
             player.zone.load_Another_To_Me(player);
         } catch (Exception e) {
         }
@@ -537,6 +538,7 @@ public class ChangeMapService {
         if (player.zone != null && player.zone.map.mapId != 128 && player.maBuHold != null) {
             EffectSkillService.gI().removeMabuHold(player);
         }
+        if(!npcRefresh) {
         TaskService.gI().checkDoneTaskGoToMap(player, player.zone);
         if (player.fightMabu.pointMabu >= player.fightMabu.POINT_MAX && MapService.gI().isMapMaBu(player.zone.map.mapId)) {
             MajinBuuService.gI().xuongTangDuoi(player);
@@ -558,6 +560,7 @@ public class ChangeMapService {
         }
         if (player.isPl() && player.effectSkill != null && player.effectSkill.isBodyChangeTechnique) {
             EffectSkillService.gI().removeBodyChangeTechnique(player);
+        }
         }
         try {
             for (int i = player.zone.getPlayers().size() - 1; i >= 0; i--) {

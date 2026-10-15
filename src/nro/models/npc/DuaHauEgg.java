@@ -29,6 +29,7 @@ public class DuaHauEgg {
     }
 
     public void sendDuaHauEgg() {
+        if(!nro.models.event.EventManager.enabled("hung_vuong"))return;
         Message msg;
         try {
             msg = new Message(-122);

@@ -24,9 +24,10 @@ public final class EventManager {
     private static volatile boolean initialized;
     private static final Map<Player,NpcVisibility> npcVisibility=Collections.synchronizedMap(new WeakHashMap<>());
     private static final class NpcVisibility {
-        final Zone zone; final Map<String,Boolean> switches;
-        NpcVisibility(Zone zone,Map<String,Boolean> switches){this.zone=zone;this.switches=switches;}
+        final Zone zone; final Set<Integer> ids;
+        NpcVisibility(Zone zone,Set<Integer> ids){this.zone=zone;this.ids=ids;}
     }
+    private static final Map<Player,Zone> npcRefreshes=Collections.synchronizedMap(new WeakHashMap<>());
     public static String npcEvent(int npcId) {
         return switch(npcId) {
             case ConstNpc.HUNG_VUONG,ConstNpc.NOI_BANH,ConstNpc.DUA_HAU -> "hung_vuong";
@@ -40,25 +41,34 @@ public final class EventManager {
         String key=npcEvent(npc.tempId);
         return key==null || enabled(key);
     }
-    public static int npcStatus(Npc npc) {return npcEnabled(npc)?npc.status:0;}
-    /** Keep NPC definitions stable: the client's -73 packet hides/shows an existing template. */
+    private static Set<Integer> eventNpcIds(List<Npc> npcs) {
+        Set<Integer> ids=new HashSet<>();
+        for(Npc npc:npcs)if(npcEvent(npc.tempId)!=null)ids.add(npc.tempId);
+        return ids;
+    }
+    /** Record the actual transmitted list, not just the latest config (which can change mid-send). */
+    public static void npcMapSent(Player player,Zone zone,List<Npc> npcs) {
+        synchronized(player) {
+            npcVisibility.put(player,new NpcVisibility(zone,eventNpcIds(npcs)));
+            if(npcRefreshes.get(player)!=zone)npcRefreshes.remove(player);
+        }
+    }
+    public static boolean consumeNpcRefresh(Player player) {
+        synchronized(player){Zone refreshed=npcRefreshes.remove(player);return refreshed!=null && refreshed==player.zone;}
+    }
+    /** Rebuild the current map's NPC list. Disabled NPCs are absent, regardless of client status handling. */
     public static void syncNpcVisibility(Player player) {
         synchronized(player) {
             Zone zone=player.zone;
-            if(zone==null){npcVisibility.remove(player);return;}
-            Map<String,Boolean> snapshot=switches;
+            if(zone==null){npcVisibility.remove(player);npcRefreshes.remove(player);return;}
+            Set<Integer> ids=eventNpcIds(NpcManager.getNpcsByMapPlayer(player));
             NpcVisibility previous=npcVisibility.get(player);
-            if(previous!=null && previous.zone==zone && previous.switches==snapshot)return;
-            for(Npc npc:NpcManager.getNpcsByMapPlayer(player)) {
-                String key=npcEvent(npc.tempId);
-                if(player.zone!=zone)return;
-                if(key!=null)Service.gI().sendHideNpc(player,npc.tempId,npc.status==0 || !snapshot.getOrDefault(key,false));
-            }
-            if(player.zone==zone && switches==snapshot)npcVisibility.put(player,new NpcVisibility(zone,snapshot));
+            if(previous==null || previous.zone!=zone){npcVisibility.put(player,new NpcVisibility(zone,ids));return;}
+            if(previous.ids.equals(ids) || player.zone!=zone)return;
+            npcRefreshes.put(player,zone);
+            Service.gI().clearMap(player);
+            zone.mapInfo(player);
         }
-    }
-    public static void refreshNpcVisibility(Player player) {
-        synchronized(player){npcVisibility.remove(player);syncNpcVisibility(player);}
     }
     public static EventManager gI() { return INSTANCE; }
     public static boolean enabled(String key) { return switches.getOrDefault(key, false); }
