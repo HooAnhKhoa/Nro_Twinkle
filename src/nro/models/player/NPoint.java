@@ -35,6 +35,7 @@ import nro.models.utils.TimeUtil;
 public class NPoint {
 
     public static final byte MAX_LIMIT = 9;
+    public final PunchCombo punchCombo = new PunchCombo();
 
     @Setter
     private Player player;
@@ -393,10 +394,7 @@ public class NPoint {
                         case 147: //+#% sức đánh
                             this.tlDame.add(io.param);
                             break;
-                        case 156: //Giảm 50% sức đánh, HP, KI và +#% SM, TN, vàng từ quái
-                            this.tlSubSD += 50;
-                            this.tlTNSM.add(io.param);
-                            this.tlGold += io.param;
+                        case 156: // Consecutive basic punches are handled by PunchCombo.
                             break;
                         case 162: //Cute hồi #% KI/s bản thân và xung quanh
                             this.mpHoiCute += io.param;
@@ -628,10 +626,7 @@ public class NPoint {
             case 147: //+#% sức đánh
                 this.tlDame.add(io.param);
                 break;
-            case 156: //Giảm 50% sức đánh, HP, KI và +#% SM, TN, vàng từ quái
-                this.tlSubSD += 50;
-                this.tlTNSM.add(io.param);
-                this.tlGold += io.param;
+            case 156: // Consecutive basic punches are handled by PunchCombo.
                 break;
             case 162: //Cute hồi #% KI/s bản thân và xung quanh
                 this.mpHoiCute += io.param;
@@ -1193,8 +1188,8 @@ public class NPoint {
 
         dame += (dame * tlSexyDame / 100L);
 
-        //Sức đánh đẹp
-        dame += (dame * tlSexyDame / 100L);
+        // Consecutive basic punches, separate from the single Cute bonus above.
+        dame += dame * this.punchCombo.percent(this.player) / 100L;
 
         // Xử lý giảm dame
         dame -= (dame * tlSubSD / 100L);

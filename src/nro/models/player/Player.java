@@ -1240,6 +1240,7 @@ public class Player implements Runnable {
     }
 
     protected void setDie(Player plAtt) {
+        this.nPoint.punchCombo.reset();
         if (this.isPl()) {
             long vangtru = this.nPoint.power / 1000000;
             if (vangtru > 32000) {

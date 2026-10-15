@@ -81,6 +81,7 @@ public class SkillService {
             return false;
         }
         if (player.playerSkill.skillSelect.template.type == 2 && canUseSkillWithMana(player) && canUseSkillWithCooldown(player)) {
+            resetPunchComboForSkill(player);
             useSkillBuffToPlayer(player, plTarget);
             return true;
         }
@@ -103,6 +104,7 @@ public class SkillService {
             selectSkill(player, skillId);
             return false;
         } else {
+            resetPunchComboForSkill(player);
             switch (player.playerSkill.skillSelect.template.type) {
                 case 1 ->
                     useSkillAttack(player, plTarget, mobTarget);
@@ -901,7 +903,14 @@ public class SkillService {
         }
     }
 
+    private void resetPunchComboForSkill(Player player) {
+        if(player.nPoint.punchCombo.useSkill(player,player.playerSkill.skillSelect.template.id))Service.gI().point(player);
+    }
+    private void addPunchComboHit(Player player,int skill,long damage) {
+        if(player.nPoint.punchCombo.hit(player,skill,damage))Service.gI().point(player);
+    }
     private void playerAttackPlayer(Player plAtt, Player plInjure, boolean miss) {
+        resetPunchComboForSkill(plAtt);
         if (plInjure.effectSkill.anTroi) {
             plAtt.nPoint.isCrit100 = true;
         }
@@ -958,6 +967,7 @@ public class SkillService {
                 msg.cleanup();
             }
         }
+        addPunchComboHit(plAtt,skillSelect.template.id,miss?0:dameHit);
     }
 
     private void playerAttackMob(Player plAtt, Mob mob, boolean miss, boolean dieWhenHpFull) {
@@ -965,6 +975,7 @@ public class SkillService {
             return;
         }
 
+        resetPunchComboForSkill(plAtt);
         long dameHit = plAtt.nPoint.getDameAttack(true);
 
         if (plAtt.effectSkin != null && plAtt.effectSkin.isXDame) {
@@ -1000,7 +1011,9 @@ public class SkillService {
 
         hutHPMP(plAtt, dameHit, null, mob);
         sendPlayerAttackMob(plAtt, mob);
+        long hpBefore = mob.point.hp;
         mob.injured(plAtt, dameHit, dieWhenHpFull);
+        addPunchComboHit(plAtt,plAtt.playerSkill.skillSelect.template.id,miss?0:Math.max(0,hpBefore-mob.point.hp));
     }
 
     public void sendPlayerPrepareSkill(Player player, int affterMiliseconds) {
