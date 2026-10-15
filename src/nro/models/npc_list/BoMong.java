@@ -26,11 +26,15 @@ public class BoMong extends Npc {
         super(mapId, status, cx, cy, tempId, avartar);
     }
 
+    private boolean supportsServices() {
+        return mapId == 21 || mapId == 22 || mapId == 23 || mapId == 47 || mapId == 84;
+    }
+
     @Override
     public void openBaseMenu(Player player) {
         if (!TaskService.gI().checkDoneTaskTalkNpc(player, this)) {
             if (canOpenNpc(player)) {
-                if (this.mapId == 47 || this.mapId == 84) {
+                if (supportsServices()) {
                     this.createOtherMenu(player, ConstNpc.BASE_MENU,
                             "Ngươi muốn có thêm ngọc thì chịu khó làm vài nhiệm vụ sẽ được ngọc thưởng", "Nhiệm vụ\nhàng ngày", "Nhiệm vụ\nthành tích", "Nạp Ngọc", "Điểm danh", "Từ chối");
                 }
@@ -41,7 +45,7 @@ public class BoMong extends Npc {
     @Override
     public void confirmMenu(Player player, int select) {
         if (canOpenNpc(player)) {
-            if (this.mapId == 47 || this.mapId == 84) {
+            if (supportsServices()) {
                 if (player.idMark.isBaseMenu()) {
                     switch (select) {
                         case 0 -> {
