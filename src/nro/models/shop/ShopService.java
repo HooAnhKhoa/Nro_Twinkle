@@ -659,6 +659,9 @@ public class ShopService {
 
     public void buyItem(Player player, int itemTempId) {
         Shop shop = player.idMark.getShopOpen();
+        if(shop!=null&&nro.models.event.trungthu2026.TrungThuShop.TAG.equals(shop.tagName)){
+            nro.models.event.trungthu2026.TrungThuShop.buy(player,shop,itemTempId);return;
+        }
         if(shop!=null&&"SANTA_NOEL".equals(shop.tagName)&&!nro.models.event.EventManager.allowNpc(player,"christmas"))return;
         ItemShop is = shop.getItemShop(itemTempId);
         int[][] listDauThan = {{13, 293}, {60, 294}, {61, 295}, {62, 296}, {63, 297}, {64, 298}, {65, 299}, {352, 596}, {523, 597}};

@@ -24,3 +24,14 @@ Check ($null -eq $next.regional.'upgrade_stone.normal' -and [double]$next.region
 Check ((CallDrop @{action='rule';rule='gem.all';value=0.00012345;revision=$next.rates.revision}).code -eq 200) 'small percentages accepted'
 $next=(CallDrop @{action='read'}).body
 Check ([Math]::Abs([double]$next.regional.'gem.all' - 0.00012345) -lt 0.000000001) 'eight decimal places preserved'
+$beforeTT=(CallDrop @{action='read'}).body
+Check ($beforeTT.groups.trung_thu -and $beforeTT.regional.PSObject.Properties.Name.Contains('trung_thu.egg')) 'Trung Thu category and regional keys exposed'
+Check ((CallDrop @{action='rule';rule='trung_thu.egg';value=12.5;revision=$beforeTT.rates.revision}).code -eq 200) 'Trung Thu egg percent saved'
+$tt=(CallDrop @{action='read'}).body
+Check ([double]$tt.regional.'trung_thu.egg' -eq 12.5 -and $null -eq $tt.regional.'trung_thu.chicken') 'egg and chicken settings independent'
+Check ((CallDrop @{action='rule';rule='trung_thu.gogeta_costume';value=0;revision=$tt.rates.revision}).code -eq 200) 'boss item zero percent saved'
+$tt=(CallDrop @{action='read'}).body
+Check ([double]$tt.regional.'trung_thu.gogeta_costume' -eq 0 -and $null -eq $tt.regional.'trung_thu.omega_costume') 'Gogeta and Omega settings independent'
+Check ((CallDrop @{action='inherit';rule='trung_thu.egg';revision=$tt.rates.revision}).code -eq 200) 'Trung Thu percent restores default'
+$tt=(CallDrop @{action='read'}).body
+Check ($null -eq $tt.regional.'trung_thu.egg') 'restored percent stored as null'

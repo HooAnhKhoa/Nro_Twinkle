@@ -12,7 +12,7 @@ Hành trang có giới hạn **150 ô liền nhau**, dùng giao diện túi gố
 
 `test/BagInventory150Test.java`: 30 kiểm tra gói native và các thao tác tại ô127/128/149, gồm dùng, dùng theo ID, mặc, bỏ, bán, cất rương, giao dịch, ký gửi, ghép, ô rỗng, túi cũ nhỏ hơn và giới hạn150.
 
-`test/Bag150CompactionTest.php`: giữ món tại ô299 khi thu gọn, bảo toàn toàn bộ bản ghi vật phẩm, từ chối nếu có hơn150 món, giữ các ô cũ khi tăng túi nhỏ hơn và kiểm tra chạy lặp lại. Hàm thu gọn thuần dữ liệu trong `tools/bag150-compaction.php`, không kết nối database.
+Công cụ chuyển túi 300 → 150 đã chạy xong và được dọn khỏi source theo yêu cầu. Mã cùng kết quả kiểm tra được lưu trong bản sao dọn file một lần ở C:/Downloads/NroFreeSetup/Backups/cleanup-once-20261015.
 
 `test/BagStorageTest.java`: bảng tạm trong kết nối QA, xác minh giữ nguyên dữ liệu tiếng Việt và lưu hơn64KB. Luồng Trung Thu được kiểm tra trên database QA riêng.
 

@@ -60,11 +60,12 @@ public class MoonBoss extends Boss {
         if(rewarded||!accepts(p)||zone==null)return;rewarded=true;
         if(kind<=1){
             int count=Util.nextInt(number("drop.material-min"),number("drop.material-max"));
-            Service.gI().dropItemMap(zone,new ItemMap(zone,item(kind==0?"monkey-tail":"carrot"),count,location.x,location.y,p.id));
+            if(nro.models.server.PanelBridge.rollDrop("trung_thu",kind==0?"trung_thu.monkey_tail":"trung_thu.carrot",100,100))
+                Service.gI().dropItemMap(zone,new ItemMap(zone,item(kind==0?"monkey-tail":"carrot"),count,location.x,location.y,p.id));
             if(kind==0)TrungThuRuntime.monkeyReward(p);
         }else{
-            if(Util.isTrue(number("drop.costume-percent"),100)){int[] days=numbers("reward.costume-days");drop(p,TrungThuRewards.item(kind==2?"gogeta-costume":"omega-costume",1,days[Util.nextInt(0,days.length-1)]));}
-            if(Util.isTrue(number("drop.board-percent"),100))drop(p,TrungThuRewards.item("moon-board",1,Util.isTrue(number("drop.board-permanent-percent"),100)?0:number("drop.board-days")));
+            if(nro.models.server.PanelBridge.rollDrop("trung_thu",kind==2?"trung_thu.gogeta_costume":"trung_thu.omega_costume",number("drop.costume-percent"),100)){int[] days=numbers("reward.costume-days");drop(p,TrungThuRewards.item(kind==2?"gogeta-costume":"omega-costume",1,days[Util.nextInt(0,days.length-1)]));}
+            if(nro.models.server.PanelBridge.rollDrop("trung_thu",kind==2?"trung_thu.gogeta_board":"trung_thu.omega_board",number("drop.board-percent"),100))drop(p,TrungThuRewards.item("moon-board",1,Util.isTrue(number("drop.board-permanent-percent"),100)?0:number("drop.board-days")));
         }
     }
     private void drop(Player p,Item item){ItemMap ground=new ItemMap(zone,item.template.id,item.quantity,location.x,location.y,p.id);ground.options.addAll(item.itemOptions);Service.gI().dropItemMap(zone,ground);}

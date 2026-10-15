@@ -47,3 +47,17 @@ Không giả lập thao tác bằng client game thật trong các bài QA; sau k
 ## Hoàn tác
 
 Trước khi nạp: sao lưu JAR, config, hai file PHP của web và SQL các bảng người chơi/bang/ký gửi/cấu hình sự kiện vào thư mục `Backups/trung-thu-20261015-*`. Muốn quay lại, bảo trì lưu dữ liệu, phục hồi JAR và file web trước đó rồi khởi động lại. Hai bảng mới có thể giữ nguyên; bản cũ không dùng chúng. Không phục hồi toàn DB sau khi người chơi đã tiếp tục chơi nếu chưa đối chiếu dữ liệu phát sinh.
+
+## Cửa hàng chuẩn và chỉnh tỷ lệ rơi trên web
+
+NPC Trung Thu → Cửa hàng mở cửa sổ shop giống các NPC thường: ba tab **Triệu hồi**, **Đồ sự kiện**, **Trang phục**, tám món có ảnh và giá vàng/ngọc. Shop có tag `TRUNG_THU_2026`, NPC41. Có thể quản lý giá và các món bán trong mục Cửa hàng trên web. Giá từ file cấu hình chỉ dùng khi tạo món lần đầu; khởi động lại không ghi đè giá admin đã chỉnh. Các mục làm bánh, đổi pet, đổi nguyên liệu và chọn phe vẫn ở menu NPC. Tắt Trung Thu thì cửa hàng đang mở cũng không mua được. Mua hàng tiếp tục dùng giao dịch lưu tiền/vật phẩm cùng lúc, không thu tiền khi đầy túi hoặc lưu thất bại.
+
+Web → Rơi đồ → **Vật phẩm Trung Thu** có 10 dòng chỉnh % độc lập, mặc định thu gọn:
+
+- Trứng vịt muối / gà quay nguyên con: mỗi món2% ở quái map thường và map riêng.
+- Bột mì / đậu xanh: mỗi món5% ở Doanh trại, Kho báu, Con đường rắn độc, Khí gas hủy diệt.
+- Đuôi khỉ / củ cà rốt:100% từ đúng boss triệu hồi; vẫn giữ1–3 món mỗi lần rơi.
+- Cải trang Gogeta / cải trang thay thế Omega:20%, chỉnh riêng từng boss.
+- Ván bay thay thế:1%, chỉnh riêng Gogeta/Omega. Khi đã rơi, vẫn giữ1% vĩnh viễn,99% hạn7ngày.
+
+Các % trên là tỷ lệ gốc khi hệ số nhóm và toàn server đều x1. Có thể nhập % riêng thay hệ số, hoặc bấm Mặc định để trở lại cách tính hệ số. x0 vẫn tắt rơi. Phải bật Trung Thu và Vật phẩm EV. Không đổi điều kiện kiếm gỗ/cờ phe, nguồn nhận hạt sen từ nhiệm vụ hay bảng thưởng mở hộp. Game nhận thay đổi tỷ lệ trong khoảng3giây.

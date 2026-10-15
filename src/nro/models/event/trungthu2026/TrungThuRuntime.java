@@ -77,6 +77,6 @@ public final class TrungThuRuntime {
         if(type==0||type==1){roll(mob,owner,items,x,y,"salted-egg","egg");roll(mob,owner,items,x,y,"chicken","chicken");}
         else if(type==2||type==4||type==6||type==7){roll(mob,owner,items,x,y,"flour","flour");roll(mob,owner,items,x,y,"beans","beans");}
     }
-    private static void roll(Mob mob,Player p,List<ItemMap> items,int x,int y,String item,String rate){if(RANDOM.nextInt(100)<number("drop."+rate+"-percent"))items.add(new ItemMap(mob.zone,TrungThuConfig.item(item),1,x,y,p.id));}
+    private static void roll(Mob mob,Player p,List<ItemMap> items,int x,int y,String item,String rate){if(nro.models.server.PanelBridge.rollDrop("trung_thu","trung_thu."+rate,number("drop."+rate+"-percent"),100))items.add(new ItemMap(mob.zone,TrungThuConfig.item(item),1,x,y,p.id));}
     private TrungThuRuntime(){}
 }

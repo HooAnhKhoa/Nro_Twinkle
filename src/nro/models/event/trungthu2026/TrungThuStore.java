@@ -21,6 +21,7 @@ public final class TrungThuStore {
                 while(r.next())if(!"InnoDB".equalsIgnoreCase(r.getString(2)))throw new SQLException("Bảng "+r.getString(1)+" phải dùng InnoDB để đổi thưởng an toàn");
             }
             for(String sql:Files.readString(Path.of("web/trung_thu_schema.sql")).split(";"))if(!sql.isBlank())s.execute(sql);
+            TrungThuShop.ensureData(connection);
         }catch(Exception error){throw new IllegalStateException("Không tạo được dữ liệu Trung Thu",error);}
     }
     public static State state(Player player){
