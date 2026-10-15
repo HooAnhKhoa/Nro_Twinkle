@@ -13,6 +13,8 @@ public class PanelBridgeIntegrationTest {
             check("nro_panel_qa_20261013".equals(c.getCatalog()),"isolated QA database");
             Boss b=new Boss(-999999,new BossData("QA runtime boss",(byte)0,new short[]{297,298,299},10,new int[]{100},new int[]{1},new int[][]{},new String[]{},new String[]{},new String[]{},60));
             String key=b.getClass().getName();
+            // This fixture is reused by repeated QA runs; customized rows retain old rest values.
+            try(PreparedStatement cleanup=c.prepareStatement("DELETE FROM boss_web_config WHERE boss_key=?")){cleanup.setString(1,key);cleanup.executeUpdate();}
             Method publish=PanelBridge.class.getDeclaredMethod("publishBosses",Connection.class);publish.setAccessible(true);publish.invoke(null,c);
             b.data[0].setSecondsRest(0);publish.invoke(null,c);
             try(PreparedStatement s=c.prepareStatement("SELECT rest_seconds FROM boss_web_config WHERE boss_key=?")){s.setString(1,key);try(ResultSet r=s.executeQuery()){r.next();check(r.getInt(1)==0,"zero rest is preserved instead of forced to one second");}}

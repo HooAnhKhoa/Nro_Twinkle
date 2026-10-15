@@ -81,7 +81,7 @@ public final class PanelBridge {
     }
     public static void start() {
         try(Connection c=LocalManager.getConnection();Statement s=c.createStatement()) {
-            for(String file:new String[]{"panel_schema.sql","boss_web.sql","server_rates.sql","drop_rates.sql","drop_rules.sql"}) {
+            for(String file:new String[]{"panel_schema.sql","boss_web.sql","server_rates.sql","drop_rates.sql","drop_rules.sql","intrinsic_schema.sql"}) {
                 for(String sql:Files.readString(Path.of("web",file)).split(";"))if(!sql.trim().isEmpty())s.execute(sql);
             }
             double[] defaults={50,20,10,5,1,.7,.5,.1,.1};
@@ -119,6 +119,7 @@ public final class PanelBridge {
             try(PreparedStatement s=c.prepareStatement("UPDATE panel_drop_runtime SET heartbeat=NOW(),applied_revision=? WHERE id=1")){s.setLong(1,rateRevision);s.executeUpdate();}
             try(PreparedStatement s=c.prepareStatement("UPDATE server_rates SET heartbeat=NOW(),applied_revision=? WHERE id=1")){s.setLong(1,rateRevision);s.executeUpdate();}
             Map<Integer,Double> nextSkills=new HashMap<>();try(Statement s=c.createStatement();ResultSet r=s.executeQuery("SELECT * FROM panel_skill_rate")){while(r.next())nextSkills.put(r.getInt(1),r.getDouble(2));}skillRates=nextSkills;
+            try{nro.models.services.IntrinsicService.gI().reloadCatalog(c);}catch(SQLException error){Logger.logException(PanelBridge.class,error);}
             publishBosses(c);Map<String,BossConfig> next=new HashMap<>();
             try(Statement s=c.createStatement();ResultSet r=s.executeQuery("SELECT * FROM boss_web_config WHERE customized=1")){while(r.next()){BossConfig cfg=new BossConfig();cfg.hp=r.getInt("hp");cfg.damage=r.getInt("damage");cfg.rest=r.getInt("rest_seconds");cfg.enabled=r.getBoolean("enabled");next.put(r.getString("boss_key"),cfg);}}bossConfig=next;
             Set<Long> activeRequests=new HashSet<>();
