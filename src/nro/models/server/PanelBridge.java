@@ -89,10 +89,11 @@ public final class PanelBridge {
     }
     public static void start() {
         try(Connection c=LocalManager.getConnection();Statement s=c.createStatement()) {
-            for(String file:new String[]{"panel_schema.sql","boss_web.sql","server_rates.sql","drop_rates.sql","drop_rules.sql","intrinsic_schema.sql","event_schema.sql"}) {
+            for(String file:new String[]{"panel_schema.sql","boss_web.sql","server_rates.sql","drop_rates.sql","drop_rules.sql","intrinsic_schema.sql","event_schema.sql","toribot_schema.sql"}) {
                 for(String sql:Files.readString(Path.of("web",file)).split(";"))if(!sql.trim().isEmpty())s.execute(sql);
             }
             nro.models.event.EventManager.reload(c);
+            nro.models.vip.ToriVipConfig.reload(c);
             double[] defaults={50,20,10,5,1,.7,.5,.1,.1};
             for(int i=1;i<=9;i++)try(ResultSet columns=s.executeQuery("SHOW COLUMNS FROM server_rates LIKE 'star_"+i+"'")) {
                 if(!columns.next())try(Statement migration=c.createStatement()){migration.execute("ALTER TABLE server_rates ADD star_"+i+" DECIMAL(6,3) NOT NULL DEFAULT "+defaults[i-1]);}
@@ -136,6 +137,7 @@ public final class PanelBridge {
             try{nro.models.services.IntrinsicService.gI().reloadCatalog(c);}catch(SQLException error){Logger.logException(PanelBridge.class,error);}
             try{nro.models.event.EventManager.reload(c);}catch(SQLException error){Logger.logException(PanelBridge.class,error);}
             try{nro.models.boss.BossDrops.reload(c);}catch(SQLException error){Logger.logException(PanelBridge.class,error);}
+            try{nro.models.vip.ToriVipConfig.reload(c);}catch(Exception error){Logger.logException(PanelBridge.class,error);}
             publishBosses(c);Map<String,BossConfig> next=new HashMap<>();
             try(Statement s=c.createStatement();ResultSet r=s.executeQuery("SELECT * FROM boss_web_config WHERE customized=1")){while(r.next()){BossConfig cfg=new BossConfig();cfg.hp=r.getInt("hp");cfg.damage=r.getInt("damage");cfg.rest=r.getInt("rest_seconds");cfg.lifetime=r.getObject("lifetime_seconds")==null?-1:r.getInt("lifetime_seconds");cfg.enabled=r.getBoolean("enabled");next.put(r.getString("boss_key"),cfg);}}bossConfig=next;
             CommandResult result;while((result=results.poll())!=null)try(PreparedStatement s=c.prepareStatement("UPDATE boss_web_command SET completed_at=NOW(),result=? WHERE id=? AND completed_at IS NULL")){s.setString(1,result.text);s.setLong(2,result.id);s.executeUpdate();}

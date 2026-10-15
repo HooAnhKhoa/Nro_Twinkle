@@ -350,6 +350,8 @@ public class Player implements Runnable {
     public long bossBabyDefeatParticipationCount;
     public long monsterKillCountAutoTrain;
     public int vipPurchaseCount;
+    public String toriVipSeason = "";
+    public int toriVipExpBonus = 300;
     public long lastClanCheckIn = 0;
     public long lastChallengeGauTuongCuopTime;
     public long lastChallengeGauTuopCuopTime;

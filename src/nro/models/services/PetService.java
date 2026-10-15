@@ -276,7 +276,15 @@ public class PetService {
         return petData;
     }
 
+    public Pet prepareVipNormalPet(Player player) {
+        Pet pet=buildNewPet(player,false,false,false,false);
+        pet.nPoint.hpMax=pet.nPoint.hpg;pet.nPoint.mpMax=pet.nPoint.mpg;pet.nPoint.setFullHpMp();
+        return pet;
+    }
     private void createNewPet(Player player, boolean isMabu, boolean isUub, boolean isKidBeer, boolean isJiren, byte... gender) {
+        player.pet=buildNewPet(player,isMabu,isUub,isKidBeer,isJiren,gender);
+    }
+    private Pet buildNewPet(Player player, boolean isMabu, boolean isUub, boolean isKidBeer, boolean isJiren, byte... gender) {
         int[] data;
 
         if (isMabu) {
@@ -325,7 +333,7 @@ public class PetService {
         }
 
         pet.nPoint.setFullHpMp();
-        player.pet = pet;
+        return pet;
     }
 
     public static void Pet2(Player pl, int h, int b, int l) {

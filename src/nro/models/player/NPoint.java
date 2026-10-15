@@ -1600,10 +1600,7 @@ public class NPoint {
                 tiemNang += tn * 4;
             }
             }
-            if (this.player.timevip > System.currentTimeMillis()) {
-                // Other VIP and equipment modifiers retain their existing rules.
-                tiemNang += tn * 3;
-            }
+            tiemNang += tn * nro.models.vip.ToriVipService.expBonus(this.player) / 100L;
             if (this.player.effectSkill.isChibi && this.player.typeChibi == 2) {
                 tiemNang += tn * 2;
             }

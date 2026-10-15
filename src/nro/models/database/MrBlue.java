@@ -1115,6 +1115,7 @@ public class MrBlue {
 
             // data vip
             String dataVipString = rs.getString("data_vip");
+            dataArray = null;
 
             try {
                 if (dataVipString != null && !dataVipString.isEmpty()) {
@@ -1140,6 +1141,8 @@ public class MrBlue {
                         player.vip = Byte.parseByte(dataArray.get(5).toString());
                         player.timevip = Long.parseLong(String.valueOf(dataArray.get(6)).toString());
                         player.vipPurchaseCount = Integer.parseInt(String.valueOf(dataArray.get(7)));
+                        if(dataArray.size()>8)player.toriVipSeason=String.valueOf(dataArray.get(8));
+                        if(dataArray.size()>9)player.toriVipExpBonus=Integer.parseInt(String.valueOf(dataArray.get(9)));
                     } else {
                         //   System.err.println("DEBUG: data_vip for player " + player.name + " is old format (size " + dataArray.size() + "), initializing new fields with default values.");
                         player.nhanSKHVIP = false;
