@@ -9,7 +9,8 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
         $config=$conn->query('SELECT revision,applied_revision,TIMESTAMPDIFF(SECOND,heartbeat,NOW()) age FROM panel_event_runtime WHERE id=1')->fetch_assoc();
         $events=$conn->query('SELECT event_key,enabled,updated_at FROM panel_event_config')->fetch_all(MYSQLI_ASSOC);
         $history=$conn->query('SELECT id,event_key,before_enabled,after_enabled,revision,created_at,undone_at FROM panel_event_audit ORDER BY id DESC LIMIT 20')->fetch_all(MYSQLI_ASSOC);
-        panelReply(['config'=>$config,'events'=>$events,'history'=>$history]);
+        $hungBosses=$conn->query("SELECT name,online_count,current_locations,TIMESTAMPDIFF(SECOND,heartbeat,NOW()) age FROM boss_web_config WHERE boss_key IN ('nro.models.boss.event_hung_vuong.ThuyTinh','nro.models.boss.event_hung_vuong.SonTinh') ORDER BY name")->fetch_all(MYSQLI_ASSOC);
+        panelReply(['config'=>$config,'events'=>$events,'history'=>$history,'hung_bosses'=>$hungBosses]);
     }
     $key=$data['event_key']??null;
     $revision=filter_var($data['revision']??null,FILTER_VALIDATE_INT,['options'=>['min_range'=>1]]);
@@ -39,7 +40,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
         panelReply(['message'=>($action==='undo'?'Đã hoàn tác. ':'Đã lưu. ').'Game nhận cấu hình trong khoảng 3 giây; boss rời map ở lượt cập nhật tiếp theo.']);
     }catch(Throwable $error){$conn->rollback();panelReply(['error'=>$error instanceof RuntimeException?$error->getMessage():'Không thể lưu cấu hình sự kiện.'],409);}
 }
-?><!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sự kiện</title><link rel="stylesheet" href="/typography.css?v=20261014-2"><link rel="stylesheet" href="admin-ui.css?v=20261015-5"><link rel="stylesheet" href="events.css?v=1"><script src="admin-ui.js?v=20261015-3" defer></script></head><body class="admin-page"><?php require_once __DIR__.'/admin_ui.php';adminPageToolbar('Sự kiện'); ?>
+?><!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sự kiện</title><link rel="stylesheet" href="/typography.css?v=20261014-2"><link rel="stylesheet" href="admin-ui.css?v=20261015-5"><link rel="stylesheet" href="events.css?v=2-hung"><script src="admin-ui.js?v=20261015-3" defer></script></head><body class="admin-page"><?php require_once __DIR__.'/admin_ui.php';adminPageToolbar('Sự kiện'); ?>
 <main class="events-wrap"><header class="events-heading"><div><h1>Sự kiện</h1><p>Bật/tắt riêng từng hoạt động đang có trong game.</p></div><button id="reloadEvents" type="button">↻ Tải lại</button></header>
 <section class="events-summary"><strong id="eventCount">Đang tải…</strong><span id="eventSync" role="status">Đang kết nối game…</span></section>
 <p class="events-help">Thay đổi được lưu ngay khi bấm công tắc và giữ sau khi khởi động lại. NPC của EV sẽ ẩn khi tắt và hiện lại khi bật. Tắt EV không xóa vật phẩm đã nhận. Các công tắc độc lập; tỷ lệ rơi vẫn chỉnh ở mục Rơi đồ.</p>
@@ -47,4 +48,4 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
 <?php foreach($catalog as $key=>$event):?><article class="event-card" data-event="<?=panelEscape($key)?>"><header><span class="event-icon"><?=panelEscape($event['icon'])?></span><div><h2><?=panelEscape($event['name'])?></h2><span class="event-state">Đang tải…</span></div><button class="event-switch" type="button" role="switch" aria-checked="false" aria-label="<?=panelEscape($event['name'])?>" disabled><span></span></button></header><p><?=panelEscape($event['scope'])?></p><details><summary>Phạm vi áp dụng</summary><p><?=panelEscape($event['detail'])?></p></details></article><?php endforeach;?>
 </div><details class="events-incomplete"><summary>Các EV chưa có chức năng hoàn chỉnh</summary><p>8/3 mới có bộ nạp dữ liệu; Top Up mới có khung lớp; 20/11 và Valentine mới có mã định danh. Chưa cung cấp công tắc cho các mục này. Rồng sự kiện có luồng riêng, chưa nằm trong nhóm công tắc mùa lễ này.</p></details>
 <details class="events-history"><summary>Lịch sử bật/tắt và hoàn tác</summary><div id="eventHistory">Đang tải…</div></details></main>
-<script>const csrf=<?=json_encode($_SESSION['panel_csrf'])?>,eventCatalog=<?=json_encode($catalog,JSON_UNESCAPED_UNICODE|JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT)?>;</script><script src="events.js?v=1"></script></body></html>
+<script>const csrf=<?=json_encode($_SESSION['panel_csrf'])?>,eventCatalog=<?=json_encode($catalog,JSON_UNESCAPED_UNICODE|JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT)?>;</script><script src="events.js?v=2-hung"></script></body></html>

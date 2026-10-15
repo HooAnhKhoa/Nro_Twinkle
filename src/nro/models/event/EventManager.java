@@ -116,6 +116,7 @@ public final class EventManager {
     public synchronized void init() {
         if(initialized)return;
         new nro.models.event_list.Default().boss();
+        new HungVuong().npc();
         new HungVuong().boss();
         new Halloween().boss();
         new Christmas().boss();

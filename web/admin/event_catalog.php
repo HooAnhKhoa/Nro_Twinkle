@@ -1,7 +1,7 @@
 <?php
 function eventCatalog(): array {return [
  'broly'=>['name'=>'Broly','icon'=>'⚡','scope'=>'Broly và Super Broly','detail'=>'Bật/tắt quần thể Broly có sẵn. Tắt sẽ cho boss rời map, không phát thưởng.'],
- 'hung_vuong'=>['name'=>'Giỗ Tổ Hùng Vương','icon'=>'🏮','scope'=>'Sơn Tinh · Thủy Tinh · Vua Hùng · Nồi bánh','detail'=>'Tắt sẽ ẩn Vua Hùng, Nồi bánh và Dưa hấu; chặn dâng lễ, nấu bánh và thu hoạch. Dữ liệu cây đã trồng được giữ lại để thu hoạch khi bật lại.'],
+ 'hung_vuong'=>['name'=>'Giỗ Tổ Hùng Vương','icon'=>'🏮','scope'=>'Sơn Tinh · Thủy Tinh · Vua Hùng · Nồi bánh','detail'=>'Vua Hùng và Nồi bánh có ở Làng Aru, Làng Mori, Làng Kakarot. Thủy Tinh dẫn Sơn Tinh xuất hiện ngẫu nhiên trên các map được cấu hình; xem vị trí bên dưới. Tắt sẽ ẩn Vua Hùng, Nồi bánh và Dưa hấu; chặn dâng lễ, nấu bánh và thu hoạch. Dữ liệu cây đã trồng được giữ lại để thu hoạch khi bật lại.'],
  'tet'=>['name'=>'Tết Nguyên Đán','icon'=>'🧧','scope'=>'Lân con · Cây nêu','detail'=>'Điều khiển 10 Lân con và ẩn/hiện NPC Cây nêu đã có trên map. Không tạo thêm NPC Đường Tăng từ cấu hình Tết cũ.'],
  'halloween'=>['name'=>'Halloween','icon'=>'🎃','scope'=>'Bí Ma · Ma Trơi · Dơi','detail'=>'Điều khiển 10 boss mỗi loại và phần thưởng của chúng.'],
  'christmas'=>['name'=>'Giáng sinh','icon'=>'🎄','scope'=>'Ông già Noel · Quà rơi từ boss','detail'=>'Điều khiển 30 Ông già Noel. Khi tắt, boss ngừng xuất hiện và ngừng thả quà.'],

@@ -29,7 +29,8 @@ public class ThuyTinh extends Boss {
     private long lastTimeReward;
 
     public ThuyTinh() throws Exception {
-        super(HUNGVUONG_EVENT, BossID.THUY_TINH, true, false, BossesData.THUY_TINH);
+        super(HUNGVUONG_EVENT, BossID.THUY_TINH, false, false, BossesData.THUY_TINH);
+        this.panelIndependent = true;
     }
 
     @Override

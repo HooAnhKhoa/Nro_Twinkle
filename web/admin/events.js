@@ -5,6 +5,11 @@ async function api(body){const response=await fetch('events.php',{method:'POST',
 function lock(){cards.forEach(card=>card.querySelector('button').disabled=busy||!state);document.querySelectorAll('[data-undo]').forEach(button=>button.disabled=busy);$('#reloadEvents').disabled=busy;}
 function render(){const values=new Map(state.events.map(row=>[row.event_key,Number(row.enabled)===1]));let count=0;
 cards.forEach(card=>{const on=values.get(card.dataset.event)===true;count+=Number(on);card.classList.toggle('is-on',on);card.querySelector('.event-state').textContent=on?'Đang bật':'Đang tắt';card.querySelector('button').setAttribute('aria-checked',String(on));});
+const hungCard=$('[data-event="hung_vuong"]');let runtime=hungCard.querySelector('.event-boss-runtime');
+if(!runtime){runtime=document.createElement('details');runtime.className='event-boss-runtime';hungCard.append(runtime);}runtime.replaceChildren();
+const bossHeading=document.createElement('summary');bossHeading.textContent='Boss đang xuất hiện: '+(state.hung_bosses||[]).reduce((total,boss)=>total+Number(boss.online_count),0);runtime.append(bossHeading);
+if(!(state.hung_bosses||[]).length){const note=document.createElement('p');note.textContent='Chưa nhận dữ liệu boss từ game.';runtime.append(note);}
+(state.hung_bosses||[]).forEach(boss=>{const line=document.createElement('p');const fresh=boss.age!==null&&Number(boss.age)<=12;line.textContent=`${boss.name}: ${Number(boss.online_count)} đang trên map${fresh?'':' · dữ liệu cũ'}`;runtime.append(line);let locations=[];try{locations=JSON.parse(boss.current_locations||'[]');}catch{}if(Array.isArray(locations))locations.forEach(location=>{const place=document.createElement('span');place.className='event-boss-place';place.textContent=`${location.map_name} (#${location.map_id}) · Khu ${location.zone_id}${Number(location.count)>1?' · '+location.count+' boss':''}`;runtime.append(place);});});
 $('#eventCount').textContent=`${count}/${cards.length} hoạt động đang bật`;
 const config=state.config,online=config.age!==null&&Number(config.age)<=12;
 $('#eventSync').textContent=!online?'Game chưa kết nối bản hỗ trợ EV':Number(config.revision)===Number(config.applied_revision)?'✓ Game đã nhận cấu hình':'◷ Đang chờ game nhận cấu hình…';
