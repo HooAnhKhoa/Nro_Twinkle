@@ -31,6 +31,7 @@ public class ItemMap {
     public boolean isBlackBall;
     public boolean isNamecBall;
     public boolean isPickedUp;
+    public boolean panelSuppressed;
     public String id;
 
     public ItemMap(Zone zone, int tempId, int quantity, int x, int y, long playerId) {

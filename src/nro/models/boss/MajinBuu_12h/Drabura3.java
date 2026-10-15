@@ -162,7 +162,7 @@ public class Drabura3 extends Boss {
     @Override
     public void die(Player plKill) {
         if (plKill != null) {
-            reward(plKill);
+            giveReward(plKill);
             ServerNotify.gI().notify(plKill.name + ": Đã tiêu diệt được " + this.name + " mọi người đều ngưỡng mộ.");
         }
         this.lastTimeChatAfk = System.currentTimeMillis();

@@ -151,7 +151,7 @@ public class NinjaAoTim extends Boss {
     @Override
     public void die(Player plKill) {
         if (plKill != null) {
-            reward(plKill);
+            giveReward(plKill);
         }
         this.changeStatus(BossStatus.DIE);
     }

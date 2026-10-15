@@ -135,6 +135,7 @@ public final class PanelBridge {
             Map<Integer,Double> nextSkills=new HashMap<>();try(Statement s=c.createStatement();ResultSet r=s.executeQuery("SELECT * FROM panel_skill_rate")){while(r.next())nextSkills.put(r.getInt(1),r.getDouble(2));}skillRates=nextSkills;
             try{nro.models.services.IntrinsicService.gI().reloadCatalog(c);}catch(SQLException error){Logger.logException(PanelBridge.class,error);}
             try{nro.models.event.EventManager.reload(c);}catch(SQLException error){Logger.logException(PanelBridge.class,error);}
+            try{nro.models.boss.BossDrops.reload(c);}catch(SQLException error){Logger.logException(PanelBridge.class,error);}
             publishBosses(c);Map<String,BossConfig> next=new HashMap<>();
             try(Statement s=c.createStatement();ResultSet r=s.executeQuery("SELECT * FROM boss_web_config WHERE customized=1")){while(r.next()){BossConfig cfg=new BossConfig();cfg.hp=r.getInt("hp");cfg.damage=r.getInt("damage");cfg.rest=r.getInt("rest_seconds");cfg.lifetime=r.getObject("lifetime_seconds")==null?-1:r.getInt("lifetime_seconds");cfg.enabled=r.getBoolean("enabled");next.put(r.getString("boss_key"),cfg);}}bossConfig=next;
             CommandResult result;while((result=results.poll())!=null)try(PreparedStatement s=c.prepareStatement("UPDATE boss_web_command SET completed_at=NOW(),result=? WHERE id=? AND completed_at IS NULL")){s.setString(1,result.text);s.setLong(2,result.id);s.executeUpdate();}

@@ -44,7 +44,7 @@ public class Virut extends Boss {
 
     @Override
     public void die(Player plKill) {
-        this.reward(plKill);
+        giveReward(plKill);
         this.changeStatus(BossStatus.DIE);
     }
 

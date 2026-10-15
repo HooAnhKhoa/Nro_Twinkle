@@ -50,12 +50,14 @@ public class OngGiaNoel extends Boss {
     private void giftBox(){
         if(!EventManager.bossEnabled(this)||zone==null||!Util.canDoWithTime(lastTimeDrop,60000))return;
         lastTimeDrop=System.currentTimeMillis();chat("Hô hô hô! Giáng sinh vui vẻ!");
+        nro.models.boss.BossDrops.rewardPublic(this,()->{
         int[] denominators={3,5,7};
         for(int i=0;i<denominators.length;i++)if(rollGift(denominators[i])){
             int x=Math.max(24,Math.min(zone.map.mapWidth-24,location.x+(i-1)*40));
             // ItemMap registers itself: create it only after the probability check.
             Service.gI().dropItemMap(zone,new ItemMap(zone,648,1,x,zone.map.yPhysicInTop(x,0),-1));
         }
+        });
     }
     @Override public void active(){attack();}
     @Override public void attack(){

@@ -66,6 +66,13 @@ public class Boss extends Player implements IBoss {
 
     public boolean panelIndependent = false;
     public boolean panelStatsApplied = false;
+    private boolean panelRewardProcessed;
+    public boolean panelDropEligible(Player p){return p!=null&&!p.isBot&&this.zone!=null&&nro.models.server.PanelBridge.enabled(this);}
+    public final synchronized void giveReward(Player p){
+        if(panelRewardProcessed||!panelDropEligible(p))return;
+        panelRewardProcessed=true;
+        BossDrops.reward(this,p,()->reward(p));
+    }
     public boolean panelCanSpawn() { return this.panelIndependent && this.parentBoss == null; }
     public void panelSetRest(int seconds) { this.secondsRest = seconds; }
     public void panelSpawn() { this.currentLevel = -1; this.changeStatus(BossStatus.RESPAWN); }
@@ -438,7 +445,7 @@ public class Boss extends Player implements IBoss {
                 }
             }
             case AFK ->
-                this.afk();
+                BossDrops.nativeScope(this,()->this.afk());
             case ACTIVE -> {
                 this.chatM();
                 if (this.effectSkill.isCharging && !Util.isTrue(1, 20) || this.effectSkill.useTroi) {
@@ -478,6 +485,7 @@ public class Boss extends Player implements IBoss {
 
     @Override
     public void respawn() {
+        this.panelRewardProcessed=false;
         this.panelStatsApplied = false;
         this.currentLevel++;
         if (this.currentLevel >= this.data.length) {
@@ -709,13 +717,13 @@ public class Boss extends Player implements IBoss {
                 || !MapService.gI().isMapDoanhTrai(this.zone.map.mapId)
                 || !MapService.gI().isMapBanDoKhoBau(this.zone.map.mapId))) {
             if (!plKill.isBot) {
-                reward(plKill);
+                giveReward(plKill);
             }
             ServerNotify.gI().notify(plKill.name + ": Đã tiêu diệt được " + this.name + " mọi người đều ngưỡng mộ.");
             this.changeStatus(BossStatus.DIE);
         } else {
             if (plKill != null && !plKill.isBot) {
-                reward(plKill);
+                giveReward(plKill);
             }
             this.changeStatus(BossStatus.DIE);
         }

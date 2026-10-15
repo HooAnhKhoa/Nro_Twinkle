@@ -175,8 +175,11 @@ public class Broly extends Boss {
 
     @Override
     public void die(Player plKill) {
+        giveReward(plKill);
         this.changeStatus(BossStatus.DIE);
     }
+
+    @Override public void reward(Player plKill) {} // Native Broly had no death reward.
 
     private void tangChiSo() {
         int hpMax = this.nPoint.hpMax;

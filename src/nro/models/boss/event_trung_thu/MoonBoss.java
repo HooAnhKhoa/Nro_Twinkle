@@ -56,6 +56,7 @@ public class MoonBoss extends Boss {
         if(!accepts(attacker)||isDie())return 0;
         return super.injured(attacker,damage,piercing,mobAttack);
     }
+    @Override public boolean panelDropEligible(Player p){return super.panelDropEligible(p)&&!rewarded&&accepts(p);}
     @Override public synchronized void reward(Player p){
         if(rewarded||!accepts(p)||zone==null)return;rewarded=true;
         if(kind<=1){

@@ -131,7 +131,7 @@ public class AnTrom extends Boss {
     @Override
     public void die(Player plKill) {
         BadgesTaskService.updateCountBagesTask(plKill, ConstTaskBadges.BI_MOC_SACH_TUI, 1);
-        this.reward(plKill);
+        giveReward(plKill);
         this.changeStatus(BossStatus.DIE);
     }
 

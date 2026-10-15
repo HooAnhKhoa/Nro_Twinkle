@@ -112,7 +112,7 @@ public class Cadic extends Boss {
     @Override
     public void die(Player plKill) {
         if (plKill != null) {
-            reward(plKill);
+            giveReward(plKill);
             ServerNotify.gI().notify(plKill.name + ": Đã tiêu diệt được " + this.name + " mọi người đều ngưỡng mộ.");
         }
         this.lastTimeAfk = System.currentTimeMillis();

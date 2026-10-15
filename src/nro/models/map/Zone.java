@@ -414,6 +414,7 @@ public class Zone {
     }
 
     public synchronized void addItem(ItemMap itemMap) {
+        if(itemMap!=null && (itemMap.panelSuppressed||nro.models.boss.BossDrops.suppress(itemMap))){itemMap.panelSuppressed=true;return;}
         if (itemMap != null && !items.contains(itemMap)) {
             items.add(0, itemMap);
         }

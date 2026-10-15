@@ -1537,6 +1537,7 @@ public class Service {
     }
 
     public void dropItemMap(Zone zone, ItemMap item) {
+        if(item.panelSuppressed)return;
         Message msg;
         try {
             msg = new Message(68);
@@ -1553,6 +1554,7 @@ public class Service {
     }
 
     public void dropItemMapForMe(Player player, ItemMap item) {
+        if(item.panelSuppressed)return;
         Message msg;
         try {
             msg = new Message(68);
