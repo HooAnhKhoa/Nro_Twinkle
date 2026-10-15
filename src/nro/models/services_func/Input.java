@@ -600,11 +600,11 @@ public class Input {
     }
 
     public void createFormTradeGold(Player pl) {
-        createForm(pl, TRADE_GOLD, "Tỉ lệ quy đổi: 10.000 vnđ = 40 Thỏi vàng \n Số dư hiện tại: " + pl.getSession().vnd, new SubInput("Số lượng", NUMERIC));
+        createForm(pl, TRADE_GOLD, "Tỉ lệ quy đổi: 10.000 vnđ = 40 Thỏi vàng + 5.000 điểm Quy Lão \n Số dư hiện tại: " + pl.getSession().vnd, new SubInput("Số lượng", NUMERIC));
     }
 
     public void createFormTradeGem(Player pl) {
-        createForm(pl, TRADE_GEM, "Tỉ lệ quy đổi: 10.000 vnđ = 10000 ngọc \n Số dư hiện tại: " + pl.getSession().vnd, new SubInput("Số lượng", NUMERIC));
+        createForm(pl, TRADE_GEM, "Tỉ lệ quy đổi: 10.000 vnđ = 10000 ngọc + 5.000 điểm Quy Lão \n Số dư hiện tại: " + pl.getSession().vnd, new SubInput("Số lượng", NUMERIC));
     }
 
     public void createFormChangeName(Player pl, Player plChanged) {

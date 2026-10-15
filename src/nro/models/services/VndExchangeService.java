@@ -14,6 +14,7 @@ import nro.models.utils.Logger;
 
 /** Debits the current database balance and saves all rewards in the same transaction. */
 public final class VndExchangeService {
+    public static final int POINTS_PER_10000 = 5000;
     private static final BagExchange EXCHANGE=new BagExchange(0,System::currentTimeMillis);
     public record Result(boolean success,String message){}
     private static Result fail(String message){return new Result(false,message);}
@@ -45,7 +46,7 @@ public final class VndExchangeService {
                     p.getSession().vnd=balance;
                     if(gold&&!active)return fail("Vui lòng kích hoạt tài khoản để đổi thỏi vàng.");
                     if(balance<amount)return fail("Số dư VNĐ không đủ, vui lòng nạp thêm.");
-                    int points=(amount/10000)*50,tickets=(amount/10000)*10,bars=(amount/1000)*4;
+                    int points=(amount/10000)*POINTS_PER_10000,tickets=(amount/10000)*10,bars=(amount/1000)*4;
                     long pointAfter=(long)p.event.getEventPoint()+points;
                     if(pointAfter>Integer.MAX_VALUE)return fail("Điểm sự kiện sẽ vượt giới hạn. Chưa trừ VNĐ.");
                     List<Item> items=new ArrayList<>();

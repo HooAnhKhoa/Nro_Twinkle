@@ -35,7 +35,7 @@ public class BoMong extends Npc {
     public void openBaseMenu(Player player) {
         if (isHome()) {
             if (canOpenNpc(player)) createOtherMenu(player, HOME_EXCHANGE,
-                    "Đổi số dư VNĐ của tài khoản thành thỏi vàng hoặc ngọc xanh.\n10.000 VNĐ = 40 thỏi vàng hoặc 10.000 ngọc xanh.",
+                    "Đổi số dư VNĐ của tài khoản thành thỏi vàng hoặc ngọc xanh.\n10.000 VNĐ = 40 thỏi vàng hoặc 10.000 ngọc xanh.\nMỗi 10.000 VNĐ đổi thêm 5.000 điểm Quy Lão.",
                     "Đổi\nthỏi vàng", "Đổi\nngọc xanh", "Đóng");
             return;
         }

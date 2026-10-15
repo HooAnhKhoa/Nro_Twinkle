@@ -36,10 +36,12 @@ public class VndExchangeTest {
     try(ResultSet r=s.executeQuery("SELECT * FROM item_option_template ORDER BY id")){while(r.next())Manager.ITEM_OPTION_TEMPLATES.add(new ItemOptionTemplate(r.getInt("id"),r.getString("NAME"),0));}
    }
    User gold=user(c,1,50000,8,true);check(VndExchangeService.redeem(gold,10000,true).success(),"gold-bar exchange succeeds");
-   check(qty(gold,457)==40&&qty(gold,718)==10&&gold.event.getEventPoint()==50,"10000 VND grants 40 bars, ten tickets and fifty points");
-   check(balance(c,gold)==40000&&gold.getSession().vnd==40000&&scalar(c,"SELECT event_point FROM player WHERE id="+gold.id)==50,"database balance, session mirror and points update together");
-   User gem=user(c,2,50000,8,false);gem.getSession().vnd=0;check(VndExchangeService.redeem(gem,10000,false).success()&&gem.inventory.gem==10100&&qty(gem,718)==10,"gem exchange uses actual DB balance even with stale zero session");
+   check(qty(gold,457)==40&&qty(gold,718)==10&&gold.event.getEventPoint()==5000,"10000 VND grants 40 bars, ten tickets and five thousand points");
+   check(balance(c,gold)==40000&&gold.getSession().vnd==40000&&scalar(c,"SELECT event_point FROM player WHERE id="+gold.id)==5000,"database balance, session mirror and points update together");
+   User gem=user(c,2,50000,8,false);gem.getSession().vnd=0;check(VndExchangeService.redeem(gem,10000,false).success()&&gem.inventory.gem==10100&&qty(gem,718)==10&&gem.event.getEventPoint()==5000,"gem exchange uses actual DB balance even with stale zero session");
    check(balance(c,gem)==40000&&scalar(c,"SELECT JSON_EXTRACT(data_inventory,'$[1]') FROM player WHERE id="+gem.id)==10100,"gem reward persists with debit");
+   User doubleAmount=user(c,14,50000,8,true);check(VndExchangeService.redeem(doubleAmount,20000,true).success()&&doubleAmount.event.getEventPoint()==10000&&scalar(c,"SELECT event_point FROM player WHERE id="+doubleAmount.id)==10000,"20000 VND grants and persists exactly ten thousand Quy Lao points");
+   User maxAmount=user(c,15,5000000,8,true);check(VndExchangeService.redeem(maxAmount,5000000,false).success()&&maxAmount.event.getEventPoint()==2500000&&balance(c,maxAmount)==0,"maximum exchange computes 2500000 points without overflow");
    User poor=user(c,3,5000,8,true);poor.getSession().vnd=100000;check(!VndExchangeService.redeem(poor,10000,true).success()&&balance(c,poor)==5000&&poor.getSession().vnd==5000&&qty(poor,457)==0,"stale high session cannot overspend the database balance");
    for(int invalid:new int[]{-1,0,9999,5000001})check(!VndExchangeService.redeem(poor,invalid,false).success()&&balance(c,poor)==5000,"reject amount outside original bounds: "+invalid);
    User inactive=user(c,4,50000,8,false);check(!VndExchangeService.redeem(inactive,10000,true).success()&&balance(c,inactive)==50000,"gold keeps original activated-account requirement");
@@ -47,7 +49,7 @@ public class VndExchangeTest {
    packed.inventory.itemsBag.set(0,ItemService.gI().createNewItem((short)888,1));check(!VndExchangeService.redeem(packed,10000,false).success()&&packed.inventory.gem==100&&balance(c,packed)==50000,"full bag also rolls back gem reward and balance");
    User limit=user(c,6,50000,8,true);limit.inventory.gem=Integer.MAX_VALUE;check(!VndExchangeService.redeem(limit,10000,false).success()&&balance(c,limit)==50000&&qty(limit,718)==0,"gem overflow never debits VND");
    limit.event.setEventPoint(Integer.MAX_VALUE);check(!VndExchangeService.redeem(limit,10000,true).success()&&balance(c,limit)==50000,"point overflow never debits VND");
-   User fractional=user(c,7,50000,8,true);check(VndExchangeService.redeem(fractional,15000,true).success()&&qty(fractional,457)==60&&qty(fractional,718)==10&&fractional.event.getEventPoint()==50,"non-round amounts keep existing integer reward ratios");
+   User fractional=user(c,7,50000,8,true);check(VndExchangeService.redeem(fractional,15000,true).success()&&qty(fractional,457)==60&&qty(fractional,718)==10&&fractional.event.getEventPoint()==5000,"non-round amounts keep existing integer reward ratios");
    User rollback=user(c,8,50000,8,true);
    try(Statement s=c.createStatement()){s.execute("DROP TRIGGER IF EXISTS qa_vnd_failure");s.execute("CREATE TRIGGER qa_vnd_failure BEFORE UPDATE ON player FOR EACH ROW BEGIN IF OLD.id="+rollback.id+" THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Expected QA VND failure'; END IF; END");}
    try{check(!VndExchangeService.redeem(rollback,10000,true).success()&&balance(c,rollback)==50000&&qty(rollback,457)==0&&qty(rollback,718)==0&&rollback.getSession().vnd==50000&&rollback.event.getEventPoint()==0,"storage failure restores DB debit, bag, balance mirror and points");}finally{try(Statement s=c.createStatement()){s.execute("DROP TRIGGER qa_vnd_failure");}}
