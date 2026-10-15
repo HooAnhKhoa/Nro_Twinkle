@@ -1010,9 +1010,10 @@ public class ShopService {
     }
 
     public void showConfirmSellItem(Player pl, int where, int index) {
+        int wireIndex=index;
         Item item = null;
         if (where == 0) {
-            if (index < 0) {
+            if (index < 0||index>=pl.inventory.itemsBody.size()) {
                 Service.gI().sendThongBao(pl, "Không thể thực hiện");
                 return;
             }
@@ -1021,6 +1022,7 @@ public class ShopService {
             if (pl.getSession().version < 220) {
                 index -= (pl.inventory.itemsBody.size() - 7);
             }
+            wireIndex=index;index=nro.models.services.BagPages.global(pl,index);if(index<0)return;
             item = pl.inventory.itemsBag.get(index);
         }
         if (item != null && item.isNotNullItem()) {
@@ -1050,7 +1052,8 @@ public class ShopService {
             try {
                 msg = new Message(7);
                 msg.writer().writeByte(where);
-                msg.writer().writeShort(index);
+                msg.writer().writeShort(wireIndex);
+                nro.models.services.BagPages.remember(pl,item,nro.models.services.BagPages.SELL,where,wireIndex);
                 msg.writer().writeUTF(text);
                 pl.sendMessage(msg);
             } catch (Exception e) {
@@ -1064,6 +1067,7 @@ public class ShopService {
     }
 
     public void sellItem(Player pl, int where, int index) {
+        int wireIndex=index;
         if (pl.idMark.getShopOpen() == null || pl.idMark.getTagNameShop() == null) {
             Service.gI().sendThongBao(pl, "Không thể thực hiện");
             return;
@@ -1074,10 +1078,13 @@ public class ShopService {
         }
         Item item = null;
         if (where == 0) {
+            if(index>=pl.inventory.itemsBody.size())return;
             item = pl.inventory.itemsBody.get(index);
         } else {
+            index=nro.models.services.BagPages.global(pl,index);if(index<0)return;
             item = pl.inventory.itemsBag.get(index);
         }
+        if(!nro.models.services.BagPages.confirm(pl,item,nro.models.services.BagPages.SELL,where,wireIndex))return;
         if (item != null) {
             if (item.template.id == 570) {
                 Service.gI().sendThongBao(pl, "Bạn không thể bán vật phẩm này");

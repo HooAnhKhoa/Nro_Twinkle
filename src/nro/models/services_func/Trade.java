@@ -102,12 +102,15 @@ public class Trade {
                     goldTrade2 = quantity;
                 }
             } else { // Giao dịch vật phẩm
+                int globalIndex=nro.models.services.BagPages.global(pl,index);
+                if(globalIndex<0)return;
                 Item item = null;
                 if (pl.equals(this.player1)) {
-                    item = itemsBag1.get(index);
+                    if(globalIndex>=itemsBag1.size())return;item = itemsBag1.get(globalIndex);
                 } else {
-                    item = itemsBag2.get(index);
+                    if(globalIndex>=itemsBag2.size())return;item = itemsBag2.get(globalIndex);
                 }
+                if(!item.isNotNullItem())return;
                 if (item.template.id == 570) {
                     Service.gI().sendThongBao(pl, "Không thể giao dịch Rương Gỗ");
                 }

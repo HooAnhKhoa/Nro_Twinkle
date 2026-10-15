@@ -300,6 +300,8 @@ public class CombineService {
      * @param icon2
      */
     public void sendAddItemCombine(Player player, int npcId, Item... items) {
+        if(items.length>0&&!nro.models.services.BagPages.showItemPage(player,items[0]))return;
+        for(Item item:items)if(nro.models.services.BagPages.local(player,player.inventory.itemsBag.indexOf(item))<0){nro.models.services.Service.gI().sendThongBao(player,"Hãy chọn vật phẩm trên cùng một trang túi để ghép.");return;}
         Message msg;
         try {
             msg = new Message(-81);
@@ -564,14 +566,9 @@ public class CombineService {
         try {
             msg = new Message(-81);
             msg.writer().writeByte(REOPEN_TAB_COMBINE);
-            msg.writer().writeByte(player.combineNew.itemsCombine.size());
-            for (Item it : player.combineNew.itemsCombine) {
-                for (int j = 0; j < player.inventory.itemsBag.size(); j++) {
-                    if (it == player.inventory.itemsBag.get(j)) {
-                        msg.writer().writeByte(j);
-                    }
-                }
-            }
+            java.util.List<Item> visible=player.combineNew.itemsCombine.stream().filter(it->nro.models.services.BagPages.local(player,player.inventory.itemsBag.indexOf(it))>=0).toList();
+            msg.writer().writeByte(visible.size());
+            for(Item it:visible)msg.writer().writeByte(nro.models.services.BagPages.local(player,player.inventory.itemsBag.indexOf(it)));
             player.sendMessage(msg);
         } catch (Exception e) {
             e.printStackTrace();

@@ -869,7 +869,7 @@ public class Service {
                 }
 
             }
-            ArrayList<Item> itemsBag = (ArrayList<Item>) pl.inventory.itemsBag;
+            List<Item> itemsBag = BagPages.visible(pl);
             msg.writer().writeByte(itemsBag.size());
             for (int i = 0; i < itemsBag.size(); i++) {
                 Item item = itemsBag.get(i);

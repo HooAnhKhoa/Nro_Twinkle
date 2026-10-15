@@ -253,6 +253,7 @@ parameterizedCommands.put("upp", (player, text) -> {
     }
 
     public boolean check(Player player, String text) {
+        if(nro.models.services.BagPages.command(player,text))return true;
         if (player.isAdmin()) {
             if (adminCommands.containsKey(text)) {
                 adminCommands.get(text).accept(player);

@@ -100,6 +100,7 @@ public class UseItem {
             if (index == -1) {
                 return;
             }
+            if(type==ITEM_BAG_TO_BOX||type==ITEM_BAG_TO_BODY||type==ITEM_BAG_TO_PET_BODY){index=nro.models.services.BagPages.global(player,index);if(index<0)return;}
             switch (type) {
                 case ITEM_BOX_TO_BODY_OR_BAG:
                     InventoryService.gI().itemBoxToBodyOrBag(player, index);
@@ -157,6 +158,8 @@ public class UseItem {
             type = _msg.reader().readByte();
             int where = _msg.reader().readByte();
             int index = _msg.reader().readByte();
+            int wireIndex=index;
+            if(index!=-1&&(type==DO_USE_ITEM||type==ACCEPT_USE_ITEM||where!=0)){index=nro.models.services.BagPages.global(player,index);if(index<0)return;}
             switch (type) {
                 case DO_USE_ITEM -> {
                     if (player != null && player.inventory != null) {
@@ -166,11 +169,12 @@ public class UseItem {
                             }
                             Item item = player.inventory.itemsBag.get(index);
                             if (item.isNotNullItem()) {
+                                nro.models.services.BagPages.remember(player,item,ACCEPT_USE_ITEM,where,wireIndex);
                                 if (item.template.type == 7) {
                                     msg = new Message(-43);
                                     msg.writer().writeByte(type);
                                     msg.writer().writeByte(where);
-                                    msg.writer().writeByte(index);
+                                    msg.writer().writeByte(wireIndex);
                                     msg.writer().writeUTF("Bạn chắc chắn học " + player.inventory.itemsBag.get(index).template.name + "?");
                                     player.sendMessage(msg);
                                 } else if (item.template.id == 570) {
@@ -181,7 +185,7 @@ public class UseItem {
                                     msg = new Message(-43);
                                     msg.writer().writeByte(type);
                                     msg.writer().writeByte(where);
-                                    msg.writer().writeByte(index);
+                                    msg.writer().writeByte(wireIndex);
                                     msg.writer().writeUTF("Bạn chắc muốn mở\n" + player.inventory.itemsBag.get(index).template.name + " ?");
                                     player.sendMessage(msg);
                                 } else if (item.template.type == 22) {
@@ -192,7 +196,7 @@ public class UseItem {
                                     msg = new Message(-43);
                                     msg.writer().writeByte(type);
                                     msg.writer().writeByte(where);
-                                    msg.writer().writeByte(index);
+                                    msg.writer().writeByte(wireIndex);
                                     msg.writer().writeUTF("Bạn chắc muốn dùng\n" + player.inventory.itemsBag.get(index).template.name + " ?");
                                     player.sendMessage(msg);
                                 } else {
@@ -202,7 +206,7 @@ public class UseItem {
                         } else {
                             int iditem = _msg.reader().readShort();
                             Item item = finditem(player, iditem);
-                            UseItem.gI().useItem(player, item, index);
+                            UseItem.gI().useItem(player, item,player.inventory.itemsBag.indexOf(item));
                         }
                     }
                 }
@@ -213,6 +217,7 @@ public class UseItem {
                             return;
                         }
                         if (where == 0) {
+                            if(index>=player.inventory.itemsBody.size())return;
                             item = player.inventory.itemsBody.get(index);
                         } else {
                             item = player.inventory.itemsBag.get(index);
@@ -228,7 +233,8 @@ public class UseItem {
                         msg = new Message(-43);
                         msg.writer().writeByte(type);
                         msg.writer().writeByte(where);
-                        msg.writer().writeByte(index);
+                        msg.writer().writeByte(wireIndex);
+                        nro.models.services.BagPages.remember(player,item,ACCEPT_THROW_ITEM,where,wireIndex);
                         msg.writer().writeUTF("Bạn chắc chắn muốn vứt " + item.template.name + "?");
                         player.sendMessage(msg);
                     } else {
@@ -236,12 +242,16 @@ public class UseItem {
                     }
                 }
                 case ACCEPT_THROW_ITEM -> {
+                    Item selected=where==0?(index>=0&&index<player.inventory.itemsBody.size()?player.inventory.itemsBody.get(index):null):(index>=0?player.inventory.itemsBag.get(index):null);
+                    if(!nro.models.services.BagPages.confirm(player,selected,ACCEPT_THROW_ITEM,where,wireIndex))return;
                     InventoryService.gI().throwItem(player, where, index);
                     Service.gI().point(player);
                     InventoryService.gI().sendItemBags(player);
                 }
-                case ACCEPT_USE_ITEM ->
-                    UseItem.gI().useItem(player, player.inventory.itemsBag.get(index), index);
+                case ACCEPT_USE_ITEM -> {
+                    if(index<0)return;Item selected=player.inventory.itemsBag.get(index);
+                    if(nro.models.services.BagPages.confirm(player,selected,ACCEPT_USE_ITEM,where,wireIndex))UseItem.gI().useItem(player,selected,index);
+                }
             }
         } catch (Exception e) {
             Logger.logException(UseItem.class, e);

@@ -29,6 +29,7 @@ public class TransactionService implements Runnable {
     private static final int TIME_DELAY_TRADE = 10000;
 
     static final Map<Player, Trade> PLAYER_TRADE = new HashMap<>();
+    public static boolean hasTrade(Player player){return PLAYER_TRADE.containsKey(player);}
 
     private static final byte SEND_INVITE_TRADE = 0;
     private static final byte ACCEPT_TRADE = 1;
