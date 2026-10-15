@@ -12,7 +12,10 @@ function dropCatalog(): array { return [
  'skh'=>['name'=>'Set kích hoạt','icon'=>'⚔️','base'=>[200/9999],'detail'=>'2/9.999 tại map SKH và map riêng tư; giữ bonus trang bị và cỏ bốn lá.'],
  'gold'=>['name'=>'Vàng','icon'=>'🪙','base'=>[5,1,30,15,1],'detail'=>'Ba hành tinh 5%; Nappa 1%; map lạnh 30%; tương lai 15%; phó bản 1%. Không đổi số vàng.'],
  'capsule'=>['name'=>'Capsule kỳ bí / vỡ','icon'=>'💊','base'=>[20,100/9999,100/19999],'detail'=>'Capsule kỳ bí cần máy dò; capsule vỡ tại map SKH / riêng tư.'],
- 'event'=>['name'=>'Vật phẩm sự kiện','icon'=>'🎉','base'=>[5,1,100/130,20,10],'detail'=>'Các món đang có trong code, chả giò và hồng đào; giữ điều kiện map.'],
+ 'hung_vuong'=>['name'=>'Nguyên liệu Giỗ Tổ','icon'=>'🏮','base'=>[100,5,100],'detail'=>'Chỉ rơi khi bật Giỗ Tổ và Vật phẩm EV. Sính lễ từ đúng quái, nguyên liệu từ quái thường, Tem từ Sơn Tinh/Thủy Tinh.'],
+ 'summer'=>['name'=>'Khúc mía','icon'=>'🥤','base'=>[5],'detail'=>'Chỉ rơi khi bật Xe nước mía và Vật phẩm EV. Nước đá giữ nguồn mua tại Chi Chi.'],
+ 'bill_food'=>['name'=>'Thức ăn cho Bill','icon'=>'🍱','base'=>[5,1,100/130],'detail'=>'Tayaki, Kẹo táo, Kem que đôi, Mochi, Ramen; độc lập với công tắc mùa lễ.'],
+ 'quest_items'=>['name'=>'Vật phẩm nhiệm vụ','icon'=>'📋','base'=>[20,10],'detail'=>'Cuốn chả giò ở Doanh trại và Hồng Đào ở Ngũ Hành Sơn; độc lập với công tắc mùa lễ.'],
  'gem'=>['name'=>'Ngọc','icon'=>'💚','base'=>[.0001],'detail'=>'1/1.000.000; ngọc miễn phí bảo đảm giữ nguyên.'],
  'skill'=>['name'=>'Bí kíp tuyệt kỹ','icon'=>'📜','base'=>[10,20],'detail'=>'Ngục tù: nhánh 10% hoặc nhánh 20% có điều kiện set hủy diệt / kích hoạt.'],
  ]; }

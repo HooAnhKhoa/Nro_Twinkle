@@ -613,6 +613,7 @@ public class Zone {
     }
 
     public void mapInfo(Player pl) {
+        synchronized(pl) {
         Message msg;
         try {
             msg = new Message(-24);
@@ -644,11 +645,12 @@ public class Zone {
                 msg.writer().writeByte(0);
             }
 
-            // mob
+            List<Mob> mobs = new ArrayList<>();
+            // Keep dead offering slots while ON so subsequent client mob indices remain stable.
             try {
-                List<Mob> mobs = new ArrayList<>();
                 for (Mob mob : this.mobs) {
-                    if (mob.isBigBoss() && mob.tempId != 70 && mob.isDie()) {
+                    if (!nro.models.event.OfferingMobs.visible(mob))continue;
+                    if (mob.isBigBoss() && mob.tempId != 70 && mob.isDie() && !nro.models.event.OfferingMobs.isOffering(mob)) {
                         continue;
                     }
                     mobs.add(mob);
@@ -727,7 +729,7 @@ public class Zone {
             msg.writer().writeByte(pl.idMark.getIdSpaceShip());
             msg.writer().writeByte(this.map.mapId == 148 ? 1 : 0);
             pl.sendMessage(msg);
-            nro.models.event.EventManager.npcMapSent(pl,this,npcs);
+            nro.models.event.EventManager.npcMapSent(pl,this,npcs,mobs);
 
             msg.cleanup();
 
@@ -735,6 +737,8 @@ public class Zone {
             Logger.logException(Service.class, e);
         }
     }
+
+        }
 
     public TrapMap isInTrap(Player player) {
         for (TrapMap trap : this.trapMaps) {

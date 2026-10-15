@@ -36,6 +36,7 @@ public class ThuyTinh extends Boss {
     @Override
     public void reward(Player plKill) {
         if (!nro.models.event.EventManager.bossEnabled(this)) return;
+        nro.models.event.EventDrops.rewardStamp(this,plKill);
         int diem = 5;
         plKill.event.addEventPoint(diem);
         Service.gI().sendThongBao(plKill, "+5 Point");

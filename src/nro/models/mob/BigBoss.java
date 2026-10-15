@@ -15,6 +15,7 @@ public class BigBoss extends Mob {
 
     @Override
     public void update() {
+        if (nro.models.event.OfferingMobs.tick(this)) return;
         if (zone.isGoldenFriezaAlive && TimeUtil.is21H()) {
             if (!isDie()) {
                 startDie();

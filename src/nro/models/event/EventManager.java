@@ -13,6 +13,7 @@ import nro.models.consts.ConstNpc;
 import nro.models.map.Zone;
 import nro.models.map.service.NpcManager;
 import nro.models.npc.Npc;
+import nro.models.mob.Mob;
 
 /** Independent event switches. Boss populations are allocated once, never on each toggle. */
 public final class EventManager {
@@ -47,11 +48,17 @@ public final class EventManager {
         return ids;
     }
     /** Record the actual transmitted list, not just the latest config (which can change mid-send). */
-    public static void npcMapSent(Player player,Zone zone,List<Npc> npcs) {
+    public static void npcMapSent(Player player,Zone zone,List<Npc> npcs,List<Mob> mobs) {
         synchronized(player) {
-            npcVisibility.put(player,new NpcVisibility(zone,eventNpcIds(npcs)));
+            Set<Integer> ids=eventNpcIds(npcs);
+            for(Mob mob:mobs)if(OfferingMobs.isOffering(mob))ids.add(-1000-mob.id);
+            npcVisibility.put(player,new NpcVisibility(zone,ids));
             if(npcRefreshes.get(player)!=zone)npcRefreshes.remove(player);
         }
+    }
+    public static boolean clientKnowsMob(Player player,Mob mob) {
+        NpcVisibility state=npcVisibility.get(player);
+        return state!=null&&state.zone==mob.zone&&state.ids.contains(-1000-mob.id);
     }
     public static boolean consumeNpcRefresh(Player player) {
         synchronized(player){Zone refreshed=npcRefreshes.remove(player);return refreshed!=null && refreshed==player.zone;}
@@ -62,6 +69,7 @@ public final class EventManager {
             Zone zone=player.zone;
             if(zone==null){npcVisibility.remove(player);npcRefreshes.remove(player);return;}
             Set<Integer> ids=eventNpcIds(NpcManager.getNpcsByMapPlayer(player));
+            for(Mob mob:zone.mobs)if(OfferingMobs.isOffering(mob)&&OfferingMobs.visible(mob))ids.add(-1000-mob.id);
             NpcVisibility previous=npcVisibility.get(player);
             if(previous==null || previous.zone!=zone){npcVisibility.put(player,new NpcVisibility(zone,ids));return;}
             if(previous.ids.equals(ids) || player.zone!=zone)return;
@@ -106,6 +114,7 @@ public final class EventManager {
             }
             // Preserve snapshot identity on unchanged polls so player ticks do not resend NPC packets.
             if(!switches.equals(next))switches=Collections.unmodifiableMap(next);
+            if(initialized)OfferingMobs.publish(connection);
             if(initialized)try(PreparedStatement update=connection.prepareStatement("UPDATE panel_event_runtime SET heartbeat=NOW(),applied_revision=? WHERE id=1")) {
                 update.setLong(1,revision);update.executeUpdate();
             }
@@ -117,6 +126,7 @@ public final class EventManager {
         if(initialized)return;
         new nro.models.event_list.Default().boss();
         new HungVuong().npc();
+        OfferingMobs.seed();
         new HungVuong().boss();
         new Halloween().boss();
         new Christmas().boss();

@@ -55,6 +55,7 @@ public class Mob {
     public long lastTimeDie;
     public int lvMob = 0;
     public int status = 5;
+    public boolean eventOfferingSuspended;
     public int type = 1;
 
     public long lastTimeAttackPlayer;
@@ -115,6 +116,7 @@ public class Mob {
     }
 
     public void injured(Player plAtt, long damage, boolean dieWhenHpFull) {
+        if (!nro.models.event.OfferingMobs.visible(this)) return;
         if (!this.isDie()) {
             if (damage >= this.point.hp) {
                 damage = this.point.hp;
@@ -610,6 +612,7 @@ public class Mob {
             return list;
         }
         int mapid = player.zone.map.mapId;
+        nro.models.event.EventDrops.appendMobDrops(this,player,list,x,yEnd);
         //========================Capsul Kì Bí========================
         if (player.itemTime.isUseMayDo
                 && (nro.models.server.PanelBridge.rollDrop("capsule","capsule.detector",20, 100))
@@ -691,27 +694,27 @@ public class Mob {
             }
         }
         if (MapService.gI().AllMap(mapid)) {
-            if (nro.models.server.PanelBridge.rollDrop("event","event.item1798",5, 100)) {
+            if (nro.models.server.PanelBridge.rollDrop("bill_food","event.item1798",5, 100)) {
                 ItemMap it = new ItemMap(zone, 1798, 1, x, yEnd, player.id);
                 list.add(it);
             }
-            if (nro.models.server.PanelBridge.rollDrop("event","event.item1799",5, 100)) {
+            if (nro.models.server.PanelBridge.rollDrop("bill_food","event.item1799",5, 100)) {
                 ItemMap it = new ItemMap(zone, 1799, 1, x, yEnd, player.id);
                 list.add(it);
             }
-            if (nro.models.server.PanelBridge.rollDrop("event","event.item1800",5, 100)) {
+            if (nro.models.server.PanelBridge.rollDrop("bill_food","event.item1800",5, 100)) {
                 ItemMap it = new ItemMap(zone, 1800, 1, x, yEnd, player.id);
                 list.add(it);
             }
-            if (nro.models.server.PanelBridge.rollDrop("event","event.item1612",5, 100)) {
+            if (nro.models.server.PanelBridge.rollDrop("summer","event.item1612",5, 100)) {
                 ItemMap it = new ItemMap(zone, 1612, 1, x, yEnd, player.id);
                 list.add(it);
             }
-            if (nro.models.server.PanelBridge.rollDrop("event","event.item1801",1, 100)) {
+            if (nro.models.server.PanelBridge.rollDrop("bill_food","event.item1801",1, 100)) {
                 ItemMap it = new ItemMap(zone, 1801, 1, x, yEnd, player.id);
                 list.add(it);
             }
-            if (nro.models.server.PanelBridge.rollDrop("event","event.item1802",1, 130)) {
+            if (nro.models.server.PanelBridge.rollDrop("bill_food","event.item1802",1, 130)) {
                 ItemMap it = new ItemMap(zone, 1802, 1, x, yEnd, player.id);
                 list.add(it);
             }
@@ -779,7 +782,7 @@ public class Mob {
                 tileDrop = (int) (baseTileDrop * 1.15);
             }
 
-            if (nro.models.server.PanelBridge.rollDrop("event","event.camp",tileDrop, 100)) {
+            if (nro.models.server.PanelBridge.rollDrop("quest_items","event.camp",tileDrop, 100)) {
                 int soLuong = 1;
                 list.add(new ItemMap(zone, 1778, soLuong, x, yEnd, player.id));
             }
@@ -1030,7 +1033,7 @@ public class Mob {
             list.add(new ItemMap(zone, 1229, 1, x, yEnd, player.id));
         }
 
-        if ((nro.models.server.PanelBridge.rollDrop("event","event.mountain",10, 100) && MapService.gI().isMapNguHanhSon(mapid))) {
+        if ((nro.models.server.PanelBridge.rollDrop("quest_items","event.mountain",10, 100) && MapService.gI().isMapNguHanhSon(mapid))) {
             list.add(new ItemMap(zone, Util.nextInt(541, 542), 1, x, yEnd, player.id));
         }
 

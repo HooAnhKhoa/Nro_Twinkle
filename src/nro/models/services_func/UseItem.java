@@ -1468,7 +1468,7 @@ public class UseItem {
             }
 
             int id = itemUsed.template.id;
-            if ((id == 1789 || id == 1799 || id == 1800 || id == 1801 || id == 1802) && itemUsed.quantity >= 99) {
+            if ((id == 1798 || id == 1799 || id == 1800 || id == 1801 || id == 1802) && itemUsed.quantity >= 99) {
 
                 InventoryService.gI().subQuantityItemsBag(player, itemUsed, 99);
 

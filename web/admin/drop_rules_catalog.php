@@ -31,9 +31,13 @@ function dropRules(): array {
     $add('capsule.detector','capsule','Quái có máy dò',20,'Quái template 58–65, khi dùng máy dò','Capsule kỳ bí, vật phẩm 380.');
     $add('capsule.early','capsule','Map SKH',100/9999,$early,'Capsule vỡ, vật phẩm 1634.');
     $add('capsule.private','capsule','Map riêng tư',100/19999,'Map 164','Capsule vỡ, vật phẩm 1634.');
-    foreach([1798=>5,1799=>5,1800=>5,1612=>5,1801=>1,1802=>100/130] as $id=>$base)$add('event.item'.$id,'event','Vật phẩm #'.$id,$base,'Map 0–163','Một lượt xét độc lập cho vật phẩm này.');
-    $add('event.camp','event','Doanh trại',20,'Map 53–62','Vật phẩm 1778.');
-    $add('event.mountain','event','Ngũ Hành Sơn',10,'Map 122–124','Ngẫu nhiên vật phẩm 541–542.');
+    foreach([1798=>['Tayaki',5],1799=>['Kẹo táo',5],1800=>['Kem que đôi',5],1801=>['Mochi',1],1802=>['Ramen',100/130]] as $id=>$item)$add('event.item'.$id,'bill_food',$item[0].' #'.$id,$item[1],'Quái map 0–163','Không phụ thuộc công tắc EV mùa lễ.');
+    $add('event.item1612','summer','Khúc mía #1612',5,'Quái map 0–163','Cần bật Xe nước mía và Vật phẩm EV.');
+    $add('event.camp','quest_items','Cuốn chả giò #1778',20,'Map 53–62');
+    $add('event.mountain','quest_items','Quả Hồng Đào #541–542',10,'Map 122–124');
+    foreach([1220=>['Ngà voi','Voi Chín Ngà'],1221=>['Cựa gà','Gà Chín Cựa'],1222=>['Hồng mao','Ngựa Chín Hồng Mao']] as $id=>$item)$add('hung.offering.'.$id,'hung_vuong',$item[0].' #'.$id,100,$item[1].' tại Thành Cổ và map/khu ngẫu nhiên','Một món mỗi lần hạ đúng quái sính lễ.');
+    foreach([1544=>'Chả lụa',1545=>'Muối tiêu',1546=>'Cơm nếp',1547=>'Bột gạo',1548=>'Đậu xanh',1549=>'Thịt tươi'] as $id=>$name)$add('hung.cooking.'.$id,'hung_vuong',$name.' #'.$id,5,'Quái thường ở mọi map','Trừ mộc nhân, bù nhìn và big boss; cần bật Giỗ Tổ và Vật phẩm EV.');
+    $add('hung.stamp','hung_vuong','Tem Mai An Tiêm #1558',100,'Sơn Tinh / Thủy Tinh','Một Tem mỗi lượt thưởng hạ boss, cần bật Giỗ Tổ và Vật phẩm EV.');
     $add('gem.all','gem','Mọi map',.0001,'Mọi map có quái hợp lệ','Ngọc miễn phí bảo đảm không bị thay đổi.');
     $add('skill.normal','skill','Ngục tù · lượt thường',10,'Map 155','Bí kíp tuyệt kỹ, vật phẩm 1229.');
     $add('skill.active','skill','Ngục tù · kích hoạt và set hủy diệt',20,'Map 155','Xét khi lượt thường thất bại và đủ cả hai điều kiện.');

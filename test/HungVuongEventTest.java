@@ -41,6 +41,10 @@ public class HungVuongEventTest {
    check(arena.zones.get(0).getBosses().contains(parent)&&arena.zones.get(0).getBosses().contains(child),"spawned bosses registered in zone");
    check(!parent.isNotifyDisabled,"parent appearance sends normal boss announcement");
    check(PanelBridge.canSpawn(parent)&&!PanelBridge.canSpawn(child),"web can summon event root without spawning companion independently");
+   for(int id=0;id<2000;id++)Manager.ITEM_TEMPLATES.add(new ItemTemplate((short)id,(byte)27,(byte)3,"QA item "+id,"",(short)0,(short)0,false,0));
+   Player winner=new Player();winner.id=321;winner.isPlayer=true;winner.zone=parent.zone;
+   parent.reward(winner);child.reward(winner);
+   check(arena.zones.get(0).items.stream().filter(item->item.itemTemplate.id==1558&&item.quantity==1&&item.playerId==321).count()==2,"both actual boss reward paths drop one owned Mai An Tiem stamp");
    int population=HungVuongEventManager.gI().getBosses().size();
    s.executeUpdate("UPDATE panel_event_config SET enabled=0 WHERE event_key='hung_vuong'");EventManager.reload(c);ticks();
    check(parent.zone==null&&child.zone==null,"OFF removes both linked bosses");
