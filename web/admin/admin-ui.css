@@ -31,3 +31,4 @@ body.admin-page.admin-embedded{padding:0!important;margin:0!important;min-height
 .admin-page[data-admin-page=giftcode] .gift-item-chip img{width:24px;height:24px;object-fit:contain;image-rendering:pixelated;flex-shrink:0}
 .admin-page[data-admin-page=giftcode] .gift-item-chip>span{overflow-wrap:anywhere}
 .admin-page[data-admin-page=giftcode] .gift-item-chip strong{color:#996d29;white-space:nowrap;font-size:12px}
+.boss-timers{margin:14px 0;padding:12px;border:1px solid #d9e5f2;border-radius:10px;background:#f0f6ff}.boss-timers>div{display:flex;justify-content:space-between;gap:12px;margin:6px 0;font-size:13px;line-height:1.5}.boss-timers span{color:#70859e}.boss-timers strong{text-align:right;color:#315678}.timing-help{display:block;font-size:12px;line-height:1.5;color:#7a8da5;margin:6px 0}.admin-page[data-admin-page=boss] .editor{max-height:none;overflow:visible}

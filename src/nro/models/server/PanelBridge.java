@@ -26,11 +26,12 @@ public final class PanelBridge {
     private static volatile Map<String, DropRule> dropRules = Collections.emptyMap();
     private static final class DropRule {final String category;final double base,value;DropRule(String category,double base,double value){this.category=category;this.base=base;this.value=value;}}
     private static final class DropConfig {String mode;double value;DropConfig(String mode,double value){this.mode=mode;this.value=value;}}
-    private static final Map<String, Long> spawnRequests = new ConcurrentHashMap<>();
+    private record SpawnRequest(long id,int delay){}
+    private static final Map<String, SpawnRequest> spawnRequests = new ConcurrentHashMap<>();
     private static final Queue<CommandResult> results = new ConcurrentLinkedQueue<>();
     private static final class CommandResult { final long id;final String text;CommandResult(long id,String text){this.id=id;this.text=text;} }
     private static final class PanelCommand {long id,playerId;String action;boolean stale;}
-    private static final class BossConfig {int hp,damage,rest;boolean enabled;}
+    private static final class BossConfig {int hp,damage,rest,lifetime;boolean enabled;}
     private static String key(Boss b) {return b.getClass().getName();}
     public static void register(Boss b) {bosses.computeIfAbsent(key(b),k->new CopyOnWriteArrayList<>()).add(new WeakReference<>(b));}
     public static double upgrade(int level,double original) {return level>=0&&level<upgrades.length?upgrades[level]:original;}
@@ -69,7 +70,7 @@ public final class PanelBridge {
     public static boolean enabled(Boss b) {BossConfig c=bossConfig.get(key(b));return nro.models.event.EventManager.bossEnabled(b)&&(c==null||c.enabled);}
     public static void configure(Boss b) {
         BossConfig c=bossConfig.get(key(b));
-        if(c!=null){BossData d=b.data[0];d.setHp(new int[]{c.hp});d.setDame(c.damage);d.setSecondsRest(c.rest);b.panelSetRest(c.rest);}
+        if(c!=null){BossData d=b.data[0];d.setHp(new int[]{c.hp});d.setDame(c.damage);d.setSecondsRest(c.rest);b.panelSetRest(c.rest);b.panelSetLifetime(c.lifetime);}
     }
     public static void applySpawnStats(Boss b) {
         BossConfig c=bossConfig.get(key(b));
@@ -80,10 +81,10 @@ public final class PanelBridge {
     }
     public static void tickBoss(Boss b) {
         configure(b);
-        Long request=spawnRequests.get(key(b));
+        SpawnRequest request=spawnRequests.get(key(b));
         if(request!=null&&canSpawn(b)&&enabled(b)) {
-            if(b.zone!=null) {if(spawnRequests.remove(key(b),request)) results.add(new CommandResult(request,"Boss đã xuất hiện trên bản đồ."));}
-            else if(spawnRequests.remove(key(b),request)){b.panelSpawn();results.add(new CommandResult(request,"Đã đánh thức boss; chờ chu kỳ vào bản đồ."));}
+            if(b.zone!=null) {if(spawnRequests.remove(key(b),request)) results.add(new CommandResult(request.id(),"Boss đã xuất hiện trên bản đồ."));}
+            else if(spawnRequests.remove(key(b),request)){b.panelScheduleSpawn(request.delay());results.add(new CommandResult(request.id(),"Đã hẹn boss xuất hiện sau "+request.delay()+" giây (khi đủ điều kiện vào bản đồ)."));}
         }
     }
     public static void start() {
@@ -101,6 +102,11 @@ public final class PanelBridge {
             }
             try(ResultSet columns=s.executeQuery("SHOW COLUMNS FROM boss_web_config LIKE 'current_locations'")) {
                 if(!columns.next())try(Statement migration=c.createStatement()){migration.execute("ALTER TABLE boss_web_config ADD current_locations TEXT NULL");}
+            }
+            for(String[] column:new String[][]{{"boss_web_config","lifetime_seconds","INT NULL"},{"boss_web_config","timing_state","LONGTEXT NULL"},{"boss_web_command","delay_seconds","INT NOT NULL DEFAULT 0"}}){
+                try(ResultSet columns=s.executeQuery("SHOW COLUMNS FROM "+column[0]+" LIKE '"+column[1]+"'")){
+                    if(!columns.next())try(Statement migration=c.createStatement()){migration.execute("ALTER TABLE "+column[0]+" ADD "+column[1]+" "+column[2]);}
+                }
             }
         }catch(Exception e){Logger.logException(PanelBridge.class,e);return;}
         Executors.newSingleThreadScheduledExecutor(r->{Thread t=new Thread(r,"PanelBridge");t.setDaemon(true);return t;}).scheduleWithFixedDelay(PanelBridge::poll,0,3,TimeUnit.SECONDS);
@@ -130,11 +136,12 @@ public final class PanelBridge {
             try{nro.models.services.IntrinsicService.gI().reloadCatalog(c);}catch(SQLException error){Logger.logException(PanelBridge.class,error);}
             try{nro.models.event.EventManager.reload(c);}catch(SQLException error){Logger.logException(PanelBridge.class,error);}
             publishBosses(c);Map<String,BossConfig> next=new HashMap<>();
-            try(Statement s=c.createStatement();ResultSet r=s.executeQuery("SELECT * FROM boss_web_config WHERE customized=1")){while(r.next()){BossConfig cfg=new BossConfig();cfg.hp=r.getInt("hp");cfg.damage=r.getInt("damage");cfg.rest=r.getInt("rest_seconds");cfg.enabled=r.getBoolean("enabled");next.put(r.getString("boss_key"),cfg);}}bossConfig=next;
-            Set<Long> activeRequests=new HashSet<>();
-            try(Statement s=c.createStatement();ResultSet r=s.executeQuery("SELECT id,boss_key FROM boss_web_command WHERE completed_at IS NULL AND requested_at>=NOW()-INTERVAL 30 SECOND ORDER BY id LIMIT 20")){while(r.next()){activeRequests.add(r.getLong(1));spawnRequests.putIfAbsent(r.getString(2),r.getLong(1));}}
-            spawnRequests.entrySet().removeIf(e->!activeRequests.contains(e.getValue()));
+            try(Statement s=c.createStatement();ResultSet r=s.executeQuery("SELECT * FROM boss_web_config WHERE customized=1")){while(r.next()){BossConfig cfg=new BossConfig();cfg.hp=r.getInt("hp");cfg.damage=r.getInt("damage");cfg.rest=r.getInt("rest_seconds");cfg.lifetime=r.getObject("lifetime_seconds")==null?-1:r.getInt("lifetime_seconds");cfg.enabled=r.getBoolean("enabled");next.put(r.getString("boss_key"),cfg);}}bossConfig=next;
             CommandResult result;while((result=results.poll())!=null)try(PreparedStatement s=c.prepareStatement("UPDATE boss_web_command SET completed_at=NOW(),result=? WHERE id=? AND completed_at IS NULL")){s.setString(1,result.text);s.setLong(2,result.id);s.executeUpdate();}
+            Set<Long> activeRequests=new HashSet<>();
+            try(Statement s=c.createStatement();ResultSet r=s.executeQuery("SELECT id,boss_key,delay_seconds FROM boss_web_command WHERE completed_at IS NULL AND requested_at>=NOW()-INTERVAL 30 SECOND ORDER BY id LIMIT 20")){while(r.next()){activeRequests.add(r.getLong(1));spawnRequests.putIfAbsent(r.getString(2),new SpawnRequest(r.getLong(1),Math.max(0,Math.min(604800,r.getInt(3)))));}}
+            spawnRequests.entrySet().removeIf(e->!activeRequests.contains(e.getValue().id()));
+
             try(Statement s=c.createStatement()){s.executeUpdate("UPDATE boss_web_command SET completed_at=NOW(),result='Lệnh hết hạn; boss chưa thể xuất hiện.' WHERE completed_at IS NULL AND requested_at<NOW()-INTERVAL 30 SECOND");}
             try(Statement s=c.createStatement();ResultSet r=s.executeQuery("SELECT * FROM panel_command WHERE completed_at IS NULL ORDER BY id LIMIT 20")){
                 while(r.next()){
@@ -154,9 +161,10 @@ public final class PanelBridge {
     }
     private static void publishBosses(Connection c)throws SQLException {
         for(Map.Entry<String,CopyOnWriteArrayList<WeakReference<Boss>>> entry:bosses.entrySet()){
-            Boss first=null;int online=0;Map<String,Map<String,Object>> locations=new LinkedHashMap<>();
+            Boss first=null;int online=0;Map<String,Map<String,Object>> locations=new LinkedHashMap<>();List<Map<String,Object>> timings=new ArrayList<>();long now=System.currentTimeMillis();
             for(WeakReference<Boss> ref:entry.getValue()){
                 Boss b=ref.get();if(b==null){entry.getValue().remove(ref);continue;}if(first==null)first=b;
+                timings.add(b.panelTiming(now));
                 nro.models.map.Zone zone=b.zone;
                 if(zone!=null&&zone.map!=null){online++;String position=zone.map.mapId+":"+zone.zoneId;
                     Map<String,Object> location=locations.get(position);
@@ -165,8 +173,8 @@ public final class PanelBridge {
                 }
             }if(first==null)continue;
             BossData d=first.data[0];
-            try(PreparedStatement s=c.prepareStatement("INSERT INTO boss_web_config(boss_key,name,hp,damage,rest_seconds,map_ids,can_spawn,head_id,online_count,current_locations,heartbeat) VALUES(?,?,?,?,?,?,?,?,?,?,NOW()) ON DUPLICATE KEY UPDATE online_count=VALUES(online_count),current_locations=VALUES(current_locations),can_spawn=VALUES(can_spawn),head_id=VALUES(head_id),rest_seconds=IF(customized=0,VALUES(rest_seconds),rest_seconds),heartbeat=NOW(),applied_at=NOW()")){
-                s.setString(1,entry.getKey());s.setString(2,d.getName());s.setInt(3,d.getHp()[0]);s.setInt(4,Math.max(0,d.getDame()));s.setInt(5,Math.max(0,d.getSecondsRest()));s.setString(6,Arrays.toString(d.getMapJoin()));s.setInt(7,canSpawn(first)?1:0);s.setInt(8,d.getOutfit()[0]);s.setInt(9,online);s.setString(10,new com.google.gson.Gson().toJson(locations.values()));s.executeUpdate();
+            try(PreparedStatement s=c.prepareStatement("INSERT INTO boss_web_config(boss_key,name,hp,damage,rest_seconds,map_ids,can_spawn,head_id,online_count,current_locations,timing_state,heartbeat) VALUES(?,?,?,?,?,?,?,?,?,?,?,NOW()) ON DUPLICATE KEY UPDATE online_count=VALUES(online_count),current_locations=VALUES(current_locations),timing_state=VALUES(timing_state),can_spawn=VALUES(can_spawn),head_id=VALUES(head_id),rest_seconds=IF(customized=0,VALUES(rest_seconds),rest_seconds),heartbeat=NOW(),applied_at=NOW()")){
+                s.setString(1,entry.getKey());s.setString(2,d.getName());s.setInt(3,d.getHp()[0]);s.setInt(4,Math.max(0,d.getDame()));s.setInt(5,Math.max(0,d.getSecondsRest()));s.setString(6,Arrays.toString(d.getMapJoin()));s.setInt(7,canSpawn(first)?1:0);s.setInt(8,d.getOutfit()[0]);s.setInt(9,online);s.setString(10,new com.google.gson.Gson().toJson(locations.values()));s.setString(11,new com.google.gson.Gson().toJson(timings));s.executeUpdate();
             }
         }
     }

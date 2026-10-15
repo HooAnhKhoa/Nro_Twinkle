@@ -45,7 +45,6 @@ public class ShopService {
     private static final byte NORMAL_SHOP = 0;
     private static final byte SPEC_SHOP = 3;
     private static final byte KINANG_SHOP = 1;
-    private int eventPointPrice;
 
     private static ShopService I;
 
@@ -736,55 +735,11 @@ public class ShopService {
             }
         }
 
-        // Đổi bằng điểm sự kiện
+        // Price is shared with the item_shop cost shown in the native shop packet.
         if (is.tabShop.id == 59) {
-            int eventPointPrice = 0;
-
-            switch (is.temp.id) {
-                case 1567:
-                case 1731:
-                    eventPointPrice = 999;
-                    break;
-                case 1711:
-                    eventPointPrice = 750;
-                    break;
-                case 1840:
-                    eventPointPrice = 99;
-                    break;
-                case 1713:
-                    eventPointPrice = 499;
-                    break;
-                case 1608:
-                    eventPointPrice = 9;
-                    break;
-                case 1682:
-                    eventPointPrice = 499;
-                    break;
-                case 1698:
-                    eventPointPrice = 499;
-                    break;
-                case 1821:
-                    eventPointPrice = 199;
-                    break;
-                case 1757:
-                    eventPointPrice = 99;
-                    break;
-                case 1592:
-                    eventPointPrice = 99;
-                    break;
-                default:
-            }
-
-            if (player.event.getEventPoint() < eventPointPrice) {
-                Service.gI().sendThongBao(player, "Không đủ điểm sự kiện để mua vật phẩm này!");
-                return;
-            }
-
-            player.event.subEventPoint(eventPointPrice);
-            Item item = ItemService.gI().createItemFromItemShop(is);
-            InventoryService.gI().addItemBag(player, item);
-            InventoryService.gI().sendItemBags(player);
-            Service.gI().sendThongBao(player, "Đã đổi " + is.temp.name + " bằng " + eventPointPrice + " điểm sự kiện.");
+            var result = PointShop.buy(player, is);
+            if (result.success()) InventoryService.gI().sendItemBags(player);
+            Service.gI().sendThongBao(player, result.message());
             return;
         }
         // Đổi bằng điểm Capsule Bang

@@ -6,10 +6,12 @@ CREATE TABLE IF NOT EXISTS boss_web_config (
  map_ids TEXT NOT NULL, head_id INT NOT NULL DEFAULT 0, online_count INT NOT NULL DEFAULT 0,
  can_spawn TINYINT NOT NULL DEFAULT 0,
  current_locations TEXT NULL,
+ lifetime_seconds INT NULL, timing_state LONGTEXT NULL,
  heartbeat DATETIME NULL, applied_at DATETIME NULL
 );
 CREATE TABLE IF NOT EXISTS boss_web_command (
  id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
  boss_key VARCHAR(100) NOT NULL, requested_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ delay_seconds INT NOT NULL DEFAULT 0,
  completed_at DATETIME NULL, result VARCHAR(255) NULL
 );

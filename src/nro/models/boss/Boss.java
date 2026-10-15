@@ -69,6 +69,43 @@ public class Boss extends Player implements IBoss {
     public boolean panelCanSpawn() { return this.panelIndependent && this.parentBoss == null; }
     public void panelSetRest(int seconds) { this.secondsRest = seconds; }
     public void panelSpawn() { this.currentLevel = -1; this.changeStatus(BossStatus.RESPAWN); }
+    private volatile int panelLifetimeSeconds = -1;
+    private volatile long panelAppearedAt, panelSpawnAt;
+    public void panelSetLifetime(int seconds) { panelLifetimeSeconds = seconds; }
+    public void panelScheduleSpawn(int seconds) { panelSpawnAt=System.currentTimeMillis()+seconds*1000L; }
+    public boolean panelWaitingSpawn() {
+        if(panelSpawnAt==0)return false;
+        if(System.currentTimeMillis()<panelSpawnAt)return true;
+        panelSpawnAt=0;panelSpawn();return false;
+    }
+    public boolean panelExpire() {
+        if(zone==null || panelLifetimeSeconds<=0 || panelAppearedAt==0
+            || System.currentTimeMillis()<panelAppearedAt+panelLifetimeSeconds*1000L || isDie())return false;
+        // End the encounter without rewards or advancing to the next form.
+        currentLevel=data.length-1;leaveMap();return true;
+    }
+    public java.util.Map<String,Object> panelTiming(long now) {
+        java.util.Map<String,Object> timing=new java.util.LinkedHashMap<>();
+        Long spawnAt=null;
+        if(zone==null && nro.models.server.PanelBridge.enabled(this)) {
+            if(panelSpawnAt>0)spawnAt=panelSpawnAt;
+            else if(nro.models.server.PanelBridge.canSpawn(this)) {
+                try {
+                    Class<?> restOwner=getClass().getMethod("rest").getDeclaringClass();
+                    boolean timed=restOwner==Boss.class || this instanceof nro.models.boss.event_trung_thu.MoonBoss;
+                    if(bossStatus==BossStatus.REST && timed)spawnAt=Math.max(now,lastTimeRest+secondsRest*1000L);
+                    else if(bossStatus==BossStatus.RESPAWN || bossStatus==BossStatus.JOIN_MAP)spawnAt=now;
+                }catch(ReflectiveOperationException ignored){}
+            }
+        }
+        timing.put("state",bossStatus==null?"UNKNOWN":bossStatus.name());
+        timing.put("spawn_at",spawnAt);
+        timing.put("appeared_at",zone!=null&&panelAppearedAt>0?panelAppearedAt:null);
+        timing.put("expires_at",zone!=null&&panelAppearedAt>0&&panelLifetimeSeconds>0?panelAppearedAt+panelLifetimeSeconds*1000L:null);
+        Zone currentZone=zone;
+        if(currentZone!=null){timing.put("map_id",currentZone.map.mapId);timing.put("zone_id",currentZone.zoneId);}
+        return timing;
+    }
     private boolean eventSuspended;
     /** Exit without death rewards, stage advancement or waking a linked boss. */
     public synchronized void suspendEvent() {
@@ -80,6 +117,8 @@ public class Boss extends Player implements IBoss {
             this.zoneFinal = null;
             this.playerTarger = null;
             this.lastTimeRest = 0;
+            this.panelSpawnAt = 0;
+            this.panelAppearedAt = 0;
             this.changeStatus(BossStatus.REST);
             eventSuspended = true;
         }
@@ -321,6 +360,8 @@ public class Boss extends Player implements IBoss {
 
     @Override
     public void changeStatus(BossStatus status) {
+        if(status==BossStatus.CHAT_S && zone!=null && panelAppearedAt==0)panelAppearedAt=System.currentTimeMillis();
+        if(status==BossStatus.REST)panelAppearedAt=0;
         this.bossStatus = status;
     }
 
@@ -364,6 +405,7 @@ public class Boss extends Player implements IBoss {
         eventSuspended = false;
         nro.models.server.PanelBridge.tickBoss(this);
         if (!nro.models.server.PanelBridge.enabled(this)) { if (this.zone != null) this.leaveMap(); return; }
+        if (this.panelWaitingSpawn() || this.panelExpire()) return;
         if (prepareBom) {
             return;
         }
@@ -374,7 +416,7 @@ public class Boss extends Player implements IBoss {
         }
         switch (this.bossStatus) {
             case CHAT_S, AFK, ACTIVE ->
-                this.autoLeaveMap();
+                { if (panelLifetimeSeconds < 0) this.autoLeaveMap(); }
         }
         switch (this.bossStatus) {
             case REST ->
