@@ -2,7 +2,7 @@ param([string]$SiteRoot='C:\xampp\htdocs', [switch]$Deploy)
 $ErrorActionPreference='Stop'
 $repoRoot=$PSScriptRoot
 $stageRoot=Join-Path $repoRoot 'build\typography-stage'
-$backupRoot=Join-Path 'C:\Downloads\NroFreeSetup\Backups' ('web-typography-'+(Get-Date -Format 'yyyyMMdd-HHmmss'))
+$backupRoot=Join-Path 'D:\NroFreeSetup\Backups' ('web-typography-'+(Get-Date -Format 'yyyyMMdd-HHmmss'))
 $link='<link rel="stylesheet" href="/typography.css?v=20261014-1">'
 $files=Get-ChildItem -LiteralPath $SiteRoot -Recurse -File -Filter '*.php' | Where-Object { [IO.File]::ReadAllText($_.FullName) -match '</head>' }
 $changed=@()

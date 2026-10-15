@@ -18,7 +18,7 @@ if not defined GAME_JAR (
   exit /b 1
 )
 echo Dang chay %GAME_JAR%
-"%GAME_JAVA%" -server -Djava.net.preferIPv4Stack=true -Dfile.encoding=UTF-8 -jar "%GAME_JAR%"
+"%GAME_JAVA%" -server -Djava.net.preferIPv4Stack=true -Dfile.encoding=UTF-8 -Dnro.game.root="%~dp0." -jar "%~dp0%GAME_JAR%"
 set "GAME_EXIT=%ERRORLEVEL%"
 if "%GAME_EXIT%"=="42" (
   echo Da luu du lieu. Tu khoi dong lai sau 10 giay trong cua so nay...

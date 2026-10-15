@@ -1,4 +1,4 @@
-param([string]$BackupPath = 'C:\Downloads\NroFreeSetup\Backups\panel-before-20261013')
+param([string]$BackupPath = 'D:\NroFreeSetup\Backups\panel-before-20261013')
 $ErrorActionPreference = 'Stop'
 $backupRoot = (Resolve-Path -LiteralPath $BackupPath).Path
 if (!(Test-Path -LiteralPath (Join-Path $backupRoot 'admin/panel.php')) -or !(Test-Path -LiteralPath (Join-Path $backupRoot 'run.bat'))) { throw 'Backup is incomplete.' }
