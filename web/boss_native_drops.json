@@ -1,0 +1,2118 @@
+{
+  "version": 1,
+  "description": "Các vật phẩm có thể rơi theo nhánh gốc; không phải tất cả cùng rơi.",
+  "bosses": {
+    "nro.models.boss.Android.Android13": {
+      "ids": [
+        18,
+        19,
+        20,
+        190
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Android.Android14": {
+      "ids": [
+        18,
+        19,
+        20,
+        190
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Android.Android15": {
+      "ids": [
+        18,
+        19,
+        20,
+        190
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Android.Android19": {
+      "ids": [
+        18,
+        19,
+        20,
+        190
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Android.DrKore": {
+      "ids": [
+        18,
+        19,
+        20,
+        190
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Android.KingKong": {
+      "ids": [
+        18,
+        19,
+        20,
+        190
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Android.Pic": {
+      "ids": [
+        18,
+        19,
+        20,
+        190
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Android.Poc": {
+      "ids": [
+        18,
+        19,
+        20,
+        190
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Baby.Baby": {
+      "ids": [
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        190,
+        230,
+        231,
+        232,
+        234,
+        235,
+        236,
+        238,
+        239,
+        240,
+        242,
+        243,
+        244,
+        246,
+        247,
+        248,
+        250,
+        251,
+        252,
+        254,
+        255,
+        256,
+        258,
+        259,
+        260,
+        262,
+        263,
+        264,
+        266,
+        267,
+        268,
+        270,
+        271,
+        272,
+        274,
+        275,
+        276,
+        278,
+        279,
+        280,
+        555,
+        556,
+        557,
+        558,
+        559,
+        560,
+        561,
+        562,
+        563,
+        564,
+        565,
+        566,
+        567,
+        992,
+        1785,
+        1786,
+        1788
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.ban_do_kho_bau.TrungUyXanhLo": {
+      "ids": [
+        705
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Black_Goku.BlackGoku": {
+      "ids": [
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        190,
+        230,
+        231,
+        232,
+        234,
+        235,
+        236,
+        238,
+        239,
+        240,
+        242,
+        243,
+        244,
+        246,
+        247,
+        248,
+        250,
+        251,
+        252,
+        254,
+        255,
+        256,
+        258,
+        259,
+        260,
+        262,
+        263,
+        264,
+        266,
+        267,
+        268,
+        270,
+        271,
+        272,
+        274,
+        275,
+        276,
+        278,
+        279,
+        280,
+        555,
+        556,
+        557,
+        558,
+        559,
+        560,
+        561,
+        562,
+        563,
+        564,
+        565,
+        566,
+        567,
+        992
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Boss": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Boss_Manager.AnTromManager": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Boss_Manager.BrolyManager": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Boss_Manager.ChristmasEventManager": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Boss_Manager.FinalBossManager": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Boss_Manager.GasDestroyManager": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Boss_Manager.HalloweenEventManager": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Boss_Manager.HungVuongEventManager": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Boss_Manager.LunarNewYearEventManager": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Boss_Manager.OtherBossManager": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Boss_Manager.RedRibbonHQManager": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Boss_Manager.SkillSummonedManager": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Boss_Manager.SnakeWayManager": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Boss_Manager.TreasureUnderSeaManager": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Boss_Manager.TrungThuEventManager": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Boss_Manager.YardartManager": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Boss_mini.AnTrom": {
+      "ids": [
+        190,
+        1591,
+        1594
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Boss_mini.MatTroi": {
+      "ids": [
+        1562
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Boss_mini.Odo": {
+      "ids": [
+        1591,
+        1594
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Boss_mini.RongNhi": {
+      "ids": [
+        18,
+        19,
+        20,
+        1821
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Boss_mini.SoiHecQuyn": {
+      "ids": [],
+      "complete": false,
+      "unresolved": [
+        "itemId"
+      ],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Boss_mini.Virut": {
+      "ids": [
+        1591,
+        1594
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Broly.Broly": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Broly.SuperBroly": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Thưởng đệ tử nếu người hạ chưa có đệ tử; không rơi vật phẩm gốc xuống đất."
+    },
+    "nro.models.boss.Cell.SieuBoHung": {
+      "ids": [
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        190,
+        230,
+        231,
+        232,
+        234,
+        235,
+        236,
+        238,
+        239,
+        240,
+        242,
+        243,
+        244,
+        246,
+        247,
+        248,
+        250,
+        251,
+        252,
+        254,
+        255,
+        256,
+        258,
+        259,
+        260,
+        262,
+        263,
+        264,
+        266,
+        267,
+        268,
+        270,
+        271,
+        272,
+        274,
+        275,
+        276,
+        278,
+        279,
+        280,
+        555,
+        556,
+        557,
+        558,
+        559,
+        560,
+        561,
+        562,
+        563,
+        564,
+        565,
+        566,
+        567
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Cell.XenBoHung": {
+      "ids": [
+        18,
+        19,
+        20,
+        190
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Cell.XENCON1": {
+      "ids": [
+        18,
+        19,
+        20,
+        190
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Cell.XENCON2": {
+      "ids": [
+        18,
+        19,
+        20,
+        190
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Cell.XENCON3": {
+      "ids": [
+        18,
+        19,
+        20,
+        190
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Cell.XENCON4": {
+      "ids": [
+        18,
+        19,
+        20,
+        190
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Cell.XENCON5": {
+      "ids": [
+        18,
+        19,
+        20,
+        190
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Cell.XENCON6": {
+      "ids": [
+        18,
+        19,
+        20,
+        190
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Cell.XENCON7": {
+      "ids": [
+        18,
+        19,
+        20,
+        190
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Cold.Cooler": {
+      "ids": [
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        190,
+        230,
+        231,
+        232,
+        234,
+        235,
+        236,
+        238,
+        239,
+        240,
+        242,
+        243,
+        244,
+        246,
+        247,
+        248,
+        250,
+        251,
+        252,
+        254,
+        255,
+        256,
+        258,
+        259,
+        260,
+        262,
+        263,
+        264,
+        266,
+        267,
+        268,
+        270,
+        271,
+        272,
+        274,
+        275,
+        276,
+        278,
+        279,
+        280,
+        555,
+        556,
+        557,
+        558,
+        559,
+        560,
+        561,
+        562,
+        563,
+        564,
+        565,
+        566,
+        567
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.cumber.Cumber": {
+      "ids": [
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        190,
+        230,
+        231,
+        232,
+        234,
+        235,
+        236,
+        238,
+        239,
+        240,
+        242,
+        243,
+        244,
+        246,
+        247,
+        248,
+        250,
+        251,
+        252,
+        254,
+        255,
+        256,
+        258,
+        259,
+        260,
+        262,
+        263,
+        264,
+        266,
+        267,
+        268,
+        270,
+        271,
+        272,
+        274,
+        275,
+        276,
+        278,
+        279,
+        280,
+        555,
+        556,
+        557,
+        558,
+        559,
+        560,
+        561,
+        562,
+        563,
+        564,
+        565,
+        566,
+        567,
+        992
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.dai_hoi_vo_thuat.ChanXu": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.dai_hoi_vo_thuat.ChaPa": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.dai_hoi_vo_thuat.JackyChun": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.dai_hoi_vo_thuat.LiuLiu": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.dai_hoi_vo_thuat.ODo": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.dai_hoi_vo_thuat.Pocolo": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.dai_hoi_vo_thuat.PonPut": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.dai_hoi_vo_thuat.SoiHecQuyn": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.dai_hoi_vo_thuat.TauPayPay": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.dai_hoi_vo_thuat.The23rdMartialArtCongress": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.dai_hoi_vo_thuat.ThienXinHang": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.dai_hoi_vo_thuat.ThienXinHangClone": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.dai_hoi_vo_thuat.Xinbato": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.dai_hoi_vo_thuat.Yamcha": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.doanh_trai.NinjaAoTim": {
+      "ids": [
+        17,
+        611,
+        1824
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.doanh_trai.NinjaClone": {
+      "ids": [
+        17
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.doanh_trai.RobotVeSi": {
+      "ids": [
+        17,
+        1824
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.doanh_trai.TrungUyThep": {
+      "ids": [
+        17,
+        611,
+        1824
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.doanh_trai.TrungUyTrang": {
+      "ids": [
+        17,
+        1824
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.doanh_trai.TrungUyXanhLo": {
+      "ids": [
+        17,
+        611,
+        1824
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.event.Halloween.BiMa": {
+      "ids": [
+        585
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.event.Halloween.Doi": {
+      "ids": [
+        585
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.event.Halloween.MaTroi": {
+      "ids": [
+        585
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.event_hung_vuong.SonTinh": {
+      "ids": [
+        421,
+        1558
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ấn theo tỷ lệ Giỗ Tổ. Cải trang được trao trễ khi boss này ở trạng thái thưởng sau trận Sơn Tinh / Thủy Tinh; cần bật sự kiện."
+    },
+    "nro.models.boss.event_hung_vuong.ThuyTinh": {
+      "ids": [
+        422,
+        1558
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ấn theo tỷ lệ Giỗ Tổ. Cải trang được trao trễ khi boss này ở trạng thái thưởng sau trận Sơn Tinh / Thủy Tinh; cần bật sự kiện."
+    },
+    "nro.models.boss.event_noel.OngGiaNoel": {
+      "ids": [
+        648
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Phát quà theo chu kỳ 60 giây khi có người chơi ở gần; cần bật sự kiện Noel."
+    },
+    "nro.models.boss.event_tet.LanCon": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.event_trung_thu.KhiDot": {
+      "ids": [
+        1045
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.event_trung_thu.MoonBoss": {
+      "ids": [],
+      "complete": false,
+      "unresolved": [
+        "item(kind==0?\"monkey-tail\":\"carrot\")",
+        "item.template.id"
+      ],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.event_trung_thu.NguyetThan": {
+      "ids": [
+        2123
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.event_trung_thu.NhatThan": {
+      "ids": [
+        2124
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Frieza.Fide": {
+      "ids": [
+        18,
+        19,
+        20,
+        190
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Golden_fireza.DeathBeam1": {
+      "ids": [
+        629
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Golden_fireza.DeathBeam2": {
+      "ids": [
+        629
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Golden_fireza.DeathBeam3": {
+      "ids": [
+        629
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Golden_fireza.DeathBeam4": {
+      "ids": [
+        629
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Golden_fireza.DeathBeam5": {
+      "ids": [
+        629
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Golden_fireza.GoldenFrieza": {
+      "ids": [
+        629
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.khi_gas.DrLychee": {
+      "ids": [
+        738
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.khi_gas.Hatchiyack": {
+      "ids": [
+        729
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.luyen_tap_tu_dong.Karin": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.luyen_tap_tu_dong.KhiBubbles": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.luyen_tap_tu_dong.MrPoPo": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.luyen_tap_tu_dong.TauPayPay": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.luyen_tap_tu_dong.ThanVuTru": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.luyen_tap_tu_dong.ThuongDe": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.luyen_tap_tu_dong.ToSuKaio": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.luyen_tap_tu_dong.TrainingBoss": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.luyen_tap_tu_dong.Whis": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.luyen_tap_tu_dong.Yajiro": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.MajinBuu_12h.BuiBui": {
+      "ids": [
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        190,
+        230,
+        231,
+        232,
+        234,
+        235,
+        236,
+        238,
+        239,
+        240,
+        242,
+        243,
+        244,
+        246,
+        247,
+        248,
+        250,
+        251,
+        252,
+        254,
+        255,
+        256,
+        258,
+        259,
+        260,
+        262,
+        263,
+        264,
+        266,
+        267,
+        268,
+        270,
+        271,
+        272,
+        274,
+        275,
+        276,
+        278,
+        279,
+        280,
+        555,
+        556,
+        557,
+        558,
+        559,
+        560,
+        561,
+        562,
+        563,
+        564,
+        565,
+        566,
+        567
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.MajinBuu_12h.BuiBui2": {
+      "ids": [
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        190,
+        230,
+        231,
+        232,
+        234,
+        235,
+        236,
+        238,
+        239,
+        240,
+        242,
+        243,
+        244,
+        246,
+        247,
+        248,
+        250,
+        251,
+        252,
+        254,
+        255,
+        256,
+        258,
+        259,
+        260,
+        262,
+        263,
+        264,
+        266,
+        267,
+        268,
+        270,
+        271,
+        272,
+        274,
+        275,
+        276,
+        278,
+        279,
+        280,
+        555,
+        556,
+        557,
+        558,
+        559,
+        560,
+        561,
+        562,
+        563,
+        564,
+        565,
+        566,
+        567
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.MajinBuu_12h.Cadic": {
+      "ids": [
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        190,
+        230,
+        231,
+        232,
+        234,
+        235,
+        236,
+        238,
+        239,
+        240,
+        242,
+        243,
+        244,
+        246,
+        247,
+        248,
+        250,
+        251,
+        252,
+        254,
+        255,
+        256,
+        258,
+        259,
+        260,
+        262,
+        263,
+        264,
+        266,
+        267,
+        268,
+        270,
+        271,
+        272,
+        274,
+        275,
+        276,
+        278,
+        279,
+        280,
+        555,
+        556,
+        557,
+        558,
+        559,
+        560,
+        561,
+        562,
+        563,
+        564,
+        565,
+        566,
+        567
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.MajinBuu_12h.Drabura": {
+      "ids": [
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        190,
+        230,
+        231,
+        232,
+        234,
+        235,
+        236,
+        238,
+        239,
+        240,
+        242,
+        243,
+        244,
+        246,
+        247,
+        248,
+        250,
+        251,
+        252,
+        254,
+        255,
+        256,
+        258,
+        259,
+        260,
+        262,
+        263,
+        264,
+        266,
+        267,
+        268,
+        270,
+        271,
+        272,
+        274,
+        275,
+        276,
+        278,
+        279,
+        280,
+        555,
+        556,
+        557,
+        558,
+        559,
+        560,
+        561,
+        562,
+        563,
+        564,
+        565,
+        566,
+        567
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.MajinBuu_12h.Drabura2": {
+      "ids": [
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        190,
+        230,
+        231,
+        232,
+        234,
+        235,
+        236,
+        238,
+        239,
+        240,
+        242,
+        243,
+        244,
+        246,
+        247,
+        248,
+        250,
+        251,
+        252,
+        254,
+        255,
+        256,
+        258,
+        259,
+        260,
+        262,
+        263,
+        264,
+        266,
+        267,
+        268,
+        270,
+        271,
+        272,
+        274,
+        275,
+        276,
+        278,
+        279,
+        280,
+        555,
+        556,
+        557,
+        558,
+        559,
+        560,
+        561,
+        562,
+        563,
+        564,
+        565,
+        566,
+        567
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.MajinBuu_12h.Drabura3": {
+      "ids": [
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        190,
+        230,
+        231,
+        232,
+        234,
+        235,
+        236,
+        238,
+        239,
+        240,
+        242,
+        243,
+        244,
+        246,
+        247,
+        248,
+        250,
+        251,
+        252,
+        254,
+        255,
+        256,
+        258,
+        259,
+        260,
+        262,
+        263,
+        264,
+        266,
+        267,
+        268,
+        270,
+        271,
+        272,
+        274,
+        275,
+        276,
+        278,
+        279,
+        280,
+        555,
+        556,
+        557,
+        558,
+        559,
+        560,
+        561,
+        562,
+        563,
+        564,
+        565,
+        566,
+        567
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.MajinBuu_12h.Goku": {
+      "ids": [
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        190,
+        230,
+        231,
+        232,
+        234,
+        235,
+        236,
+        238,
+        239,
+        240,
+        242,
+        243,
+        244,
+        246,
+        247,
+        248,
+        250,
+        251,
+        252,
+        254,
+        255,
+        256,
+        258,
+        259,
+        260,
+        262,
+        263,
+        264,
+        266,
+        267,
+        268,
+        270,
+        271,
+        272,
+        274,
+        275,
+        276,
+        278,
+        279,
+        280,
+        555,
+        556,
+        557,
+        558,
+        559,
+        560,
+        561,
+        562,
+        563,
+        564,
+        565,
+        566,
+        567
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.MajinBuu_12h.Mabu": {
+      "ids": [
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        190,
+        230,
+        231,
+        232,
+        234,
+        235,
+        236,
+        238,
+        239,
+        240,
+        242,
+        243,
+        244,
+        246,
+        247,
+        248,
+        250,
+        251,
+        252,
+        254,
+        255,
+        256,
+        258,
+        259,
+        260,
+        262,
+        263,
+        264,
+        266,
+        267,
+        268,
+        270,
+        271,
+        272,
+        274,
+        275,
+        276,
+        278,
+        279,
+        280,
+        555,
+        556,
+        557,
+        558,
+        559,
+        560,
+        561,
+        562,
+        563,
+        564,
+        565,
+        566,
+        567
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.MajinBuu_12h.Yacon": {
+      "ids": [
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        190,
+        230,
+        231,
+        232,
+        234,
+        235,
+        236,
+        238,
+        239,
+        240,
+        242,
+        243,
+        244,
+        246,
+        247,
+        248,
+        250,
+        251,
+        252,
+        254,
+        255,
+        256,
+        258,
+        259,
+        260,
+        262,
+        263,
+        264,
+        266,
+        267,
+        268,
+        270,
+        271,
+        272,
+        274,
+        275,
+        276,
+        278,
+        279,
+        280,
+        555,
+        556,
+        557,
+        558,
+        559,
+        560,
+        561,
+        562,
+        563,
+        564,
+        565,
+        566,
+        567
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.MajinBuu_14h.Mabu2H": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.MajinBuu_14h.SuperBu": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.ma_vuong_picolo.Pocolo": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Nappa.Kuku": {
+      "ids": [
+        18,
+        19,
+        20,
+        190
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Nappa.MapDauDinh": {
+      "ids": [
+        18,
+        19,
+        20,
+        190
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Nappa.Rambo": {
+      "ids": [
+        18,
+        19,
+        20,
+        190
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.nhan_ban.NhanBan": {
+      "ids": [
+        638
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.sieu_hang.Rival": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.sieu_hang.SuperRank": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.Tau_PayPay.TaoPaiPai": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.tieu_doi_sat_thu.SO1": {
+      "ids": [
+        18,
+        19,
+        20,
+        190
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.tieu_doi_sat_thu.SO2": {
+      "ids": [
+        18,
+        19,
+        20,
+        190
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.tieu_doi_sat_thu.SO3": {
+      "ids": [
+        18,
+        19,
+        20,
+        190
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.tieu_doi_sat_thu.SO4": {
+      "ids": [
+        18,
+        19,
+        20,
+        190
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.tieu_doi_sat_thu.TDT": {
+      "ids": [
+        18,
+        19,
+        20,
+        190
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.tieu_doi_sat_thu_namek.SO1_NM": {
+      "ids": [
+        19,
+        20,
+        77,
+        432
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.tieu_doi_sat_thu_namek.SO2_NM": {
+      "ids": [
+        19,
+        20,
+        77,
+        431
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.tieu_doi_sat_thu_namek.SO3_NM": {
+      "ids": [
+        19,
+        20,
+        77,
+        430
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.tieu_doi_sat_thu_namek.SO4_NM": {
+      "ids": [
+        19,
+        20,
+        77,
+        429
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.tieu_doi_sat_thu_namek.TDT_NM": {
+      "ids": [
+        19,
+        20,
+        77,
+        433
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.trai_dat.BIDO": {
+      "ids": [
+        19,
+        20,
+        77,
+        426
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.trai_dat.BOJACK": {
+      "ids": [
+        19,
+        20,
+        77,
+        427
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.trai_dat.BUJIN": {
+      "ids": [
+        19,
+        20,
+        77,
+        423
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.trai_dat.KOGU": {
+      "ids": [
+        19,
+        20,
+        77,
+        424
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.trai_dat.SUPER_BOJACK": {
+      "ids": [
+        19,
+        20,
+        77,
+        428
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.trai_dat.ZANGYA": {
+      "ids": [
+        19,
+        20,
+        77,
+        425
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.vo_dai_hat_mit.BongBang": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.vo_dai_hat_mit.DeathOrAliveArena": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.vo_dai_hat_mit.Dracula": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.vo_dai_hat_mit.NguoiVoHinh": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.vo_dai_hat_mit.ThoDauBac": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.vo_dai_hat_mit.VuaQuySaTang": {
+      "ids": [],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.yardrat.CHIENBINH0": {
+      "ids": [
+        590
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.yardrat.CHIENBINH1": {
+      "ids": [
+        590
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.yardrat.CHIENBINH2": {
+      "ids": [
+        590
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.yardrat.CHIENBINH3": {
+      "ids": [
+        590
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.yardrat.CHIENBINH4": {
+      "ids": [
+        590
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.yardrat.CHIENBINH5": {
+      "ids": [
+        590
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.yardrat.DOITRUONG5": {
+      "ids": [
+        590
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.yardrat.TANBINH0": {
+      "ids": [
+        590
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.yardrat.TANBINH1": {
+      "ids": [
+        590
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.yardrat.TANBINH2": {
+      "ids": [
+        590
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.yardrat.TANBINH3": {
+      "ids": [
+        590
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.yardrat.TANBINH4": {
+      "ids": [
+        590
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.yardrat.TANBINH5": {
+      "ids": [
+        590
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.yardrat.TAPSU0": {
+      "ids": [
+        590
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.yardrat.TAPSU1": {
+      "ids": [
+        590
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.yardrat.TAPSU2": {
+      "ids": [
+        590
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.yardrat.TAPSU3": {
+      "ids": [
+        590
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.yardrat.TAPSU4": {
+      "ids": [
+        590
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.yardrat.Yardart": {
+      "ids": [
+        590
+      ],
+      "complete": true,
+      "unresolved": [],
+      "note": "Ngẫu nhiên / theo điều kiện gốc."
+    },
+    "nro.models.boss.event_trung_thu.MoonBoss$Monkey": {
+      "ids": [
+        1045
+      ],
+      "complete": true,
+      "note": "Chỉ khi sự kiện Trung Thu bật và đủ điều kiện nhận thưởng; tỷ lệ lấy từ mục Rơi đồ → Trung Thu."
+    },
+    "nro.models.boss.event_trung_thu.MoonBoss$Rabbit": {
+      "ids": [
+        462
+      ],
+      "complete": true,
+      "note": "Chỉ khi sự kiện Trung Thu bật và đủ điều kiện nhận thưởng; tỷ lệ lấy từ mục Rơi đồ → Trung Thu."
+    },
+    "nro.models.boss.event_trung_thu.MoonBoss$Gogeta": {
+      "ids": [
+        1697,
+        735
+      ],
+      "complete": true,
+      "note": "Chỉ khi sự kiện Trung Thu bật và đủ điều kiện nhận thưởng; tỷ lệ lấy từ mục Rơi đồ → Trung Thu."
+    },
+    "nro.models.boss.event_trung_thu.MoonBoss$Omega": {
+      "ids": [
+        1685,
+        735
+      ],
+      "complete": true,
+      "note": "Chỉ khi sự kiện Trung Thu bật và đủ điều kiện nhận thưởng; tỷ lệ lấy từ mục Rơi đồ → Trung Thu."
+    }
+  }
+}

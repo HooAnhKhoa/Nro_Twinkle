@@ -1,6 +1,7 @@
 const byId=id=>document.getElementById(id),number=n=>Number(n).toLocaleString('vi-VN');
 let bossRows=[],chosen=null,infoDirty=false,dropDirty=false,infoBusy=false,dropBusy=false,clockOffset=0;
 let dropConfig=null,optionCatalog=[],dropLoadVersion=0,pickerVersion=0,pickerTimer=null,lastCardFocus=null;
+let nativeDrops=null,itemPage=1,itemPages=1;
 const modal=byId('bossModal');
 async function bossApi(body){const response=await fetch('boss.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...body,csrf:bossCsrf})});const data=await response.json();if(!response.ok||data.error)throw Error(data.error||'Không thể thực hiện thao tác.');return data;}
 function notify(text,error=false){byId('message').textContent=text||'';byId('message').className='boss-message'+(error?' error':'');}
@@ -25,7 +26,7 @@ function fillInfo(){if(!chosen)return;byId('hp').value=number(chosen.hp);byId('d
 function showTab(name){const drops=name==='drops';byId('infoPanel').hidden=drops;byId('dropsPanel').hidden=!drops;byId('infoTab').setAttribute('aria-selected',String(!drops));byId('dropsTab').setAttribute('aria-selected',String(drops));if(drops&&!dropConfig&&!dropBusy)loadDrops();}
 async function openBoss(row,card){
  if((infoDirty||dropDirty)&&chosen?.boss_key!==row.boss_key&&!confirm('Bỏ các thay đổi chưa lưu?'))return;
- if(chosen?.boss_key!==row.boss_key){dropLoadVersion++;dropConfig=null;dropDirty=false;byId('dropRows').replaceChildren();byId('itemSearch').value='';byId('itemResults').hidden=true;}
+ if(chosen?.boss_key!==row.boss_key){dropLoadVersion++;pickerVersion++;dropConfig=null;nativeDrops=null;dropDirty=false;byId('dropRows').replaceChildren();byId('lootPreview').replaceChildren();byId('lootNote').textContent='Đang tải bảng rơi…';byId('itemSearch').value='';byId('itemResults').replaceChildren();byId('itemPicker').open=false;itemPage=1;}
  chosen=row;infoDirty=false;fillInfo();byId('spawnDelay').value=0;notify('');lastCardFocus=card;updateDetails();showTab(startBossDrops?'drops':'info');if(!modal.open)modal.showModal();
 }
 function closeBoss(){if(infoBusy||dropBusy){notify('Đang xử lý, hãy chờ hoàn tất.');return;}if((infoDirty||dropDirty)&&!confirm('Đóng và bỏ các thay đổi chưa lưu?'))return;modal.close();infoDirty=dropDirty=false;dropLoadVersion++;dropConfig=null;const current=[...byId('cards').children].find(c=>c.dataset.key===chosen?.boss_key);(current||lastCardFocus)?.focus();}
@@ -52,14 +53,25 @@ byId('spawn').onclick=async()=>{
  try{const command=await bossApi({action:'spawn',key:chosen.boss_key,delay});notify('Đang chờ server nhận lệnh…');let done=false;for(let n=0;n<14;n++){await new Promise(resolve=>setTimeout(resolve,1500));const data=await bossApi({action:'status',id:command.id});if(data.command?.completed_at){notify(data.command.result);done=true;break;}}if(!done)notify('Lệnh vẫn đang chờ server phản hồi.');await refreshBosses();}catch(error){notify(error.message,true);}finally{infoBusy=false;updateDetails();}
 };
 function updateDropHint(){
- const mode=byId('dropMode').value;byId('dropModeHint').textContent=({original:'Dùng toàn bộ bảng rơi trong code gốc. Các dòng tùy chỉnh bên dưới được giữ làm bản nháp.',add:'Giữ đồ gốc và rơi thêm theo các dòng bên dưới.',replace:'Chỉ rơi các dòng bên dưới, thay vật phẩm gốc. Bảng trống sẽ không rơi đồ.',off:'Tắt vật phẩm rơi của boss. Bảng bên dưới vẫn được giữ để bật lại.'})[mode];
+ const mode=byId('dropMode').value;byId('dropModeHint').textContent=({original:'Dùng toàn bộ bảng rơi trong code gốc. Các dòng tùy chỉnh bên dưới được giữ làm bản nháp.',add:'Giữ đồ gốc và rơi thêm theo các dòng bên dưới.',replace:'Chỉ rơi các dòng bên dưới, thay vật phẩm gốc. Bảng trống sẽ không rơi đồ.',off:'Tắt vật phẩm rơi của boss. Bảng bên dưới vẫn được giữ để bật lại.'})[mode];renderLootPreview();
 }
 async function loadDrops(){
  if(!chosen||dropBusy)return;const version=++dropLoadVersion,key=chosen.boss_key;dropBusy=true;byId('saveDrops').disabled=true;byId('dropSync').textContent='Đang tải…';
- try{const [data,catalog]=await Promise.all([bossApi({action:'drop_get',key}),optionCatalog.length?Promise.resolve({options:optionCatalog}):bossApi({action:'drop_catalog'})]);if(version!==dropLoadVersion||key!==chosen?.boss_key)return;optionCatalog=catalog.options;dropConfig=data.config;dropDirty=false;byId('dropMode').value=dropConfig.mode;renderDrops();updateDropHint();showDropSync();}catch(error){if(version===dropLoadVersion)notify(error.message,true);}finally{dropBusy=false;byId('saveDrops').disabled=!dropConfig;}
+ try{const [data,catalog]=await Promise.all([bossApi({action:'drop_get',key}),optionCatalog.length?Promise.resolve({options:optionCatalog}):bossApi({action:'drop_catalog'})]);if(version!==dropLoadVersion||key!==chosen?.boss_key)return;optionCatalog=catalog.options;dropConfig=data.config;nativeDrops=data.native;dropDirty=false;byId('dropMode').value=dropConfig.mode;renderDrops();updateDropHint();showDropSync();}catch(error){if(version===dropLoadVersion)notify(error.message,true);}finally{dropBusy=false;byId('saveDrops').disabled=!dropConfig;}
 }
 function showDropSync(){if(!dropConfig)return;byId('dropSync').textContent=Number(dropConfig.revision)===0?'Đang dùng cơ chế gốc':Number(dropConfig.applied_revision)===Number(dropConfig.revision)?'Server đã nhận · bản '+dropConfig.revision:'Đã lưu · chờ server nhận';}
-function markDrops(){dropDirty=true;byId('dropSync').textContent='Có thay đổi chưa lưu';}
+function markDrops(){dropDirty=true;byId('dropSync').textContent='Có thay đổi chưa lưu';renderLootPreview();}
+function itemTile(item,button=false){const card=node(button?'button':'article',null,'boss-item-tile');if(button)card.type='button';card.append(icon('/icon/'+(item.icon_id||1)+'.png'),node('strong',item.name||'Vật phẩm #'+item.id),node('small','ID '+item.id));return card;}
+function renderLootPreview(){
+ const area=byId('lootPreview');area.replaceChildren();if(!dropConfig)return;
+ const mode=byId('dropMode').value,native=mode==='original'||mode==='add',custom=mode==='add'||mode==='replace';
+ const notes=[dropDirty?'Xem trước thay đổi chưa lưu.':'Theo cấu hình đã lưu.'];
+ if(mode==='off')notes.push('Đã tắt rơi vật phẩm.');
+ if(native){notes.push(nativeDrops?.note||'Đang tải danh sách đồ gốc.');if(!nativeDrops?.complete)notes.push('Danh sách đồ gốc chưa đầy đủ.');for(const item of nativeDrops?.items||[]){const card=itemTile(item);card.append(node('span','Đồ gốc · theo điều kiện','boss-item-badge'));area.append(card);}}
+ if(custom)for(const item of dropConfig.items.filter(i=>i.chance>0)){const card=itemTile(item);card.append(node('span',number(item.chance)+'% · ×'+number(item.min)+(item.max!==item.min?'–'+number(item.max):''),'boss-item-badge custom'));for(const opt of item.options){const name=optionCatalog.find(o=>Number(o.id)===Number(opt.id))?.name||'Chỉ số';card.append(node('small',name.includes('#')?name.replace('#',number(opt.param)):name+' '+number(opt.param)));}area.append(card);}
+ if(!area.children.length&&mode!=='off')notes.push(native&&!nativeDrops?.complete?'Chưa xác định được vật phẩm gốc.':'Không có vật phẩm rơi xuống đất trong bảng này.');
+ byId('lootNote').textContent=notes.join(' ');
+}
 function numericField(title,value,min,max,onchange){const label=node('label',title),input=node('input');input.type='number';input.min=min;input.max=max;input.step=title==='Tỷ lệ %'?'0.0001':'1';input.required=true;input.value=value;input.oninput=()=>{onchange(Number(input.value));markDrops();};label.append(input);return label;}
 function optionsEditor(entry,container){
  container.replaceChildren();container.parentElement.querySelector('summary').textContent='Chỉ số vật phẩm ('+entry.options.length+')';for(const [index,option] of entry.options.entries()){
@@ -77,13 +89,25 @@ function renderDrops(){
  }
 }
 byId('dropMode').onchange=()=>{markDrops();updateDropHint();};byId('reloadDrops').onclick=()=>{if(dropDirty&&!confirm('Bỏ thay đổi bảng rơi chưa lưu và tải lại?'))return;dropConfig=null;notify('');loadDrops();};
-byId('itemSearch').oninput=()=>{
- clearTimeout(pickerTimer);const version=++pickerVersion,query=byId('itemSearch').value.trim();if(!query){byId('itemResults').hidden=true;return;}
- pickerTimer=setTimeout(async()=>{try{const data=await bossApi({action:'drop_search',query});if(version!==pickerVersion)return;const results=byId('itemResults');results.replaceChildren();for(const item of data.items){const button=node('button');button.type='button';button.append(icon('/icon/'+item.icon_id+'.png'),node('span',item.name),node('small','#'+item.id));button.onclick=()=>{if(!dropConfig){notify('Chưa tải xong bảng rơi.',true);return;}if(dropConfig.items.length>=30){notify('Tối đa 30 dòng vật phẩm.',true);return;}dropConfig.items.push({id:Number(item.id),name:item.name,icon_id:Number(item.icon_id),min:1,max:1,chance:100,options:[]});markDrops();renderDrops();byId('itemSearch').value='';results.hidden=true;};results.append(button);}if(!data.items.length)results.append(node('p','Không tìm thấy vật phẩm.','boss-help'));results.hidden=false;}catch(error){notify(error.message,true);}},220);
-};
+async function loadItemPage(page=1){
+ const version=++pickerVersion,key=chosen?.boss_key,query=byId('itemSearch').value.trim();byId('itemsPage').textContent='Đang tải…';byId('itemsPrev').disabled=byId('itemsNext').disabled=true;
+ try{const data=await bossApi({action:'drop_search',query,page});if(version!==pickerVersion||key!==chosen?.boss_key||!modal.open)return;
+  itemPage=data.page;itemPages=data.pages;const results=byId('itemResults');results.replaceChildren();results.hidden=false;
+  for(const item of data.items){const button=itemTile(item,true);button.append(node('span','＋ Thêm','boss-item-badge'));button.onclick=()=>{
+   if(!dropConfig||dropBusy){notify('Hãy chờ tải/lưu bảng rơi hoàn tất.',true);return;}if(dropConfig.items.length>=30){notify('Tối đa 30 dòng vật phẩm.',true);return;}
+   dropConfig.items.push({id:Number(item.id),name:item.name,icon_id:Number(item.icon_id),min:1,max:1,chance:100,options:[]});markDrops();renderDrops();notify('Đã thêm '+item.name+'. Chọn chế độ bổ sung hoặc thay bảng rơi rồi lưu để áp dụng.');
+  };results.append(button);}
+  if(!data.items.length)results.append(node('p','Không tìm thấy vật phẩm.','boss-help'));
+  byId('itemsPage').textContent=number(data.total)+' vật phẩm · Trang '+itemPage+'/'+itemPages;byId('itemsPrev').disabled=itemPage<=1;byId('itemsNext').disabled=itemPage>=itemPages;
+ }catch(error){if(version===pickerVersion){byId('itemsPage').textContent=error.message;notify(error.message,true);}}
+}
+byId('itemSearch').onkeydown=event=>{if(event.key==='Enter'){event.preventDefault();clearTimeout(pickerTimer);loadItemPage(1);}};
+byId('itemPicker').ontoggle=()=>{if(byId('itemPicker').open)loadItemPage(1);};
+byId('itemSearch').oninput=()=>{clearTimeout(pickerTimer);pickerVersion++;pickerTimer=setTimeout(()=>loadItemPage(1),220);};
+byId('itemsPrev').onclick=()=>loadItemPage(itemPage-1);byId('itemsNext').onclick=()=>loadItemPage(itemPage+1);
 byId('dropForm').onsubmit=async event=>{
  event.preventDefault();if(!chosen||!dropConfig||dropBusy)return;dropBusy=true;byId('saveDrops').disabled=true;
- try{const data=await bossApi({action:'drop_save',key:chosen.boss_key,revision:Number(dropConfig.revision),mode:byId('dropMode').value,items:dropConfig.items.map(({id,min,max,chance,options})=>({id,min,max,chance,options}))});dropConfig=data.config;dropDirty=false;notify(data.message);showDropSync();}catch(error){notify(error.message,true);}finally{dropBusy=false;byId('saveDrops').disabled=false;}
+ try{const data=await bossApi({action:'drop_save',key:chosen.boss_key,revision:Number(dropConfig.revision),mode:byId('dropMode').value,items:dropConfig.items.map(({id,min,max,chance,options})=>({id,min,max,chance,options}))});dropConfig=data.config;nativeDrops=data.native;dropDirty=false;notify(data.message);showDropSync();renderLootPreview();}catch(error){notify(error.message,true);}finally{dropBusy=false;byId('saveDrops').disabled=false;}
 };
 setInterval(async()=>{if(!modal.open||!dropConfig||dropDirty||dropBusy||byId('dropsPanel').hidden)return;try{const key=chosen.boss_key;const data=await bossApi({action:'drop_get',key});if(!modal.open||chosen?.boss_key!==key||!dropConfig||dropDirty||dropBusy)return;if(Number(data.config.revision)===Number(dropConfig.revision)){dropConfig.applied_revision=data.config.applied_revision;showDropSync();}else byId('dropSync').textContent='Có bản mới ở phiên khác · bấm Tải lại';}catch(error){}},5000);
 refreshBosses();setInterval(refreshBosses,5000);setInterval(updateTimers,1000);

@@ -33,8 +33,12 @@ function bossDropApi(mysqli $conn,array $data): bool {
     if($action==='drop_search'){
         $query=trim(mb_substr((string)($data['query']??''),0,80));
         $id=ctype_digit($query)?(int)$query:-1;
-        $stmt=$conn->prepare('SELECT id,NAME AS name,icon_id FROM item_template WHERE id=? OR INSTR(LOWER(NAME),LOWER(?))>0 ORDER BY (id=?) DESC,id LIMIT 30');
-        $stmt->bind_param('isi',$id,$query,$id);$stmt->execute();reply(['items'=>$stmt->get_result()->fetch_all(MYSQLI_ASSOC)]);
+        $page=max(1,min(10000,(int)($data['page']??1)));$limit=24;
+        $stmt=$conn->prepare('SELECT COUNT(*) AS total FROM item_template WHERE id=? OR INSTR(LOWER(NAME),LOWER(?))>0');
+        $stmt->bind_param('is',$id,$query);$stmt->execute();$total=(int)$stmt->get_result()->fetch_assoc()['total'];
+        $pages=max(1,(int)ceil($total/$limit));$page=min($page,$pages);$offset=($page-1)*$limit;
+        $stmt=$conn->prepare('SELECT id,NAME AS name,icon_id FROM item_template WHERE id=? OR INSTR(LOWER(NAME),LOWER(?))>0 ORDER BY (id=?) DESC,id LIMIT ? OFFSET ?');
+        $stmt->bind_param('isiii',$id,$query,$id,$limit,$offset);$stmt->execute();reply(['items'=>$stmt->get_result()->fetch_all(MYSQLI_ASSOC),'total'=>$total,'page'=>$page,'pages'=>$pages]);
     }
     if($action==='drop_catalog')reply(['options'=>$conn->query('SELECT id,NAME AS name FROM item_option_template WHERE id BETWEEN 0 AND 255 ORDER BY id')->fetch_all(MYSQLI_ASSOC)]);
     if(!in_array($action,['drop_get','drop_save'],true))return false;
@@ -64,5 +68,11 @@ function bossDropApi(mysqli $conn,array $data): bool {
     $templates=[];$ids=array_unique(array_map(fn($item)=>(int)$item['id'],$config['items']));
     if($ids)foreach($conn->query('SELECT id,NAME AS name,icon_id FROM item_template WHERE id IN ('.implode(',',$ids).')')->fetch_all(MYSQLI_ASSOC) as $template)$templates[(int)$template['id']]=$template;
     foreach($config['items'] as &$item){$item['name']=$templates[(int)$item['id']]['name']??('Vật phẩm #'.$item['id']);$item['icon_id']=$templates[(int)$item['id']]['icon_id']??1;}unset($item);
-    reply(['config'=>$config,'message'=>$action==='drop_save'?'Đã lưu bảng rơi. Server nhận trong khoảng 3 giây.':null]);
+    $catalog=json_decode(@file_get_contents(__DIR__.'/../boss_native_drops.json'),true)??[];
+    $native=$catalog['bosses'][$key]??['ids'=>[],'complete'=>false,'note'=>'Chưa có danh sách đồ gốc của boss này.'];
+    $native['items']=[];$ids=array_unique(array_map('intval',$native['ids']));
+    if($ids){$found=[];foreach($conn->query('SELECT id,NAME AS name,icon_id FROM item_template WHERE id IN ('.implode(',',$ids).')')->fetch_all(MYSQLI_ASSOC) as $item){$native['items'][]=$item;$found[]=(int)$item['id'];}
+        foreach(array_diff($ids,$found) as $id)$native['items'][]=['id'=>$id,'name'=>'Vật phẩm #'.$id.' (thiếu mẫu dữ liệu)','icon_id'=>1];}
+    unset($native['ids'],$native['unresolved']);
+    reply(['config'=>$config,'native'=>$native,'message'=>$action==='drop_save'?'Đã lưu bảng rơi. Server nhận trong khoảng 3 giây.':null]);
 }

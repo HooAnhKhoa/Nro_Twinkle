@@ -1,0 +1,20 @@
+const assert=require('node:assert/strict');
+const c=require('../web/boss_native_drops.json').bosses;
+function ids(key,expected){assert.deepEqual(c['nro.models.boss.'+key].ids,expected,key);}
+ids('Nappa.Kuku',[18,19,20,190]);
+ids('Boss_mini.RongNhi',[18,19,20,1821]);
+ids('khi_gas.Hatchiyack',[729]);
+ids('khi_gas.DrLychee',[738]);
+ids('event_hung_vuong.SonTinh',[421,1558]);
+ids('event_hung_vuong.ThuyTinh',[422,1558]);
+ids('event_noel.OngGiaNoel',[648]);
+ids('Broly.Broly',[]);ids('Broly.SuperBroly',[]);
+ids('event_trung_thu.MoonBoss$Monkey',[1045]);
+ids('event_trung_thu.MoonBoss$Rabbit',[462]);
+ids('event_trung_thu.MoonBoss$Gogeta',[1697,735]);
+ids('event_trung_thu.MoonBoss$Omega',[1685,735]);
+const baby=c['nro.models.boss.Baby.Baby'].ids;
+for(const id of [15,20,190,230,280,555,567,992,1785,1786,1788])assert(baby.includes(id),'Baby missing '+id);
+assert(!baby.includes(50),'Option ID must not become an item');
+for(const row of Object.values(c))assert(row.ids.every(id=>Number.isInteger(id)&&id>=0&&id<=32767));
+console.log('PASS: native catalogs cover direct rewards, random branches, helper methods, event stamps, configured Moon bosses, and non-item rewards.');

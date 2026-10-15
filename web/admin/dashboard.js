@@ -17,7 +17,7 @@ const pageFiles=new Set([...pageRoutes.keys()].map(t=>t.split('?')[0]).concat(['
 let currentDashboardPage='';
 function safeDashboardTarget(target){
     try{const url=new URL(target,location.href);const file=url.pathname.split('/').pop();
-        return url.origin===location.origin&&url.pathname==='/admin/'+file&&pageFiles.has(file)?file+url.search:'';
+        return url.origin===location.origin&&url.pathname==='/admin/'+file&&(pageFiles.has(file)||file==='boss_drops.php')?(file==='boss_drops.php'?'boss.php':file)+url.search:'';
     }catch(error){return '';}
 }
 function markDashboardMenu(target,activity=false){
