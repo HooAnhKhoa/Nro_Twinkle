@@ -58,11 +58,7 @@ if(isset($data['action']) && $data['action'] === 'add'){
 
     $newId = $conn->insert_id;
 
-    // 3. Tạo player
-    $conn->query("
-        INSERT INTO player (account_id, name)
-        VALUES ($newId, '')
-    ");
+    // The game creates the complete character after the player chooses name and race.
 
     echo json_encode([
         "status" => "success",
@@ -152,9 +148,8 @@ if(trim($name) !== ""){
     $checkPlayer = $conn->query("SELECT id FROM player WHERE account_id=$id");
     if($checkPlayer && $checkPlayer->num_rows > 0){
         $conn->query("UPDATE player SET name='$name' WHERE account_id=$id");
-    }else{
-        $conn->query("INSERT INTO player (account_id, name) VALUES ($id, '$name')");
     }
+    // Accounts without a character must stay absent from player until in-game creation.
 
     echo json_encode(["status"=>"success"]);
     exit;
