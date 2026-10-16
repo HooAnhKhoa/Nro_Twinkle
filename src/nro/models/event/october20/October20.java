@@ -59,8 +59,8 @@ public final class October20 {
             var c=October20Config.current();String text;
             if(select<2){String kind=select==0?"normal":"special";var cost=recipe(c,kind);
                 StringBuilder s=new StringBuilder("|2|GÓI QUÀ 20/10 "+(select==0?"THƯỜNG":"ĐẶC BIỆT"));
-                for(int id:MATERIALS)s.append("\n|1|").append(ItemService.gI().getTemplate((short)id).name).append(" ").append(count(p,id)).append("/").append(cost.items().get(id));
-                s.append("\n|7|Giá vàng: ").append(String.format(Locale.US,"%,d",cost.gold()));
+                for(int id:MATERIALS){long owned=count(p,id);int needed=cost.items().get(id);s.append(owned>=needed?"\n|1|":"\n|7|").append(ItemService.gI().getTemplate((short)id).name).append(" ").append(owned).append("/").append(needed);}
+                s.append(p.inventory.gold>=cost.gold()?"\n|1|Giá vàng: ":"\n|7|Giá vàng: ").append(String.format(Locale.US,"%,d",cost.gold()));
                 s.append("\n|0|Mở quà: ").append(c.n(kind+".accessory")).append("% phụ kiện; ").append(c.n(kind+".stones")).append("% đá nâng cấp; ").append(100-c.n(kind+".accessory")-c.n(kind+".stones")).append("% vật phẩm hỗ trợ.");
                 s.append("\nPhụ kiện: ").append(c.n("permanent")).append("% vĩnh viễn, còn lại hạn ").append(c.n(kind+".days")).append(" ngày.");text=s.toString();
             }else{text="|2|ĐỔI "+ItemService.gI().getTemplate((short)ACCESSORIES[select-2]).name+"\n|1|Cần "+c.n("redeem.points")+" điểm 20/10.\nHạn dùng "+c.n("redeem.days")+" ngày.\n"+stats(c);}

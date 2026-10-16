@@ -888,3 +888,5 @@ Sửa luồng rơi thức ăn 663–667 (Pudding, Xúc xích, Kem dâu, Mì ly, 
 
 Điều kiện mới: sư phụ hoặc đệ đang cùng khu có đủ 5 món thần linh (áo/quần/găng/giày/nhẫn, ID 555–567). Sư phụ hoặc đệ hạ quái đều được xét; nếu cả hai cùng đủ set cũng chỉ quay **một** lượt. Quyền nhặt luôn thuộc sư phụ. Đệ ở khu khác không cấp điều kiện cho sư phụ; thiếu một món thì không đủ set. Không thay đổi tỷ lệ `food.god`, hệ số nhóm/server, hay các bảng rơi khác. Tỷ lệ gốc 3/333 ≈ 0,9009%; tỷ lệ riêng trên web có thể ghi đè (máy chính đang đặt 100% khi kiểm tra).
 Kiểm thử `test/PetGodFoodTest.java`: 28 kiểm tra trên map thường/Nappa/lạnh, quyền nhặt thực tế, set thiếu nhẫn, đệ ở khu khác, cả hai cùng đủ set, và việc giữ hiệu lực các mức 0%/x0.
+
+Menu gói quà 20/10 thường/đặc biệt: từng nguyên liệu và giá vàng hiển thị xanh khi đang đủ, đỏ khi thiếu. Màu được tính từ số lượng trong hành trang và số vàng khi mở xác nhận, không gán xanh cố định cho nguyên liệu hoặc đỏ cố định cho vàng.
