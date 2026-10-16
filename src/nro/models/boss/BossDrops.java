@@ -24,7 +24,8 @@ public final class BossDrops {
     private static volatile Map<String,Policy> policies=Map.of();
     private static final ThreadLocal<Scope> scope=new ThreadLocal<>();
     public static Policy policy(Boss b){return policies.getOrDefault(b.getClass().getName(),ORIGINAL);}
-    public static boolean suppress(ItemMap item){Scope s=scope.get();return s!=null&&item.zone==s.boss().zone&&(s.policy().mode().equals("replace")||s.policy().mode().equals("off"));}
+    public static boolean suppress(ItemMap item){if(BossBounty.suppress(item))return true;Scope s=scope.get();return s!=null&&item.zone==s.boss().zone&&(s.policy().mode().equals("replace")||s.policy().mode().equals("off"));}
+    public static void withoutScope(Runnable work){Scope previous=scope.get();scope.remove();try{work.run();}finally{if(previous!=null)scope.set(previous);}}
     public static void nativeScope(Boss boss,Runnable original){
         Scope previous=scope.get();scope.set(new Scope(boss,policy(boss)));
         try{original.run();}finally{if(previous==null)scope.remove();else scope.set(previous);}

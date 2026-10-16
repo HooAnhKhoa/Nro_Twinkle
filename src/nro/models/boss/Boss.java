@@ -67,11 +67,13 @@ public class Boss extends Player implements IBoss {
     public boolean panelIndependent = false;
     public boolean panelStatsApplied = false;
     private boolean panelRewardProcessed;
+    private String bountyEncounterKey=java.util.UUID.randomUUID().toString();
+    public String bountyEncounterKey(){return bountyEncounterKey;}
     public boolean panelDropEligible(Player p){return p!=null&&!p.isBot&&this.zone!=null&&nro.models.server.PanelBridge.enabled(this);}
     public final synchronized void giveReward(Player p){
         if(panelRewardProcessed||!panelDropEligible(p))return;
         panelRewardProcessed=true;
-        BossDrops.reward(this,p,()->reward(p));
+        BossBounty.reward(this,p,()->BossDrops.reward(this,p,()->reward(p)));
     }
     public boolean panelCanSpawn() { return this.panelIndependent && this.parentBoss == null; }
     public void panelSetRest(int seconds) { this.secondsRest = seconds; }
@@ -105,6 +107,7 @@ public class Boss extends Player implements IBoss {
                 }catch(ReflectiveOperationException ignored){}
             }
         }
+        timing.put("bounty",BossBounty.preview(this));
         timing.put("state",bossStatus==null?"UNKNOWN":bossStatus.name());
         timing.put("spawn_at",spawnAt);
         timing.put("appeared_at",zone!=null&&panelAppearedAt>0?panelAppearedAt:null);
@@ -484,8 +487,9 @@ public class Boss extends Player implements IBoss {
     }
 
     @Override
-    public void respawn() {
+    public synchronized void respawn() {
         this.panelRewardProcessed=false;
+        this.bountyEncounterKey=java.util.UUID.randomUUID().toString();
         this.panelStatsApplied = false;
         this.currentLevel++;
         if (this.currentLevel >= this.data.length) {

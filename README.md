@@ -835,3 +835,35 @@ Trên trang **Sự kiện**, bấm **Công thức & phần thưởng** ở ô 20
 Code: `src/nro/models/event/october20/`; schema idempotent `web/october20_schema.sql`; giao diện nằm trong trang Sự kiện hiện có. Dữ liệu `october20_config`, `october20_player`, `october20_exchange`, `october20_config_audit`. Đổi đồ/điểm/vàng và biên nhận lưu cùng một transaction; túi đầy, thiếu nguyên liệu, thiếu điểm hoặc lỗi lưu sẽ không làm mất đồ. Xác nhận NPC chỉ dùng một lần, thao tác thành công cách nhau tối thiểu 500 ms.
 
 Kiểm thử: `test/October20Test.java` chạy bằng JDK 17 trong cấu hình QA; `test/October20ApiTest.ps1` kiểm tra HTTP trên web QA; `test/DropRulesCatalogTest.php` kiểm tra đủ 61 quy tắc rơi. Chỉ dùng database `nro_panel_qa_20261013` cho các kiểm thử ghi dữ liệu.
+
+## Thưởng hạ boss theo độ khó (16/10/2026)
+
+VNĐ được cộng vào **account.vnd** của người hạ boss, đệ tử hạ thì chủ nhận. Thỏi vàng và Ngọc Rồng rơi dưới đất, ưu tiên quyền nhặt cho nhân vật đó. Không cộng `tongnap` và không cộng trực tiếp điểm Quy Lão. Có thể dùng VNĐ tại Bò Mộng theo quy đổi hiện hành.
+
+| Bậc | VNĐ bảo đảm | Thỏi vàng bảo đảm | Ngọc 4 sao | Ngọc 3 sao | Ngọc 2 sao |
+|---|---:|---:|---:|---:|---:|
+| 1 | 1.000 | 1–2 | 8% | 1% | 0% |
+| 2 | 2.000 | 2–3 | 10% | 3% | 0,5% |
+| 3 | 3.000 | 3–5 | 12% | 6% | 1% |
+| 4 | 4.000 | 5–8 | 15% | 10% | 3% |
+| 5 | 5.000 | 8–12 | 20% | 15% | 5% |
+
+Ngọc xét **một lượt chung**, tối đa một viên 2/3/4 sao mỗi lần hạ. Có thể không ra viên nào. Thỏi vàng chọn đều trong khoảng. Tỷ lệ này độc lập với hệ số rơi quái trên server. Thỏi vàng #457 và ngọc #15–17 từ luồng thưởng chết gốc được thay bằng bảng này để không cộng chồng; trang bị, nguyên liệu, nhiệm vụ và phần thưởng đặc thù khác của boss vẫn giữ nguyên. Thưởng mới độc lập với bảng vật phẩm tùy chỉnh cũ.
+
+Bậc tính theo **HP tối đa và sức đánh thực tế khi bị hạ**, cùng map hiện tại:
+
+- Bậc HP: dưới 10 triệu = 1; dưới 50 triệu = 2; dưới 200 triệu = 3; dưới 1 tỷ = 4; từ 1 tỷ = 5.
+- Bậc SD: dưới 10.000 = 1; dưới 50.000 = 2; dưới 200.000 = 3; dưới 500.000 = 4; còn lại = 5.
+- Bậc map: Ngục tù 155 = 5; lạnh 105–110, Mabư 114–120/127/128 = 4; tương lai 92–94/96–100/102/103 = 3; Nappa 63–83 = 2; còn lại = 1.
+- Nếu HP từ 1 tỷ, nhận bậc 5. Các trường hợp khác lấy trung bình làm tròn gần nhất của `(3 × bậc HP + bậc SD + bậc map) / 5`.
+- Ví dụ với chỉ số gốc hiện tại: Kuku/Mập Đầu Đinh/Rambo thường bậc 1; đội Số 1–4 Nappa bậc 2; Xên Hoàn Thiện bậc 3; Cooler/Black Goku thường bậc 4; Fide Vàng/Baby bậc 5. Nếu sửa chỉ số/map hoặc Broly tăng sức mạnh, bậc có thể đổi. Mỗi dạng bị hạ trong boss nhiều giai đoạn được tính riêng theo chỉ số dạng đó.
+
+Áp dụng các boss chiến đấu: Nappa, tiểu đội sát thủ/Namek, Android, Fide, Cell, Bojack, Cooler, Black Goku, Cumber, Baby, Broly, Mabư, Pôcôlô, Tàu Pảy Pảy thường, boss Doanh trại/Kho báu/Khí gas, boss Giỗ Tổ/Tết/Halloween/Trung Thu hiện hành, Rồng Nhí và Virut. **Không áp dụng** Mặt Trời, Ở Dơ, Sói hẹc quyn, Ăn Trộm, quái Yardrat, boss luyện tập/nhân bản/siêu hạng/võ đài, đạn DeathBeam hay Ông già Noel phát quà theo chu kỳ. Boss phải thực sự chết, người nhận phải là tài khoản/nhân vật hợp lệ trong cùng khu; boss/EV đang tắt hoặc hết hạn tự rời map không có thưởng.
+
+Mở Boss → chọn boss → Thông tin để xem bậc, VNĐ, khoảng thỏi vàng và tỷ lệ ngọc. Boss đang nghỉ chỉ hiển thị dự kiến; payout lấy trạng thái thực tế lúc hạ.
+
+`BossBounty.java` điều phối thưởng; mỗi lần hồi sinh có UUID riêng. `web/boss_bounty_schema.sql` tạo `boss_bounty_receipt`, khóa chính encounter_key chống cộng trùng; lưu tài khoản, nhân vật, boss, map/khu, HP, SD, bậc, tiền trước/sau và vật phẩm đã quay. Tiền và biên nhận cùng transaction InnoDB; bảng account và player cũng cần InnoDB. Không tin số dư cache của session.
+
+Trước khi cộng tiền, ghi nhật ký chờ vào `data/boss-bounty-pending/` bằng đổi tên file nguyên tử. Nếu DB lỗi hoặc số dư sắp vượt INT_MAX, thử lại mỗi 5 giây và giữ nguyên kết quả đã quay. Nhật ký được đọc lại sau khi khởi động; hoàn tất thì xóa file. Không đưa thư mục này lên Git. Khi sao lưu/chuyển máy phải mang theo nhật ký chờ. Thỏi vàng/ngọc dưới đất vẫn theo vòng đời map bình thường: không bảo đảm giữ đồ dưới đất khi server dừng, kể cả sự cố ngay sau commit; biên nhận giúp đối chiếu, VNĐ đã commit không mất.
+
+Kiểm thử: `test/BossBountyTest.java` (QA) kiểm tra bậc, 50.000 lượt rơi xác định, cộng tiền thực, chống lặp/đồng thời, quyền nhặt của chủ đệ, lỗi DB, khôi phục nhật ký, tràn số dư và giữ phần thưởng gốc. `test/BossDropsTest.java` kiểm tra hồi quy các scope rơi vật phẩm cũ.

@@ -31,9 +31,18 @@ async function openBoss(row,card){
 }
 function closeBoss(){if(infoBusy||dropBusy){notify('Đang xử lý, hãy chờ hoàn tất.');return;}if((infoDirty||dropDirty)&&!confirm('Đóng và bỏ các thay đổi chưa lưu?'))return;modal.close();infoDirty=dropDirty=false;dropLoadVersion++;dropConfig=null;const current=[...byId('cards').children].find(c=>c.dataset.key===chosen?.boss_key);(current||lastCardFocus)?.focus();}
 function updateTimers(){if(!chosen||!modal.open)return;byId('timers').replaceChildren();for(const [title,value] of bossTimerLabels(chosen,Date.now()+clockOffset)){const line=node('div');line.append(node('span',title),node('strong',value));byId('timers').append(line);}}
+function updateBounty(){
+ const box=byId('bountyPreview');if(!box||!chosen)return;box.replaceChildren();
+ const profiles=(chosen.timings||[]).map(t=>t.bounty).filter(p=>p&&p.eligible);
+ if(!profiles.length){box.append(node('span','Không có thưởng VNĐ/thỏi vàng bổ sung cho đối tượng này.'));return;}
+ const unique=[...new Map(profiles.map(p=>[`${p.tier}:${p.live}`,p])).values()];
+ box.append(node('strong','Thưởng hạ boss'));
+ for(const p of unique){box.append(node('p',`Bậc ${p.tier}: +${Number(p.vnd).toLocaleString('vi-VN')} VNĐ · ${p.bars_min}–${p.bars_max} thỏi vàng`));box.append(node('p',`Ngọc Rồng 2 sao ${p.ball_2}% · 3 sao ${p.ball_3}% · 4 sao ${p.ball_4}%`));}
+ box.append(node('small','Ngọc quay một lượt, tối đa một viên 2–4 sao. Bậc tính theo HP, sát thương và map thực tế lúc hạ; boss đang nghỉ chỉ hiện dự kiến. Trang bị/nguyên liệu gốc giữ nguyên.'));
+}
 function updateDetails(){
  if(!chosen)return;byId('bossTitle').textContent=chosen.name;byId('bossPortrait').src=chosen.image;byId('bossState').textContent=Number(chosen.enabled)?chosen.online_count+' đang xuất hiện · '+(bossLive(chosen)?'Đã kết nối server':'Chưa kết nối server'):'Boss đang tắt';
- byId('locationNow').textContent='📍 '+bossLocation(chosen);byId('restHint').textContent=bossRestHint(chosen);byId('detail').textContent='Map xuất hiện: '+bossSpawnMaps(chosen);updateTimers();
+ byId('locationNow').textContent='📍 '+bossLocation(chosen);byId('restHint').textContent=bossRestHint(chosen);byId('detail').textContent='Map xuất hiện: '+bossSpawnMaps(chosen);updateTimers();updateBounty();
  byId('spawn').textContent=Number(byId('spawnDelay').value)>0?'Hẹn xuất hiện':'Gọi ngay';byId('spawn').disabled=infoBusy||infoDirty||!bossLive(chosen)||!Number(chosen.can_spawn)||!Number(chosen.enabled)||Number(chosen.online_count)>0;
  byId('saveInfo').disabled=infoBusy||!chosen;byId('periodicHint').hidden=!chosen.boss_key.endsWith('.OngGiaNoel');
 }
