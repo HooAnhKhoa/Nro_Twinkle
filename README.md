@@ -867,3 +867,7 @@ Mở Boss → chọn boss → Thông tin để xem bậc, VNĐ, khoảng thỏi 
 Trước khi cộng tiền, ghi nhật ký chờ vào `data/boss-bounty-pending/` bằng đổi tên file nguyên tử. Nếu DB lỗi hoặc số dư sắp vượt INT_MAX, thử lại mỗi 5 giây và giữ nguyên kết quả đã quay. Nhật ký được đọc lại sau khi khởi động; hoàn tất thì xóa file. Không đưa thư mục này lên Git. Khi sao lưu/chuyển máy phải mang theo nhật ký chờ. Thỏi vàng/ngọc dưới đất vẫn theo vòng đời map bình thường: không bảo đảm giữ đồ dưới đất khi server dừng, kể cả sự cố ngay sau commit; biên nhận giúp đối chiếu, VNĐ đã commit không mất.
 
 Kiểm thử: `test/BossBountyTest.java` (QA) kiểm tra bậc, 50.000 lượt rơi xác định, cộng tiền thực, chống lặp/đồng thời, quyền nhặt của chủ đệ, lỗi DB, khôi phục nhật ký, tràn số dư và giữ phần thưởng gốc. `test/BossDropsTest.java` kiểm tra hồi quy các scope rơi vật phẩm cũ.
+
+## Bỏ thưởng điểm danh Bò Mộng (16/10/2026)
+
+Bỏ mục Điểm danh và xử lý tặng miễn phí 10.000 ngọc + 100 thỏi vàng ở Bò Mộng Rừng Karin (47) và Siêu Thị (84), do hai địa điểm dùng chung menu. Gửi lại lựa chọn cũ hoặc bấm Từ chối không nhận thưởng, không sửa ngày điểm danh. Giữ nhiệm vụ hàng ngày, thành tích, Nạp Ngọc và đổi số dư VNĐ tại Bò Mộng ở nhà (21/22/23). Không thu hồi phần thưởng đã nhận trước đây. Kiểm thử `test/BoMongCheckInRemovalTest.java`.
