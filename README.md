@@ -875,3 +875,7 @@ Bỏ mục Điểm danh và xử lý tặng miễn phí 10.000 ngọc + 100 th�
 ## Giftcode tại nhà (16/10/2026)
 
 Bò Mộng trong nhà ba hành tinh (map 21/22/23) có thêm **Nhập giftcode**, bên cạnh đổi thỏi vàng/ngọc bằng số dư VNĐ. Dùng chung `Input.GIFT_CODE` và `GiftCodeService` với NPC Santa, nên mã, điều kiện, giới hạn và lịch sử nhận vẫn dùng chung. Mục Đóng chuyển xuống cuối menu; không thêm quà miễn phí.
+
+## Cộng dồn nguyên liệu 20/10 (16/10/2026)
+
+Giấy màu #1505 và Nơ trang trí #1509 bật `is_up_to_up=1`, tối đa 99.999 mỗi chồng theo giới hạn vật phẩm thường. `web/material_stack_schema.sql` chạy trước khi nạp template. Khi đăng nhập, các chồng nguyên liệu thường cùng loại/cùng option trong hành trang và rương được gộp, giữ tổng số lượng và vị trí các món khác. Không gộp đồ khác trạng thái khóa hoặc có chỉ số/hạn dùng đặc biệt; không thay đổi danh sách đồ giữa phiên giao dịch. Đồ mới nhặt/nhận dùng cơ chế cộng dồn chung hiện có. Không xóa số lượng hay đổi dữ liệu trang bị khác.

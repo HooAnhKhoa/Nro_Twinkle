@@ -881,6 +881,24 @@ public class InventoryService {
         return false;
     }
 
+    /** Login-only consolidation: preserve slot indices and never alter a live trade's item references. */
+    public void compactEventMaterialStacks(List<Item> items) {
+        for(Item item:items)if(stackableEventMaterial(item)&&item.itemOptions.isEmpty())item.itemOptions.add(new ItemOption(73,0));
+        for(int i=0;i<items.size();i++){
+            Item target=items.get(i);if(!stackableEventMaterial(target)||target.quantity>=99999)continue;
+            for(int j=i+1;j<items.size()&&target.quantity<99999;j++){
+                Item source=items.get(j);
+                if(!stackableEventMaterial(source)||source.template.id!=target.template.id||!checkListsEqual(target.itemOptions,source.itemOptions))continue;
+                int moved=Math.min(99999-target.quantity,source.quantity);target.quantity+=moved;source.quantity-=moved;
+                if(source.quantity==0)items.set(j,ItemService.gI().createItemNull());
+            }
+        }
+    }
+    private boolean stackableEventMaterial(Item item){
+        return item!=null&&item.isNotNullItem()&&(item.template.id==1505||item.template.id==1509)&&item.template.isUpToUp&&item.quantity>0
+            &&item.itemOptions.stream().allMatch(o->o.optionTemplate.id==30||o.optionTemplate.id==73);
+    }
+
     public static boolean checkListsEqual(List<ItemOption> list1, List<ItemOption> list2) {
         if (list1.size() != list2.size()) {
             return false;

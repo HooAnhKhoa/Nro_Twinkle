@@ -1,4 +1,5 @@
 package nro.models.database;
+import nro.models.services.InventoryService;
 
 import com.google.gson.Gson;
 import nro.models.radar.OptionCard;
@@ -435,6 +436,8 @@ public class MrBlue {
                 player.inventory.itemsBox.add(item);
             }
             dataArray.clear();
+            InventoryService.gI().compactEventMaterialStacks(player.inventory.itemsBag);
+            InventoryService.gI().compactEventMaterialStacks(player.inventory.itemsBox);
 
             //data box lucky round
             dataArray = (JSONArray) JSONValue.parse(rs.getString("items_box_lucky_round"));
