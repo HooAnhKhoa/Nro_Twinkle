@@ -879,3 +879,5 @@ Bò Mộng trong nhà ba hành tinh (map 21/22/23) có thêm **Nhập giftcode**
 ## Cộng dồn nguyên liệu 20/10 (16/10/2026)
 
 Giấy màu #1505 và Nơ trang trí #1509 bật `is_up_to_up=1`, tối đa 99.999 mỗi chồng theo giới hạn vật phẩm thường. `web/material_stack_schema.sql` chạy trước khi nạp template. Khi đăng nhập, các chồng nguyên liệu thường cùng loại/cùng option trong hành trang và rương được gộp, giữ tổng số lượng và vị trí các món khác. Không gộp đồ khác trạng thái khóa hoặc có chỉ số/hạn dùng đặc biệt; không thay đổi danh sách đồ giữa phiên giao dịch. Đồ mới nhặt/nhận dùng cơ chế cộng dồn chung hiện có. Không xóa số lượng hay đổi dữ liệu trang bị khác.
+
+Bùa x2 TN, SM đệ tử trong shop (#1628, loại 29) cũng bật cộng dồn và dùng chung gộp ô khi đăng nhập cho hành trang/rương, giới hạn gộp 99.999/chồng. Không thay đổi giá shop, cách dùng, thời gian hoặc hiệu lực bùa; bùa khóa/hạn dùng đặc biệt vẫn giữ tách riêng.

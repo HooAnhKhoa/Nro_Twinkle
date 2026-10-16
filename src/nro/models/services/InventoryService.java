@@ -895,7 +895,7 @@ public class InventoryService {
         }
     }
     private boolean stackableEventMaterial(Item item){
-        return item!=null&&item.isNotNullItem()&&(item.template.id==1505||item.template.id==1509)&&item.template.isUpToUp&&item.quantity>0
+        return item!=null&&item.isNotNullItem()&&(item.template.id==1505||item.template.id==1509||item.template.id==1628)&&item.template.isUpToUp&&item.quantity>0
             &&item.itemOptions.stream().allMatch(o->o.optionTemplate.id==30||o.optionTemplate.id==73);
     }
 
