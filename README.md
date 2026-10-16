@@ -793,3 +793,8 @@ Các file nhỏ nằm trong `one-time-files.zip`; JAR được đối chiếu SH
 ## Lọc lịch sử giao dịch — 16/10/2026
 
 Trang Giao dịch có bộ lọc Từ ngày / Đến ngày, kết hợp người gửi và người nhận. Chọn cùng một ngày để xem riêng ngày đó; để trống một phía để lọc một chiều. Bấm Lọc giao dịch để áp dụng hoặc Xóa bộ lọc để xem tất cả. Lọc trước phân trang, tổng số phản ánh kết quả; liên kết chuyển trang giữ các bộ lọc. Ngày kết thúc tính đến hết ngày. Đã kiểm tra 12 trường hợp trên database QA riêng, gồm biên ngày và phân trang hơn 500 dòng.
+
+
+## Gọi lại Rồng Thần — 16/10/2026
+
+Đã bỏ thời gian chờ 10 phút giữa hai lần gọi Rồng Thần thường. Sau khi rồng trước rời đi, đủ bộ ngọc có thể gọi tiếp. Vẫn giữ giới hạn một rồng đang xuất hiện, kiểm tra đủ ngọc/địa điểm và 5 phút chọn điều ước. Rồng Băng và Rồng Namek không thay đổi. Đã biên dịch toàn bộ source Java 17 và xác minh hằng số trong JAR đóng gói: hồi gọi 0 ms, chọn điều ước 300000 ms. Có backup trước triển khai tại D:/NroFreeSetup/Backups/payments-dragon-20261016.
