@@ -1,6 +1,7 @@
 <?php
 // Base rolls from Mob.getItemMobReward. Conditional/combined checks are described explicitly.
 function dropCatalog(): array { return [
+ 'october20'=>['name'=>'Vật phẩm 20/10','icon'=>'🌹','base'=>[5,5,3,1],'detail'=>'Hoa hồng giấy 5%, giấy màu 5%, Sôcôla Trái Tim 3%, nơ trang trí 1%. Quái thường ở mọi map; không tính mộc nhân, bù nhìn hoặc big boss. Cần bật 20/10 và Vật phẩm EV.'],
  'trung_thu'=>['name'=>'Vật phẩm Trung Thu','icon'=>'🥮','base'=>[2,2,5,5,100,100,20,20,1,1],'detail'=>'Cần bật Trung Thu và Vật phẩm EV. Trứng/gà ở map thường; bột mì/đậu xanh ở phó bản; đuôi khỉ/cà rốt từ boss triệu hồi; cải trang/ván bay từ Gogeta–Omega. Hạt sen nhận qua nhiệm vụ, không rơi ngẫu nhiên.'],
  'dragon_ball'=>['name'=>'Ngọc rồng','icon'=>'🐉','base'=>[1,100/7,1,10,10],'detail'=>'1% ở map thường; 10/70 và nhánh tài khoản kích hoạt ở một số map; ngọc nhiệm vụ không thay đổi.'],
  'upgrade_stone'=>['name'=>'Đá nâng cấp','icon'=>'💎','base'=>[2,20],'detail'=>'Mọi map: 2% rơi ngẫu nhiên 1 trong 5 loại đá (lục bảo, Saphia, Ruby, Titan, thạch anh tím). Map lạnh giữ 20%, chỉ xét một lần. Đã tắt rơi mảnh đá vụn.'],

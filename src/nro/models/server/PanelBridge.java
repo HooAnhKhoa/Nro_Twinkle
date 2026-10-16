@@ -38,7 +38,7 @@ public final class PanelBridge {
     public static double star(int level,double original) {return level>=0&&level<stars.length?stars[level]:original;}
     public static boolean rollDrop(double numerator,double denominator) {return denominator>0 && ThreadLocalRandom.current().nextDouble()*denominator<Math.min(denominator,Math.max(0,numerator*dropMultiplier));}
     public static boolean dropCategoryEnabled(String category) {
-        if("trung_thu".equals(category))return nro.models.event.EventManager.enabled("trung_thu")&&nro.models.event.EventManager.enabled("mob_rewards");
+        if("october20".equals(category))return nro.models.event.EventManager.enabled("october20")&&nro.models.event.EventManager.enabled("mob_rewards"); if("trung_thu".equals(category))return nro.models.event.EventManager.enabled("trung_thu")&&nro.models.event.EventManager.enabled("mob_rewards");
         if("hung_vuong".equals(category))return nro.models.event.EventManager.enabled("hung_vuong")&&nro.models.event.EventManager.enabled("mob_rewards");
         if("summer".equals(category))return nro.models.event.EventManager.enabled("summer")&&nro.models.event.EventManager.enabled("mob_rewards");
         return !"event".equals(category)||nro.models.event.EventManager.enabled("mob_rewards");
@@ -89,7 +89,7 @@ public final class PanelBridge {
     }
     public static void start() {
         try(Connection c=LocalManager.getConnection();Statement s=c.createStatement()) {
-            for(String file:new String[]{"panel_schema.sql","boss_web.sql","server_rates.sql","drop_rates.sql","drop_rules.sql","intrinsic_schema.sql","event_schema.sql","toribot_schema.sql"}) {
+            for(String file:new String[]{"panel_schema.sql","boss_web.sql","server_rates.sql","drop_rates.sql","drop_rules.sql","intrinsic_schema.sql","event_schema.sql","october20_schema.sql","toribot_schema.sql"}) {
                 for(String sql:Files.readString(Path.of("web",file)).split(";"))if(!sql.trim().isEmpty())s.execute(sql);
             }
             nro.models.event.EventManager.reload(c);

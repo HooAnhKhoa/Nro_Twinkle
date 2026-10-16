@@ -19,3 +19,5 @@ CREATE TABLE IF NOT EXISTS panel_event_audit (
 
 CREATE TABLE IF NOT EXISTS panel_event_mob_runtime(id TINYINT PRIMARY KEY,locations MEDIUMTEXT NULL,heartbeat DATETIME NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 INSERT IGNORE INTO panel_event_mob_runtime(id,locations) VALUES(1,'[]');
+
+INSERT IGNORE INTO panel_event_config(event_key,enabled) VALUES('october20',0);

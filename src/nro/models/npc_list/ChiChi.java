@@ -34,6 +34,7 @@ public class ChiChi extends Npc {
                     "Cửa hàng",
                     "Đóng"));
 
+            if(nro.models.event.october20.October20.enabled())menu.add(4,"Sự kiện\n20/10");
             String[] menus = menu.toArray(new String[0]);
 
             createOtherMenu(player, ConstNpc.BASE_MENU,
@@ -45,6 +46,8 @@ public class ChiChi extends Npc {
     @Override
     public void confirmMenu(Player player, int select) {
         if (canOpenNpc(player)) {
+            if(nro.models.event.october20.October20.menu(this,player,select))return;
+            if(player.idMark.isBaseMenu()&&select==4&&nro.models.event.october20.October20.enabled()){nro.models.event.october20.October20.open(this,player);return;}
             int soLuong = 0;
             if (this.mapId == 5) {
                 if (player.idMark.isBaseMenu()) {

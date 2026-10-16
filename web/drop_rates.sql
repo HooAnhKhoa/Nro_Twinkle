@@ -11,3 +11,5 @@ INSERT IGNORE INTO panel_drop_rate(category) VALUES('trung_thu');
 INSERT IGNORE INTO panel_drop_rate(category,mode,value) SELECT 'summer',mode,value FROM panel_drop_rate WHERE category='event';
 INSERT IGNORE INTO panel_drop_rate(category,mode,value) SELECT 'bill_food',mode,value FROM panel_drop_rate WHERE category='event';
 INSERT IGNORE INTO panel_drop_rate(category,mode,value) SELECT 'quest_items',mode,value FROM panel_drop_rate WHERE category='event';
+
+INSERT IGNORE INTO panel_drop_rate(category) VALUES('october20');

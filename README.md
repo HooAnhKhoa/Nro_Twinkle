@@ -817,3 +817,21 @@ Quốc Vương hiển thị đúng phí mở giới hạn nhanh là 50 triệu v
 Nhiệm vụ 27 bước 0 yêu cầu 10.000 sức đánh gốc (dameg), thống nhất với tên hiển thị, thay điều kiện 35.000 cũ. Kiểm tra khi gửi nhiệm vụ lúc đăng nhập, khi nhận nhiệm vụ tiếp theo và sau khi nâng sức đánh. Nhân vật đã đạt chỉ số từ trước không cần nâng thêm. Chỉ hoàn thành đúng bước này; giữ nguyên tiến độ capsule/boss và các nhiệm vụ khác. Sức đánh trang bị không thay thế sức đánh gốc, đệ/boss/bot không được dùng để hoàn thành. Nói chuyện Karin không bỏ qua điều kiện chỉ số. Lời nhắc bước capsule dùng số lượng từ template hiện tại.
 
 Migration chỉ sửa gợi ý cũ 35K thành 10K khi tên nhiệm vụ vẫn là 10K; không reset nhiệm vụ người chơi bằng SQL. Đã qua 22 kiểm tra trên DB QA riêng và xác minh JAR Java 17 đủ 646 lớp ứng dụng. Backup: D:/NroFreeSetup/Backups/task-base-damage-20261016.
+
+## Sự kiện 20/10 — bản đầu (16/10/2026)
+
+Bật thủ công ở **Sự kiện → Ngày Phụ nữ Việt Nam 20/10**. Cần bật thêm **Vật phẩm EV từ quái** để rơi nguyên liệu. Chi Chi ở Đảo Kame có mục **Sự kiện 20/10** khi bật. Không có đua top, không tự bật theo lịch. Công tắc mặc định tắt sau khi cài lần đầu.
+
+- Quái thường trên mọi map: Hoa hồng giấy #1508 (5%), Giấy màu #1505 (5%), Sôcôla Trái Tim #1507 (3%), Nơ trang trí #1509 (1%). Mỗi lượt độc lập; loại mộc nhân, bù nhìn, big boss. Đệ tử đánh thì chủ nhận quyền nhặt. Chỉnh tỷ lệ thực tế tại **Rơi đồ → Vật phẩm 20/10**, vẫn áp dụng hệ số server và cơ chế tỷ lệ riêng hiện có.
+- Quà thường #1719: 20 hoa + 10 giấy + 5 sôcôla + 1 nơ + 1.000.000 vàng. Khi mở: 2% phụ kiện, 60% đá nâng cấp, 38% đồ hỗ trợ; đá/hỗ trợ nhận 3 món; thêm 1 điểm 20/10.
+- Quà đặc biệt #1720: 50 hoa + 20 giấy + 10 sôcôla + 3 nơ + 3.000.000 vàng. Khi mở: 20% phụ kiện, 50% đá nâng cấp, 30% đồ hỗ trợ; đá/hỗ trợ nhận 10 món; thêm 5 điểm 20/10.
+- Đá nâng cấp chọn đều ID 220–224; đồ hỗ trợ chọn đều Cuồng nộ/Bổ huyết/Bổ khí (381–383). Một hộp chỉ nhận một nhóm thưởng.
+- Phụ kiện chọn đều Chậu hoa hồng #1515 / Bong bóng hoa hồng #1520 / Bó Hoa Hồng #954. Mỗi món có SD 15–20% (option 50), SĐ chí mạng 15–20% (5), chí mạng 5–7% (14), Cute tăng SD 5–7% (226), không giao dịch (30). Không thêm HP/KI. Khi quay ra phụ kiện, 1% vĩnh viễn, còn lại quà thường hạn 3 ngày, quà đặc biệt hạn 7 ngày (option 93). Các % chỉ số được quay độc lập trong khoảng đã đặt.
+- Mở hộp tích điểm riêng theo nhân vật, lưu qua khởi động lại. 100 điểm được chọn một trong ba phụ kiện, hạn 7 ngày, cùng khoảng chỉ số. Không đổi ra tiền hoặc điểm Quy Lão.
+- Tắt sự kiện dừng rơi nguyên liệu, ẩn mục 20/10 tại Chi Chi và chặn gói/đổi điểm. Hộp đã có vẫn mở được, vẫn nhận điểm. Phụ kiện đã nhận giữ hiệu lực theo hạn dùng.
+
+Trên trang **Sự kiện**, bấm **Công thức & phần thưởng** ở ô 20/10 để mở phần chỉnh thu gọn. Sửa được số nguyên liệu, giá vàng, tỷ lệ nhóm thưởng, số lượng đá/hỗ trợ, hạn dùng, tỷ lệ vĩnh viễn, điểm và bốn khoảng chỉ số. Thay đổi nhận trong khoảng 3 giây, chỉ áp dụng lần nhận thưởng mới. Menu xác nhận mở trước khi thay đổi phải mở lại. Có hoàn tác lần lưu gần nhất và lịch sử quản trị trong DB.
+
+Code: `src/nro/models/event/october20/`; schema idempotent `web/october20_schema.sql`; giao diện nằm trong trang Sự kiện hiện có. Dữ liệu `october20_config`, `october20_player`, `october20_exchange`, `october20_config_audit`. Đổi đồ/điểm/vàng và biên nhận lưu cùng một transaction; túi đầy, thiếu nguyên liệu, thiếu điểm hoặc lỗi lưu sẽ không làm mất đồ. Xác nhận NPC chỉ dùng một lần, thao tác thành công cách nhau tối thiểu 500 ms.
+
+Kiểm thử: `test/October20Test.java` chạy bằng JDK 17 trong cấu hình QA; `test/October20ApiTest.ps1` kiểm tra HTTP trên web QA; `test/DropRulesCatalogTest.php` kiểm tra đủ 61 quy tắc rơi. Chỉ dùng database `nro_panel_qa_20261013` cho các kiểm thử ghi dữ liệu.

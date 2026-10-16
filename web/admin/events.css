@@ -3,3 +3,7 @@
 .event-boss-runtime{margin-top:14px;padding:12px;background:#ffffffa8;border:1px solid #dce7ef;border-radius:10px;font-size:13px}.event-boss-runtime strong{font-size:14px}.event-boss-runtime p{margin:8px 0 4px}.event-boss-place{display:block;margin:4px 0;color:#39638b;font-size:12px}
 .event-mob-runtime{margin-top:12px;padding:12px;background:#ffffffa8;border:1px solid #dce7ef;border-radius:10px;max-height:360px;overflow:auto}.event-mob-runtime p{margin:10px 0;font-size:13px}.event-mob-runtime .event-boss-place{line-height:1.6}
 .events-grid{align-items:start}
+
+.october20-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.october20-fields label{display:flex;flex-direction:column;gap:8px;padding:14px;border:1px solid #e4dce8;border-radius:12px;background:#fff8fb}.october20-fields input{width:100%;box-sizing:border-box}#october20Settings>p{line-height:1.7}#october20Settings{scroll-margin-top:20px}
+
+#openOctober20Settings{margin-top:14px;padding:9px 12px;border:1px solid #d8c7d8;border-radius:9px;color:#83527a;background:#fff9fc;cursor:pointer}

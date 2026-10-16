@@ -58,3 +58,7 @@ INSERT INTO panel_drop_rule(rule_key,category,base_percent) VALUES('trung_thu.go
 INSERT INTO panel_drop_rule(rule_key,category,base_percent) VALUES('trung_thu.omega_costume','trung_thu',20.00000000) ON DUPLICATE KEY UPDATE category=VALUES(category),base_percent=VALUES(base_percent);
 INSERT INTO panel_drop_rule(rule_key,category,base_percent) VALUES('trung_thu.gogeta_board','trung_thu',1.00000000) ON DUPLICATE KEY UPDATE category=VALUES(category),base_percent=VALUES(base_percent);
 INSERT INTO panel_drop_rule(rule_key,category,base_percent) VALUES('trung_thu.omega_board','trung_thu',1.00000000) ON DUPLICATE KEY UPDATE category=VALUES(category),base_percent=VALUES(base_percent);
+INSERT INTO panel_drop_rule(rule_key,category,base_percent) VALUES('october20.roses','october20',5) ON DUPLICATE KEY UPDATE category=VALUES(category),base_percent=VALUES(base_percent);
+INSERT INTO panel_drop_rule(rule_key,category,base_percent) VALUES('october20.paper','october20',5) ON DUPLICATE KEY UPDATE category=VALUES(category),base_percent=VALUES(base_percent);
+INSERT INTO panel_drop_rule(rule_key,category,base_percent) VALUES('october20.chocolate','october20',3) ON DUPLICATE KEY UPDATE category=VALUES(category),base_percent=VALUES(base_percent);
+INSERT INTO panel_drop_rule(rule_key,category,base_percent) VALUES('october20.bow','october20',1) ON DUPLICATE KEY UPDATE category=VALUES(category),base_percent=VALUES(base_percent);

@@ -20,7 +20,7 @@ public final class EventManager {
     private static final EventManager INSTANCE = new EventManager();
     private static final Map<String, Boolean> DEFAULTS = Map.of(
         "broly",true,"hung_vuong",true,"halloween",false,"christmas",false,
-        "tet",false,"trung_thu",false,"summer",true,"mob_rewards",true);
+        "tet",false,"trung_thu",false,"summer",true,"mob_rewards",true,"october20",false);
     private static volatile Map<String, Boolean> switches = DEFAULTS;
     private static volatile boolean initialized;
     private static final Map<Player,NpcVisibility> npcVisibility=Collections.synchronizedMap(new WeakHashMap<>());
@@ -99,6 +99,7 @@ public final class EventManager {
         return false;
     }
     public static void reload(Connection connection) throws SQLException {
+        nro.models.event.october20.October20Config.reload(connection);
         Map<String,Boolean> next=new HashMap<>(DEFAULTS);
         long revision;
         boolean auto=connection.getAutoCommit();

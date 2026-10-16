@@ -265,6 +265,7 @@ public class UseItem {
 
     private void useItem(Player pl, Item item, int indexBag) {
         if (item != null && item.isNotNullItem()) {
+            if(nro.models.event.october20.October20.use(pl,item))return;
             if(nro.models.event.trungthu2026.TrungThuRuntime.use(pl,item))return;
 
             if (item.template.id == 570) {

@@ -52,5 +52,6 @@ function dropRules(): array {
     $add('trung_thu.omega_costume','trung_thu','Cải trang phe Omega',20,'Omega Trung Thu · Siêu Thị (84)','Dùng cải trang rồng thay thế; giữ điều kiện phe đối lập, kiếm gỗ và hạn dùng.');
     $add('trung_thu.gogeta_board','trung_thu','Ván bay cung trăng · Gogeta',1,'Gogeta Trung Thu · Siêu Thị (84)','Dùng lồng đèn cá chép thay thế. Khi đã rơi, giữ 1% vĩnh viễn / 99% hạn 7 ngày.');
     $add('trung_thu.omega_board','trung_thu','Ván bay cung trăng · Omega',1,'Omega Trung Thu · Siêu Thị (84)','Dùng lồng đèn cá chép thay thế. Khi đã rơi, giữ 1% vĩnh viễn / 99% hạn 7 ngày.');
+    foreach(['roses'=>['Hoa hồng giấy #1508',5],'paper'=>['Giấy màu #1505',5],'chocolate'=>['Sôcôla Trái Tim #1507',3],'bow'=>['Nơ trang trí #1509',1]] as $key=>$item)$add('october20.'.$key,'october20',$item[0],$item[1],'Quái thường ở mọi map','Cần bật 20/10 và Vật phẩm EV; trừ mộc nhân, bù nhìn và big boss.');
     return $rules;
 }
