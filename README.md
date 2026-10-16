@@ -890,3 +890,7 @@ Sửa luồng rơi thức ăn 663–667 (Pudding, Xúc xích, Kem dâu, Mì ly, 
 Kiểm thử `test/PetGodFoodTest.java`: 28 kiểm tra trên map thường/Nappa/lạnh, quyền nhặt thực tế, set thiếu nhẫn, đệ ở khu khác, cả hai cùng đủ set, và việc giữ hiệu lực các mức 0%/x0.
 
 Menu gói quà 20/10 thường/đặc biệt: từng nguyên liệu và giá vàng hiển thị xanh khi đang đủ, đỏ khi thiếu. Màu được tính từ số lượng trong hành trang và số vàng khi mở xác nhận, không gán xanh cố định cho nguyên liệu hoặc đỏ cố định cho vàng.
+
+## Tắt ba Top ở Chi Chi (16/10/2026)
+
+Bỏ menu và xử lý xem Top/Xem điểm Hộp quà thiếu nhi 2025, Nước mía, Kem trái cây tại Chi Chi. Menu còn Cửa hàng, Sự kiện 20/10 (khi bật), Đóng. Các mã menu Top cũ không còn được Chi Chi xử lý. Giữ cửa hàng, quà 20/10 và dữ liệu điểm đã có.
