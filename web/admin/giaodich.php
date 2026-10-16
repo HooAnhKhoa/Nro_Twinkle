@@ -9,17 +9,41 @@ $q = $conn->query("SELECT is_admin FROM account WHERE username='$userEsc'");
 $check = $q->fetch_assoc();
 if(!$check || $check['is_admin'] != 1){ echo "Không có quyền!"; exit; }
 
-// ===== XỬ LÝ PHÂN TRANG =====
-$item_per_page = 500; 
-$current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-if($current_page < 1) $current_page = 1;
-$offset = ($current_page - 1) * $item_per_page;
-
-$total_res = $conn->query("SELECT COUNT(*) as total FROM history_transaction");
-$total_row = $total_res->fetch_assoc();
-$total_transactions = $total_row['total'];
-$total_pages = ceil($total_transactions / $item_per_page);
-
+// Apply filters before pagination across the entire transaction history.
+function tradeText($key) { return isset($_GET[$key]) && is_string($_GET[$key]) ? trim($_GET[$key]) : ''; }
+function tradeEscape($value) { return htmlspecialchars($value, ENT_QUOTES, 'UTF-8'); }
+function tradeDate($value) {
+    $date=DateTimeImmutable::createFromFormat('!Y-m-d', $value);
+    return $date && $date->format('Y-m-d')===$value && $date->format('Y')>='1000' && $date->format('Y')<='9998' ? $date : null;
+}
+$from=tradeText('from'); $to=tradeText('to');
+$sender=mb_substr(tradeText('sender'),0,100); $recipient=mb_substr(tradeText('recipient'),0,100);
+$fromDate=$from!==''?tradeDate($from):null; $toDate=$to!==''?tradeDate($to):null;
+$filterError='';
+if(($from!==''&&!$fromDate)||($to!==''&&!$toDate)) $filterError='Ngày lọc không hợp lệ. Vui lòng chọn lại ngày.';
+elseif($fromDate&&$toDate&&$fromDate>$toDate) $filterError='Ngày bắt đầu phải trước hoặc bằng ngày kết thúc.';
+$where=[]; $params=[];
+if($filterError) $where[]='1=0';
+else {
+    if($fromDate){$where[]='t.time_tran >= ?';$params[]=$fromDate->format('Y-m-d 00:00:00');}
+    if($toDate){$where[]='t.time_tran < ?';$params[]=$toDate->modify('+1 day')->format('Y-m-d 00:00:00');}
+    foreach(['player_1'=>$sender,'player_2'=>$recipient] as $column=>$name) if($name!==''){
+        $where[]="INSTR(LOWER(SUBSTRING_INDEX(TRIM(t.$column), ' (', 1)), LOWER(?)) > 0"; $params[]=$name;
+    }
+}
+$whereSql=$where?' WHERE '.implode(' AND ',$where):'';
+function tradeQuery($sql) {
+    global $conn,$params;
+    $stmt=$conn->prepare($sql);
+    if($params)$stmt->bind_param(str_repeat('s',count($params)),...$params);
+    $stmt->execute(); return $stmt->get_result();
+}
+$item_per_page=500;
+$total_transactions=(int)tradeQuery('SELECT COUNT(*) AS total FROM history_transaction t'.$whereSql)->fetch_assoc()['total'];
+$total_pages=max(1,(int)ceil($total_transactions/$item_per_page));
+$current_page=isset($_GET['page'])&&is_string($_GET['page'])?max(1,(int)$_GET['page']):1;
+$current_page=min($current_page,$total_pages); $offset=($current_page-1)*$item_per_page;
+$filterQuery=array_filter(['from'=>$from,'to'=>$to,'sender'=>$sender,'recipient'=>$recipient],static function($v){return $v!=='';});
 // ===== LẤY DANH SÁCH ICON TỪ ITEM_TEMPLATE =====
 $itemIcons = [];
 $getTemplates = $conn->query("SELECT name, icon_id FROM item_template");
@@ -57,8 +81,8 @@ $sql = "SELECT t.*, h1.avatar_id as avt1, h2.avatar_id as avt2
         LEFT JOIN head_avatar h1 ON p1.head = h1.head_id
         LEFT JOIN player p2 ON SUBSTRING_INDEX(TRIM(t.player_2), ' (', 1) = p2.name
         LEFT JOIN head_avatar h2 ON p2.head = h2.head_id
-        ORDER BY t.time_tran DESC LIMIT $item_per_page OFFSET $offset";
-$list = $conn->query($sql);
+        $whereSql ORDER BY t.time_tran DESC, t.id DESC LIMIT $item_per_page OFFSET $offset";
+$list = tradeQuery($sql);
 ?>
 
 <!DOCTYPE html>
@@ -67,7 +91,7 @@ $list = $conn->query($sql);
     <meta charset="UTF-8">
     <title>Lịch Sử Giao Dịch</title>
     <link rel="icon" type="image/png" href="/img/icon.jpg">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <style>
         body {
             margin: 0; font-family: 'Segoe UI'; font-size: 1.1em;
@@ -136,6 +160,12 @@ $list = $conn->query($sql);
         .item-row { display: flex; align-items: center; gap: 6px; font-size: 15px; margin-bottom: 2px; }
         .mini-icon { width: 24px; height: 24px; }
         .time-col { font-size: 15px; color: #475569; font-weight: bold; }
+        .trade-filters {display:flex;align-items:flex-end;flex-wrap:wrap;gap:12px;padding:16px;background:#f0f6ff;border:1px solid #dce6f3;border-radius:12px;margin:18px 0;}
+        .trade-filters label {display:flex;flex-direction:column;gap:6px;font-size:14px;color:#627e9f;}
+        .trade-filters input {min-width:170px;}
+        .trade-filters a {padding:10px 14px;color:#6486ae;text-decoration:none;}
+        .trade-filter-error {color:#b35461;padding:12px;background:#fff0f1;border-radius:8px;}
+        .trade-empty {padding:30px;color:#8194ac;}
     </style>
 <link rel="stylesheet" href="/typography.css?v=20261014-1"><link rel="stylesheet" href="admin-ui.css?v=20261015-5"><script src="admin-ui.js?v=20261015-3" defer></script><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body class="admin-page" data-admin-page="giaodich"><?php require_once __DIR__.'/admin_ui.php'; adminPageToolbar('Giao dịch'); ?>
@@ -156,9 +186,16 @@ $list = $conn->query($sql);
         </div>
     </div>
 
+    <form id="tradeFilters" class="trade-filters" method="get" action="giaodich.php">
+        <label>Từ ngày<input type="date" name="from" value="<?= tradeEscape($from) ?>" min="1000-01-01" max="9998-12-31"></label>
+        <label>Đến ngày<input type="date" name="to" value="<?= tradeEscape($to) ?>" min="1000-01-01" max="9998-12-31"></label>
+        <button type="submit">🔍 Lọc giao dịch</button>
+        <a href="giaodich.php">Xóa bộ lọc</a>
+    </form>
+    <?php if($filterError): ?><p class="trade-filter-error" role="alert"><?= tradeEscape($filterError) ?></p><?php endif; ?>
     <div class="pagination">
         <?php for($i = 1; $i <= $total_pages; $i++): ?>
-            <a href="?page=<?= $i ?>" class="<?= ($i == $current_page) ? 'active' : '' ?>"><?= $i ?></a>
+            <a href="?<?= tradeEscape(http_build_query(array_merge($filterQuery,['page'=>$i]))) ?>" class="<?= ($i == $current_page) ? 'active' : '' ?>"><?= $i ?></a>
         <?php endfor; ?>
     </div>
 
@@ -174,10 +211,10 @@ $list = $conn->query($sql);
                 </tr>
                 <tr class="search-row" style="background: #dbeafe;">
                     <td></td>
-                    <td><input type="text" id="searchP1" class="search-input" placeholder="🔍 Lọc..."></td>
+                    <td><input type="text" id="searchP1" name="sender" form="tradeFilters" value="<?= tradeEscape($sender) ?>" class="search-input" placeholder="🔍 Lọc..." aria-label="Lọc người gửi"></td>
                     <td></td>
                     <td></td>
-                    <td><input type="text" id="searchP2" class="search-input" placeholder="🔍 Lọc..."></td>
+                    <td><input type="text" id="searchP2" name="recipient" form="tradeFilters" value="<?= tradeEscape($recipient) ?>" class="search-input" placeholder="🔍 Lọc..." aria-label="Lọc người nhận"></td>
                 </tr>
             </thead>
             <tbody id="tranTableBody">
@@ -187,7 +224,7 @@ $list = $conn->query($sql);
                     $name2 = explode(" (", $row['player_2'])[0];
                     $displayTime = str_replace(" ", "<br>", $row['time_tran']);
                 ?>
-                <tr class="tran-row" data-p1="<?= mb_strtolower($name1) ?>" data-p2="<?= mb_strtolower($name2) ?>">
+                <tr class="tran-row" data-p1="<?= tradeEscape(mb_strtolower($name1)) ?>" data-p2="<?= tradeEscape(mb_strtolower($name2)) ?>">
                     <td class="time-col"><?= $displayTime ?></td>
                     <td>
                         <div style="display:flex; flex-direction:column; align-items:center;">
@@ -205,24 +242,13 @@ $list = $conn->query($sql);
                     </td>
                 </tr>
                 <?php endwhile; ?>
+                <?php if($total_transactions===0): ?><tr><td colspan="5" class="trade-empty">Không có giao dịch phù hợp.</td></tr><?php endif; ?>
             </tbody>
         </table>
     </div>
 
 </div>
 
-<script>
-$(document).ready(function() {
-    $("#searchP1, #searchP2").on("keyup", function() {
-        let v1 = $("#searchP1").val().toLowerCase().trim();
-        let v2 = $("#searchP2").val().toLowerCase().trim();
-        $("#tranTableBody tr").each(function() {
-            let p1 = $(this).attr("data-p1");
-            let p2 = $(this).attr("data-p2");
-            $(this).toggle(p1.indexOf(v1) > -1 && p2.indexOf(v2) > -1);
-        });
-    });
-});
-</script>
+
 </body>
 </html>

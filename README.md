@@ -788,3 +788,8 @@ Danh sách đường dẫn gốc, kích thước, SHA256 và nơi lưu lại n�
 `C:/Downloads/NroFreeSetup/Backups/cleanup-once-20261015/manifest.json`
 
 Các file nhỏ nằm trong `one-time-files.zip`; JAR được đối chiếu SHA256 với bản sao sẵn có hoặc lưu riêng trong `runtime-jars`. Đã kiểm tra checksum trước khi xóa bản trong source. Chỉ khôi phục file cần thiết về đúng đường dẫn trong manifest; không chạy lại script reset/cấp đồ hoặc thay JAR cũ khi chưa đối chiếu dữ liệu hiện tại.
+
+
+## Lọc lịch sử giao dịch — 16/10/2026
+
+Trang Giao dịch có bộ lọc Từ ngày / Đến ngày, kết hợp người gửi và người nhận. Chọn cùng một ngày để xem riêng ngày đó; để trống một phía để lọc một chiều. Bấm Lọc giao dịch để áp dụng hoặc Xóa bộ lọc để xem tất cả. Lọc trước phân trang, tổng số phản ánh kết quả; liên kết chuyển trang giữ các bộ lọc. Ngày kết thúc tính đến hết ngày. Đã kiểm tra 12 trường hợp trên database QA riêng, gồm biên ngày và phân trang hơn 500 dòng.
