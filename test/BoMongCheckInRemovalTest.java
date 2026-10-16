@@ -24,7 +24,7 @@ public class BoMongCheckInRemovalTest {
    check(p.lastCheckIn.equals(before),"map "+map+" no longer changes check-in timestamp");
    p.idMark.setIndexMenu(ConstNpc.BASE_MENU);npc.confirmMenu(p,0);check(p.idMark.getIndexMenu()==ConstNpc.MENU_OPTION_LEVEL_SIDE_TASK,"map "+map+" daily task menu still opens");
   }
-  for(int map:new int[]{21,22,23}){var p=new User();var npc=new Npc(map);npc.openBaseMenu(p);check(npc.buttons.length==3&&npc.buttons[0].contains("thỏi vàng")&&npc.buttons[1].contains("ngọc xanh"),"home "+map+" preserves VND exchanges");npc.confirmMenu(p,2);check(p.inventory.gem==123,"home close does not grant free gems");}
+  for(int map:new int[]{21,22,23}){var p=new User();var npc=new Npc(map);npc.openBaseMenu(p);check(npc.buttons.length==4&&npc.buttons[0].contains("thỏi vàng")&&npc.buttons[1].contains("ngọc xanh"),"home "+map+" preserves VND exchanges");npc.confirmMenu(p,2);check(p.idMark.getTypeInput()==nro.models.services_func.Input.GIFT_CODE,"home "+map+" routes input to the existing gift-code service");npc.confirmMenu(p,3);check(p.inventory.gem==123,"home close does not grant free gems");}
   System.out.println("PASS: "+checks+" Bo Mong checks");
  }
 }

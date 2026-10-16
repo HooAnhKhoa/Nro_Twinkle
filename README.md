@@ -871,3 +871,7 @@ Kiểm thử: `test/BossBountyTest.java` (QA) kiểm tra bậc, 50.000 lượt r
 ## Bỏ thưởng điểm danh Bò Mộng (16/10/2026)
 
 Bỏ mục Điểm danh và xử lý tặng miễn phí 10.000 ngọc + 100 thỏi vàng ở Bò Mộng Rừng Karin (47) và Siêu Thị (84), do hai địa điểm dùng chung menu. Gửi lại lựa chọn cũ hoặc bấm Từ chối không nhận thưởng, không sửa ngày điểm danh. Giữ nhiệm vụ hàng ngày, thành tích, Nạp Ngọc và đổi số dư VNĐ tại Bò Mộng ở nhà (21/22/23). Không thu hồi phần thưởng đã nhận trước đây. Kiểm thử `test/BoMongCheckInRemovalTest.java`.
+
+## Giftcode tại nhà (16/10/2026)
+
+Bò Mộng trong nhà ba hành tinh (map 21/22/23) có thêm **Nhập giftcode**, bên cạnh đổi thỏi vàng/ngọc bằng số dư VNĐ. Dùng chung `Input.GIFT_CODE` và `GiftCodeService` với NPC Santa, nên mã, điều kiện, giới hạn và lịch sử nhận vẫn dùng chung. Mục Đóng chuyển xuống cuối menu; không thêm quà miễn phí.

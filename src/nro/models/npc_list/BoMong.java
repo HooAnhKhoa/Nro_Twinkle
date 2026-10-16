@@ -29,7 +29,7 @@ public class BoMong extends Npc {
         if (isHome()) {
             if (canOpenNpc(player)) createOtherMenu(player, HOME_EXCHANGE,
                     "Đổi số dư VNĐ của tài khoản thành thỏi vàng hoặc ngọc xanh.\n10.000 VNĐ = 40 thỏi vàng hoặc 10.000 ngọc xanh.\nMỗi 10.000 VNĐ đổi thêm 5.000 điểm Quy Lão.",
-                    "Đổi\nthỏi vàng", "Đổi\nngọc xanh", "Đóng");
+                    "Đổi\nthỏi vàng", "Đổi\nngọc xanh", "Nhập\ngiftcode", "Đóng");
             return;
         }
         if (!TaskService.gI().checkDoneTaskTalkNpc(player, this)) {
@@ -49,6 +49,7 @@ public class BoMong extends Npc {
                 if (player.idMark.getIndexMenu() == HOME_EXCHANGE) {
                     if (select == 0) Input.gI().createFormTradeGold(player);
                     else if (select == 1) Input.gI().createFormTradeGem(player);
+                    else if (select == 2) Input.gI().createFormGiftCode(player);
                 }
                 return;
             }
