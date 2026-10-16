@@ -61,9 +61,9 @@ public class Bill extends Npc {
                         switch (select) {
                             case 0 -> {
                                 if (InventoryService.gI().canOpenBillShop(player)) {
-                                    createOtherMenu(player, 2,
-                                            "Đói bụng quá... ngươi mang cho ta 99 phần đồ ăn\n"
-                                            + "ta sẽ cho một món đồ Hủy Diệt.\n"
+                                    createOtherMenu(player, 100,
+                                            "Ngươi cần 99 phần thức ăn cùng loại trong hành trang\n"
+                                            + "và số vàng ghi trên món đồ Hủy Diệt muốn đổi.\n"
                                             + "Nếu tâm trạng ta vui ngươi có thể nhận trang bị tăng đến 15%",
                                             "OK", "Từ chối");
                                     player.idMark.setIndexMenu(100);
@@ -89,17 +89,20 @@ public class Bill extends Npc {
                             }
                         }
                     }
+                    case 100 -> {
+                        if (select == 0) {
+                            if (InventoryService.gI().canOpenBillShop(player)) {
+                                ShopService.gI().opendShop(player, "BILL", true);
+                            } else {
+                                Service.gI().sendThongBao(player, "Cần mặc đủ 5 món Thần Linh và có 99 thức ăn cùng loại trong hành trang.");
+                            }
+                        }
+                    }
                     case 10 -> {
                         if (select == 0) {
                             doiNhanhItem(player);
                         }
                     }
-                }
-            }
-
-            case 2 -> {
-                if (select == 100 && InventoryService.gI().canOpenBillShop(player)) {
-                    ShopService.gI().opendShop(player, "BILL", true);
                 }
             }
 

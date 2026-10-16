@@ -1116,6 +1116,7 @@ public class InventoryService {
     }
 
     public boolean fullSetThan(Player player) {
+        if (player == null || player.inventory == null || player.inventory.itemsBody.size() < 5) return false;
         for (int i = 0; i < 5; i++) {
             Item item = player.inventory.itemsBody.get(i);
             if (item == null || item.template == null || item.template.level != 13) {
@@ -1125,9 +1126,20 @@ public class InventoryService {
         return true;
     }
 
+    /** 99 portions of one food type, counted across all bag slots. */
+    public int billFoodId(Player player) {
+        for (int id = 663; id <= 667; id++) {
+            long count = 0;
+            for (Item item : player.inventory.itemsBag) {
+                if (item != null && item.template != null && item.template.id == id && item.quantity > 0) count += item.quantity;
+            }
+            if (count >= 99) return id;
+        }
+        return -1;
+    }
+
     public boolean x99ThucAn(Player player) {
-        Item doAn = player.inventory.itemsBag.stream().filter(it -> it != null && it.template != null && (it.template.id == 663 || it.template.id == 664 || it.template.id == 665 || it.template.id == 666 || it.template.id == 667) && it.quantity >= 99).findFirst().orElse(null);
-        return doAn != null;
+        return billFoodId(player) >= 0;
     }
 
     public boolean canOpenBillShop(Player player) {

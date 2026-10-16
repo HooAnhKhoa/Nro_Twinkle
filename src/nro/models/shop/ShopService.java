@@ -1,6 +1,8 @@
 package nro.models.shop;
 
 import nro.models.consts.ConstAchievement;
+import nro.models.event.trungthu2026.BagExchange;
+import nro.models.event.trungthu2026.TrungThuStore;
 import nro.models.item.Item;
 import nro.models.player.Inventory;
 import nro.models.player.Player;
@@ -1182,35 +1184,12 @@ public class ShopService {
 
     private void buyItemHD(Player player, int itemTempId) {
         Shop shop = player.idMark.getShopOpen();
-        ItemShop is = shop.getItemShop(itemTempId);
-        if (is == null) {
+        ItemShop is = shop == null ? null : shop.getItemShop(itemTempId);
+        if (is == null || !"BILL".equals(shop.tagName)) {
             Service.gI().sendThongBao(player, "Không thể thực hiện");
             return;
         }
         Item item = ItemService.gI().createItemFromItemShop(is);
-        if (InventoryService.gI().getCountEmptyBag(player) < 1) {
-            Service.gI().sendThongBao(player, "Hành trang đã đầy, không thể chứa thêm.");
-            return;
-        }
-        if (!subMoneyByItemShopV2(player, is)) {
-            return;
-        }
-        if (item.template.level == 14) {
-            Item doAn = player.inventory.itemsBag.stream().filter(it -> it != null && it.template != null && (it.template.id == 663 || it.template.id == 664 || it.template.id == 665 || it.template.id == 666 || it.template.id == 667) && it.quantity >= 99).findFirst().orElse(null);
-            if (doAn != null) {
-                InventoryService.gI().subQuantityItemsBag(player, doAn, 99);
-            } else {
-                Service.gI().sendThongBao(player, "Không có đủ thức ăn");
-                return;
-            }
-        }
-        if (player.inventory.itemsBody.get(0) != null || player.inventory.itemsBody.get(1) != null || player.inventory.itemsBody.get(2) != null || player.inventory.itemsBody.get(3) != null || player.inventory.itemsBody.get(4) != null || player.inventory.itemsBody.get(5) != null) {
-            Item dothan = player.inventory.itemsBody.stream().filter(it -> it != null && it.template != null && it.template.level == 13).findFirst().orElse(null);
-            if (dothan == null) {
-                Service.gI().sendThongBao(player, "Không có đủ set thần");
-                return;
-            }
-        }
         int param = 0;
         if (item.template.level == 14) {
             int random = Util.nextInt(1, 100); // Số ngẫu nhiên từ 1 đến 100
@@ -1245,10 +1224,51 @@ public class ShopService {
         itemoptions.add(new ItemOption(30, (short) 0));
         item.itemOptions.clear();
         item.itemOptions.addAll(itemoptions);
-        InventoryService.gI().addItemBag(player, item);
+        String error = exchangeBillItem(player, is, item, TrungThuStore::persistBag);
+        if (error != null) {
+            Service.gI().sendThongBao(player, error);
+            return;
+        }
         InventoryService.gI().sendItemBags(player);
+        Service.gI().sendMoney(player);
         Service.gI().sendThongBao(player, "Mua thành công " + is.temp.name);
     }
+
+    // Recheck at purchase time; roll back bag and money if saving fails.
+    String exchangeBillItem(Player player, ItemShop price, Item reward, BagExchange.Commit save) {
+        synchronized (player) {
+            if (player.zone == null || player.zone.map.mapId != 48 || !InventoryService.gI().fullSetThan(player))
+                return "Cần đứng tại Bill và mặc đủ 5 món Thần Linh (áo, quần, găng, giày, nhẫn).";
+            int food = InventoryService.gI().billFoodId(player);
+            if (food < 0) return "Cần 99 thức ăn cùng loại trong hành trang (Pudding, Xúc xích, Kem dâu, Mì ly hoặc Sushi).";
+            if (price.cost < 0 || (price.typeSell != COST_GOLD && price.typeSell != COST_GEM
+                    && price.typeSell != COST_RUBY && price.typeSell != COST_COUPON)) return "Giá cửa hàng không hợp lệ.";
+            int ruby = price.typeSell == COST_RUBY ? price.cost : 0;
+            int coupon = price.typeSell == COST_COUPON ? price.cost : 0;
+            if (player.inventory.ruby < ruby || player.inventory.coupon < coupon) return "Không đủ hồng ngọc hoặc điểm đổi đồ.";
+            int couponBefore = player.inventory.coupon;
+            var result = BILL_EXCHANGE.execute(player,
+                    new BagExchange.Cost(java.util.Map.of(food, 99), price.typeSell == COST_GOLD ? price.cost : 0,
+                            price.typeSell == COST_GEM ? price.cost : 0),
+                    new BagExchange.Gain(List.of(reward), 0, 0, 0), p -> {
+                        p.inventory.ruby -= ruby;
+                        p.inventory.coupon -= coupon;
+                        save.save(p);
+                    });
+            if (result != BagExchange.Result.SUCCESS) player.inventory.coupon = couponBefore;
+            return switch (result) {
+                case SUCCESS -> null;
+                case MISSING_GOLD -> "Không đủ vàng đổi đồ.";
+                case MISSING_GEMS -> "Không đủ ngọc đổi đồ.";
+                case MISSING_ITEMS -> "Không đủ 99 thức ăn cùng loại.";
+                case BAG_FULL -> "Hành trang đầy, hãy chừa một ô trống.";
+                case SAVE_FAILED -> "Chưa lưu được dữ liệu. Chưa trừ thức ăn và tiền; vui lòng thử lại.";
+                default -> "Không thể đổi đồ lúc này.";
+            };
+        }
+    }
+
+    private static final BagExchange BILL_EXCHANGE = new BagExchange(0, System::currentTimeMillis);
 
     private Item buyMagicPean(Player player, int[][] listDauThan, Item item) {
         for (int i = 0; i < listDauThan.length; i++) {

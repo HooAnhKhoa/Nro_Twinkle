@@ -894,3 +894,9 @@ Menu gói quà 20/10 thường/đặc biệt: từng nguyên liệu và giá và
 ## Tắt ba Top ở Chi Chi (16/10/2026)
 
 Bỏ menu và xử lý xem Top/Xem điểm Hộp quà thiếu nhi 2025, Nước mía, Kem trái cây tại Chi Chi. Menu còn Cửa hàng, Sự kiện 20/10 (khi bật), Đóng. Các mã menu Top cũ không còn được Chi Chi xử lý. Giữ cửa hàng, quà 20/10 và dữ liệu điểm đã có.
+
+## Sửa đổi đồ Hủy Diệt tại Bill (16/10/2026)
+
+Sửa menu xác nhận 100 tại Bill map 48 để bấm OK mở đúng shop BILL; trước đây nhánh mở shop nằm nhầm map 2 và kiểm tra nhầm số nút 100. Thức ăn 663–667 được cộng số lượng qua mọi ô hành trang, đủ 99 phần **cùng loại**; không trộn nhiều loại hoặc tính đồ trong rương. Vẫn yêu cầu chính nhân vật mặc đủ 5 món Thần Linh và trả giá vàng/ngọc theo shop (giá máy chính hiện 720 triệu–2 tỷ vàng/món); không tiêu hao trang bị Thần Linh.
+
+Khi mua phải kiểm tra lại map, set và thức ăn. Dùng BagExchange để trừ chính xác 99 phần, thêm trang bị và lưu hành trang/tiền trong một giao dịch; lỗi lưu hoặc không đủ chỗ thì hoàn tác thức ăn, món đồ và tiền. Ô thức ăn vừa tiêu hết có thể dùng chứa đồ mới. Giữ bảng chỉ số và xác suất nâng thêm 0–15% của đồ Hủy Diệt như trước. `test/BillExchangeTest.java` kiểm tra menu mở shop thực, nhiều ô, không trộn thức ăn, thiếu set/vàng, túi đầy, dùng ô vừa giải phóng và hoàn tác khi lưu lỗi với mọi loại tiền shop hỗ trợ.
