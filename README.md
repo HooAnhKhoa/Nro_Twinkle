@@ -881,3 +881,10 @@ Bò Mộng trong nhà ba hành tinh (map 21/22/23) có thêm **Nhập giftcode**
 Giấy màu #1505 và Nơ trang trí #1509 bật `is_up_to_up=1`, tối đa 99.999 mỗi chồng theo giới hạn vật phẩm thường. `web/material_stack_schema.sql` chạy trước khi nạp template. Khi đăng nhập, các chồng nguyên liệu thường cùng loại/cùng option trong hành trang và rương được gộp, giữ tổng số lượng và vị trí các món khác. Không gộp đồ khác trạng thái khóa hoặc có chỉ số/hạn dùng đặc biệt; không thay đổi danh sách đồ giữa phiên giao dịch. Đồ mới nhặt/nhận dùng cơ chế cộng dồn chung hiện có. Không xóa số lượng hay đổi dữ liệu trang bị khác.
 
 Bùa x2 TN, SM đệ tử trong shop (#1628, loại 29) cũng bật cộng dồn và dùng chung gộp ô khi đăng nhập cho hành trang/rương, giới hạn gộp 99.999/chồng. Không thay đổi giá shop, cách dùng, thời gian hoặc hiệu lực bùa; bùa khóa/hạn dùng đặc biệt vẫn giữ tách riêng.
+
+## Thức ăn thần linh khi đệ tử mặc set (16/10/2026)
+
+Sửa luồng rơi thức ăn 663–667 (Pudding, Xúc xích, Kem dâu, Mì ly, Sushi): trước đây map lạnh đổi biến người đánh từ đệ sang sư phụ rồi mới xét set, nên đệ mặc đủ thần linh nhưng sư phụ không mặc sẽ mất điều kiện. Ngoài map lạnh, quyền nhặt cũng có thể mang ID đệ.
+
+Điều kiện mới: sư phụ hoặc đệ đang cùng khu có đủ 5 món thần linh (áo/quần/găng/giày/nhẫn, ID 555–567). Sư phụ hoặc đệ hạ quái đều được xét; nếu cả hai cùng đủ set cũng chỉ quay **một** lượt. Quyền nhặt luôn thuộc sư phụ. Đệ ở khu khác không cấp điều kiện cho sư phụ; thiếu một món thì không đủ set. Không thay đổi tỷ lệ `food.god`, hệ số nhóm/server, hay các bảng rơi khác. Tỷ lệ gốc 3/333 ≈ 0,9009%; tỷ lệ riêng trên web có thể ghi đè (máy chính đang đặt 100% khi kiểm tra).
+Kiểm thử `test/PetGodFoodTest.java`: 28 kiểm tra trên map thường/Nappa/lạnh, quyền nhặt thực tế, set thiếu nhẫn, đệ ở khu khác, cả hai cùng đủ set, và việc giữ hiệu lực các mức 0%/x0.

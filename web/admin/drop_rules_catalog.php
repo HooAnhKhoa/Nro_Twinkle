@@ -15,7 +15,7 @@ function dropRules(): array {
     $add('shop.cloth','shop','Map SKH · nhánh đồ vải thô',.1,$early,'Còn bước giới hạn sức mạnh và tạo thuộc tính sao.');
     $add('god.cold','god','Map lạnh',.002,'Map 105–110');
     $add('crystal.all','crystal','Mọi map',10,'Mọi map có quái hợp lệ','Ngẫu nhiên một trong 7 loại sao pha lê.');
-    $add('food.god','food','Mọi map · đủ set thần linh',300/333,'Mọi map có quái hợp lệ','Chỉ rơi khi mặc đủ set thần linh.');
+    $add('food.god','food','Mọi map · sư phụ/đệ đủ set thần linh',300/333,'Mọi map có quái hợp lệ','Sư phụ hoặc đệ đang cùng khu đủ 5 món thần linh; chỉ xét một lượt và sư phụ được nhặt.');
     $add('porata.soul','porata','Map bông tai · mảnh hồn',10,'Map 156–159','Nhánh đầu, vật phẩm 933.');
     $add('porata.fragment','porata','Map bông tai · mảnh vỡ',5,'Map 156–159','Nhánh kế tiếp, vật phẩm 934; giữ giới hạn 150.');
     $add('porata.last','porata','Map bông tai · nhánh cuối',.2,'Map 156–159','Vật phẩm 935; các nhánh được xét nối tiếp.');

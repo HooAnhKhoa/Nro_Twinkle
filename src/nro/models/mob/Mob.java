@@ -602,6 +602,19 @@ public class Mob {
         return itemReward;
     }
 
+    private static boolean hasGodClothes(Player player) {
+        return player!=null&&player.inventory!=null&&player.inventory.itemsBody.size()>=5
+            &&player.setClothes!=null&&player.setClothes.checkSetGod();
+    }
+    private Player godFoodOwner(Player attacker) {
+        Player owner=attacker instanceof Pet pet?pet.master:attacker;
+        if(owner==null||!owner.isPl()||owner.zone!=this.zone)return null;
+        Pet pet=owner.pet;
+        boolean petSet=pet!=null&&pet.zone==this.zone&&hasGodClothes(pet);
+        boolean attackerSet=attacker instanceof Pet&&attacker.zone==this.zone&&hasGodClothes(attacker);
+        return hasGodClothes(owner)||petSet||attackerSet?owner:null;
+    }
+
     public List<ItemMap> getItemMobReward(Player player, int x, int yEnd) {
         List<ItemMap> list = new ArrayList<>();
         if (player.isBoss) {
@@ -611,6 +624,7 @@ public class Mob {
         if (this.tempId == 0) {
             return list;
         }
+        final Player foodOwner=godFoodOwner(player);
         int mapid = player.zone.map.mapId;
         nro.models.event.EventDrops.appendMobDrops(this,player,list,x,yEnd);
         nro.models.event.trungthu2026.TrungThuRuntime.drops(this,player,list,x,yEnd);
@@ -996,11 +1010,8 @@ public class Mob {
         if (player.itemTime.isUseCoBonLa) {
             rate1 = (int) (rate1 * 1.15);
         }
-        if (nro.models.server.PanelBridge.rollDrop("food","food.god",3, 333)) {
-            if (player.setClothes.checkSetGod()) {
-                ItemMap it = new ItemMap(zone, Util.nextInt(663, 667), 1, x, yEnd, player.id);
-                list.add(it);
-            }
+        if (foodOwner!=null&&nro.models.server.PanelBridge.rollDrop("food","food.god",3,333)) {
+            list.add(new ItemMap(zone,Util.nextInt(663,667),1,x,yEnd,foodOwner.id));
         }
 
         // Upgrade stones: one roll per defeated mob, including every ordinary map.

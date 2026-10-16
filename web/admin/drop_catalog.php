@@ -8,7 +8,7 @@ function dropCatalog(): array { return [
  'shop'=>['name'=>'Đồ shop có sao','icon'=>'🛍️','base'=>[.0125,100/19999,.1],'detail'=>'Trang bị thường có sao từ randTempItemDoSao / randDoSao. Giữ kiểm tra nối tiếp, giới hạn sức mạnh và điều kiện map SKH.'],
  'god'=>['name'=>'Đồ thần linh','icon'=>'🛡️','base'=>[.002],'detail'=>'Map lạnh: 1/50.000.'],
  'crystal'=>['name'=>'Sao pha lê','icon'=>'⭐','base'=>[10],'detail'=>'10% rơi ngẫu nhiên một trong 7 loại sao pha lê ở mọi map; cỏ bốn lá giữ bonus hiện có.'],
- 'food'=>['name'=>'Thức ăn','icon'=>'🍗','base'=>[300/333],'detail'=>'3/333 khi mặc đủ set thần linh.'],
+ 'food'=>['name'=>'Thức ăn','icon'=>'🍗','base'=>[300/333],'detail'=>'3/333 khi sư phụ hoặc đệ đang cùng khu mặc đủ 5 món thần linh. Một lượt rơi, quyền nhặt thuộc sư phụ.'],
  'porata'=>['name'=>'Mảnh hồn và vỡ bông tai','icon'=>'🧩','base'=>[10,5,.2],'detail'=>'Map bông tai: các nhánh 10%, 5%, 1/500 xét nối tiếp; giữ giới hạn vật phẩm.'],
  'angel'=>['name'=>'Mảnh thiên sứ','icon'=>'🪽','base'=>[200/555,10],'detail'=>'Ngục tù, set hủy diệt: nhánh kích hoạt 2/555 hoặc nhánh 10%.'],
  'skh'=>['name'=>'Set kích hoạt','icon'=>'⚔️','base'=>[200/9999],'detail'=>'2/9.999 tại map SKH và map riêng tư; giữ bonus trang bị và cỏ bốn lá.'],
