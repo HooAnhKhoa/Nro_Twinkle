@@ -51,7 +51,7 @@ public class QuocVuong extends Npc {
                                 this.createOtherMenu(player, ConstNpc.OPEN_POWER_PET,
                                         "Ta sẽ truyền năng lượng giúp con mở giới hạn sức mạnh của đệ tử lên "
                                         + Util.numberToMoney(player.pet.nPoint.getPowerNextLimit()),
-                                        "Nâng ngay\n" + Util.numberToMoney(OpenPowerService.COST_SPEED_OPEN_LIMIT_POWER) + " ngọc", "Đóng");
+                                        "Nâng ngay\n" + Util.numberToMoney(OpenPowerService.COST_SPEED_OPEN_LIMIT_POWER) + " vàng", "Đóng");
                             } else {
                                 this.createOtherMenu(player, ConstNpc.IGNORE_MENU,
                                         "Sức mạnh của đệ con đã đạt tới giới hạn hiện tại",
@@ -81,7 +81,7 @@ public class QuocVuong extends Npc {
                             } else {
                                 Service.gI().sendThongBao(player,
                                         "Bạn không đủ vàng để mở, còn thiếu "
-                                        + Util.numberToMoney((OpenPowerService.COST_SPEED_OPEN_LIMIT_POWER - player.inventory.gold)) + " ngọc");
+                                        + Util.numberToMoney((OpenPowerService.COST_SPEED_OPEN_LIMIT_POWER - player.inventory.gold)) + " vàng");
                             }
                         } else {
                             Service.gI().sendThongBao(player, "Giới hạn sức mạnh của bạn đã đạt tới mức tối đa hiện tại");
@@ -99,7 +99,7 @@ public class QuocVuong extends Npc {
                         } else {
                             Service.gI().sendThongBao(player,
                                     "Bạn không đủ vàng để mở, còn thiếu "
-                                    + Util.numberToMoney((OpenPowerService.COST_SPEED_OPEN_LIMIT_POWER - player.inventory.gold)) + " ngọc");
+                                    + Util.numberToMoney((OpenPowerService.COST_SPEED_OPEN_LIMIT_POWER - player.inventory.gold)) + " vàng");
                         }
                     } else {
                         Service.gI().sendThongBao(player, "Giới hạn sức mạnh của đệ tử đã đạt tới mức tối đa hiện tại");

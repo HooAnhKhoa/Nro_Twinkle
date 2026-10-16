@@ -931,9 +931,10 @@ public class UseItem {
                             case 1760: {
                                 Player player = pl;
                                 if (player.pet != null) {
-                                    InventoryService.gI().subQuantityItemsBag(pl, item, 1);
-                                    if (player.pet.playerSkill.skills.get(3).skillId != -1) {
+                                    if (player.pet.playerSkill.skills.size() > 3 && player.pet.playerSkill.skills.get(3) != null
+                                            && player.pet.playerSkill.skills.get(3).skillId != -1) {
                                         player.pet.openSkill4();
+                                        InventoryService.gI().subQuantityItemsBag(pl, item, 1);
                                     } else {
                                         Service.gI().sendThongBao(player, "Ít nhất đệ tử ngươi phải có chiêu 4 chứ!");
                                         return;

@@ -803,3 +803,10 @@ Trang Giao dịch có bộ lọc Từ ngày / Đến ngày, kết hợp người
 ## Đệ tử không tự tăng giáp — 16/10/2026
 
 Khi luyện, đệ tử chỉ tự dùng tiềm năng tăng HP, KI, sức đánh và chí mạng. Không còn chọn giáp (loại chỉ số 3) trong vòng tự cộng. Giữ nguyên giáp gốc đã có, giáp trang bị, giới hạn chỉ số và cơ chế cộng chỉ số của nhân vật chính. Không sửa dữ liệu đệ tử trong database hoặc hoàn lại tiềm năng đã dùng. Đã biên dịch toàn bộ source Java 17, xác minh đủ 646 lớp ứng dụng trong JAR và đường gọi tự cộng chỉ chọn các loại 0/1/2/4. Backup: D:/NroFreeSetup/Backups/pet-no-defense-20261016.
+
+
+## Chi Chi đổi skill 4 và phí mở giới hạn — 16/10/2026
+
+Shop Chi Chi bổ sung vật phẩm 1760 (Phở Công viên Hòa Bình, đổi skill 4 đệ tử), giá 30 ngọc như cửa hàng cũ. Migration tự thêm khi chưa có, không thêm trùng hoặc ghi đè giá quản trị đã chỉnh. Giữ bảng kỹ năng/tỷ lệ đổi hiện tại, có thể trùng kỹ năng. Chỉ trừ một vật phẩm sau khi đổi thành công; chưa có đệ hoặc chiêu 4 còn khóa thì giữ nguyên đồ.
+
+Quốc Vương hiển thị đúng phí mở giới hạn nhanh là 50 triệu vàng, gồm nút đệ tử và thông báo thiếu tiền. Không đổi giá hoặc tiền tệ thực tế. Đã qua 11 kiểm tra trên DB QA: migration, giữ giá tùy chỉnh, sử dụng vật phẩm và menu/trừ vàng thật. Backup trước nạp: D:/NroFreeSetup/Backups/pet-skill4-shop-20261016.
