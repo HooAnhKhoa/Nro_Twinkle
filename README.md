@@ -798,3 +798,8 @@ Trang Giao dịch có bộ lọc Từ ngày / Đến ngày, kết hợp người
 ## Gọi lại Rồng Thần — 16/10/2026
 
 Đã bỏ thời gian chờ 10 phút giữa hai lần gọi Rồng Thần thường. Sau khi rồng trước rời đi, đủ bộ ngọc có thể gọi tiếp. Vẫn giữ giới hạn một rồng đang xuất hiện, kiểm tra đủ ngọc/địa điểm và 5 phút chọn điều ước. Rồng Băng và Rồng Namek không thay đổi. Đã biên dịch toàn bộ source Java 17 và xác minh hằng số trong JAR đóng gói: hồi gọi 0 ms, chọn điều ước 300000 ms. Có backup trước triển khai tại D:/NroFreeSetup/Backups/payments-dragon-20261016.
+
+
+## Đệ tử không tự tăng giáp — 16/10/2026
+
+Khi luyện, đệ tử chỉ tự dùng tiềm năng tăng HP, KI, sức đánh và chí mạng. Không còn chọn giáp (loại chỉ số 3) trong vòng tự cộng. Giữ nguyên giáp gốc đã có, giáp trang bị, giới hạn chỉ số và cơ chế cộng chỉ số của nhân vật chính. Không sửa dữ liệu đệ tử trong database hoặc hoàn lại tiềm năng đã dùng. Đã biên dịch toàn bộ source Java 17, xác minh đủ 646 lớp ứng dụng trong JAR và đường gọi tự cộng chỉ chọn các loại 0/1/2/4. Backup: D:/NroFreeSetup/Backups/pet-no-defense-20261016.

@@ -753,12 +753,14 @@ public class Pet extends Player {
         }
     }
 
+    // HP, KI, damage and critical only; defense no longer spends training potential.
+    private static final byte[] AUTO_TRAIN_STATS = {0, 1, 2, 4};
     private long lastTimeIncreasePoint;
 
     private void increasePoint() {
         if (this.nPoint != null && Util.canDoWithTime(lastTimeIncreasePoint, 0)) {
             for (int i = 0; i < 20; i++) {
-                this.nPoint.increasePoint((byte) Util.nextInt(0, 4), (short) 1);
+                this.nPoint.increasePoint(AUTO_TRAIN_STATS[Util.nextInt(AUTO_TRAIN_STATS.length)], (short) 1);
             }
             lastTimeIncreasePoint = System.currentTimeMillis();
         }
