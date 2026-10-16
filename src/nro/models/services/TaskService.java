@@ -41,6 +41,7 @@ public class TaskService {
      * Làm cùng số người trong bang
      */
     private static final byte NMEMBER_DO_TASK_TOGETHER = 2;
+    public static final int BASE_DAMAGE_TASK_REQUIREMENT = 10_000;
     private boolean canNhanCayThong = true;
 
     private static nro.models.services.TaskService i;
@@ -93,6 +94,8 @@ public class TaskService {
                 msg.writer().writeShort(stm.maxCount);
             }
             player.sendMessage(msg);
+            // Also recognize stats trained before this task, including after reconnect.
+            checkDoneTaskNangCS(player);
         } catch (Exception e) {
             Logger.logException(TaskService.class, e);
         } finally {
@@ -242,7 +245,7 @@ public class TaskService {
                 return doneTask(player, ConstTask.TASK_22_1);
             }
             case ConstNpc.THAN_MEO_KARIN -> {
-                return doneTask(player, ConstTask.TASK_27_0);
+                return player.nPoint.dameg >= BASE_DAMAGE_TASK_REQUIREMENT && doneTask(player, ConstTask.TASK_27_0);
             }
             case ConstNpc.OSIN -> {
                 return doneTask(player, ConstTask.TASK_28_0)
@@ -367,14 +370,17 @@ public class TaskService {
     }
 
     public void checkDoneTaskNangCS(Player player) {
-        if (!player.isBoss && !player.isBot && !player.isPet) {
-            if (player.nPoint.dameg < 35000) {
-                return;
+        if (player == null || player.nPoint == null || player.playerTask == null
+                || player.playerTask.taskMain == null || player.isBoss || player.isBot || player.isPet || player.isNewPet) {
+            return;
+        }
+        synchronized (player) {
+            if (getIdTask(player) == ConstTask.TASK_27_0
+                    && player.nPoint.dameg >= BASE_DAMAGE_TASK_REQUIREMENT) {
+                doneTask(player, ConstTask.TASK_27_0);
             }
-            doneTask(player, ConstTask.TASK_27_0);
         }
     }
-
     public void checkDoneTaskConfirmMenuNpc(Player player, Npc npc, byte select) {
         if (!player.isBoss && !player.isBot && !player.isPet) {
             switch (npc.tempId) {
@@ -1017,7 +1023,9 @@ public class TaskService {
                 //---------------------------------
                 case ConstTask.TASK_27_0:
                     npcSay(player, ConstNpc.THAN_MEO_KARIN,
-                            "Tốt lắm! Bây giờ con hãy tìm cho ta 500 viên capsulue kì bí");
+                            "Tốt lắm! Bây giờ con hãy tìm cho ta "
+                            + player.playerTask.taskMain.subTasks.get(player.playerTask.taskMain.index).maxCount
+                            + " viên capsule kì bí");
                     break;
                 case ConstTask.TASK_27_1:
                     break;

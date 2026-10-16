@@ -810,3 +810,10 @@ Khi luyện, đệ tử chỉ tự dùng tiềm năng tăng HP, KI, sức đánh
 Shop Chi Chi bổ sung vật phẩm 1760 (Phở Công viên Hòa Bình, đổi skill 4 đệ tử), giá 30 ngọc như cửa hàng cũ. Migration tự thêm khi chưa có, không thêm trùng hoặc ghi đè giá quản trị đã chỉnh. Giữ bảng kỹ năng/tỷ lệ đổi hiện tại, có thể trùng kỹ năng. Chỉ trừ một vật phẩm sau khi đổi thành công; chưa có đệ hoặc chiêu 4 còn khóa thì giữ nguyên đồ.
 
 Quốc Vương hiển thị đúng phí mở giới hạn nhanh là 50 triệu vàng, gồm nút đệ tử và thông báo thiếu tiền. Không đổi giá hoặc tiền tệ thực tế. Đã qua 11 kiểm tra trên DB QA: migration, giữ giá tùy chỉnh, sử dụng vật phẩm và menu/trừ vàng thật. Backup trước nạp: D:/NroFreeSetup/Backups/pet-skill4-shop-20261016.
+
+
+## Tự ghi nhận nhiệm vụ sức đánh gốc — 16/10/2026
+
+Nhiệm vụ 27 bước 0 yêu cầu 10.000 sức đánh gốc (dameg), thống nhất với tên hiển thị, thay điều kiện 35.000 cũ. Kiểm tra khi gửi nhiệm vụ lúc đăng nhập, khi nhận nhiệm vụ tiếp theo và sau khi nâng sức đánh. Nhân vật đã đạt chỉ số từ trước không cần nâng thêm. Chỉ hoàn thành đúng bước này; giữ nguyên tiến độ capsule/boss và các nhiệm vụ khác. Sức đánh trang bị không thay thế sức đánh gốc, đệ/boss/bot không được dùng để hoàn thành. Nói chuyện Karin không bỏ qua điều kiện chỉ số. Lời nhắc bước capsule dùng số lượng từ template hiện tại.
+
+Migration chỉ sửa gợi ý cũ 35K thành 10K khi tên nhiệm vụ vẫn là 10K; không reset nhiệm vụ người chơi bằng SQL. Đã qua 22 kiểm tra trên DB QA riêng và xác minh JAR Java 17 đủ 646 lớp ứng dụng. Backup: D:/NroFreeSetup/Backups/task-base-damage-20261016.

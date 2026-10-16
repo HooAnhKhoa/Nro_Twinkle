@@ -296,9 +296,11 @@ public final class Manager {
             nro.models.event.ThanhCo.ensureData(ConnectionDatabase);
             nro.models.event.ChristmasGifts.ensureData(ConnectionDatabase);
             nro.models.event.trungthu2026.TrungThuStore.ensureData(ConnectionDatabase);
-            try (java.sql.Statement shopSeed = ConnectionDatabase.createStatement()) {
-                for (String sql : java.nio.file.Files.readString(java.nio.file.Path.of("web/pet_shop_schema.sql")).split(";")) {
-                    if (!sql.isBlank()) shopSeed.execute(sql);
+            try (java.sql.Statement bootstrap = ConnectionDatabase.createStatement()) {
+                for (String file : new String[]{"web/pet_shop_schema.sql", "web/task_schema.sql"}) {
+                    for (String sql : java.nio.file.Files.readString(java.nio.file.Path.of(file)).split(";")) {
+                        if (!sql.isBlank()) bootstrap.execute(sql);
+                    }
                 }
             }
             //load part
