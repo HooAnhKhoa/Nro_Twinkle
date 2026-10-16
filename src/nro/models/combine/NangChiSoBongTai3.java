@@ -15,7 +15,6 @@ public class NangChiSoBongTai3 {
     // Chi phí & tỉ lệ
     private static final int GEM_NANG_BT = 1_000;
     private static final int RATIO_NANG_CAP = 30;
-    private static final int ITEM_PARAM_INDEX = 31;
     private static final int BONG_TAI_C3_ID = 1819;
     private static final int HON_BONG_TAI_ID = 934;
     private static final int DA_XANH_LAM_ID = 935;
@@ -41,7 +40,7 @@ public class NangChiSoBongTai3 {
                 player.combineNew.gemCombine = GEM_NANG_BT;
                 player.combineNew.ratioCombine = RATIO_NANG_CAP;
 
-                int currentHon = InventoryService.gI().getParam(player, ITEM_PARAM_INDEX, HON_BONG_TAI_ID);
+                long currentHon = PorataMaterials.count(player, HON_BONG_TAI_ID);
 
                 String npcSay = "|2|Mở chỉ số Bông tai Porata [+3]\n\n";
                 npcSay += "|2|Tỉ lệ thành công: " + player.combineNew.ratioCombine + "%\n";
@@ -98,53 +97,62 @@ public class NangChiSoBongTai3 {
         }
     }
     public static void nangChiSoBongTai(Player player) {
-        try {
-            int currentHon = InventoryService.gI().getParam(player, ITEM_PARAM_INDEX, HON_BONG_TAI_ID);
-            Item daXanhLam = InventoryService.gI().findItemBag(player, DA_XANH_LAM_ID);
-
-            if (currentHon < REQUIRED_HON_BONG_TAI || daXanhLam == null || daXanhLam.quantity < 1) {
-                Service.gI().sendThongBao(player, "Không đủ vật phẩm để thực hiện.");
+        synchronized (player) {
+            if (!PorataMaterials.selected(player, BONG_TAI_C3_ID, HON_BONG_TAI_ID, DA_XANH_LAM_ID)) {
+                Service.gI().sendThongBao(player, "Vật phẩm đã thay đổi. Hãy chọn lại nguyên liệu.");
                 return;
             }
-            if (player.inventory.gem < player.combineNew.gemCombine) {
-                Service.gI().sendThongBao(player, "Bạn không đủ ngọc, còn thiếu " + (player.combineNew.gemCombine - player.inventory.gem) + " ngọc nữa!");
-                return;
+            player.combineNew.gemCombine = GEM_NANG_BT;
+            player.combineNew.ratioCombine = RATIO_NANG_CAP;
+            try {
+                long currentHon = PorataMaterials.count(player, HON_BONG_TAI_ID);
+                Item daXanhLam = InventoryService.gI().findItemBag(player, DA_XANH_LAM_ID);
+
+                if (currentHon < REQUIRED_HON_BONG_TAI || daXanhLam == null || daXanhLam.quantity < 1) {
+                    Service.gI().sendThongBao(player, "Không đủ vật phẩm để thực hiện.");
+                    return;
+                }
+                if (player.inventory.gem < player.combineNew.gemCombine) {
+                    Service.gI().sendThongBao(player, "Bạn không đủ ngọc, còn thiếu " + (player.combineNew.gemCombine - player.inventory.gem) + " ngọc nữa!");
+                    return;
+                }
+                player.inventory.gem -= player.combineNew.gemCombine;
+                Item bongTai = player.combineNew.itemsCombine.stream()
+                        .filter(it -> it != null && it.isNotNullItem() && it.template != null && it.template.id == BONG_TAI_C3_ID)
+                        .findFirst()
+                        .orElse(null);
+
+                if (bongTai == null) {
+                    Service.gI().sendThongBao(player, "Thiếu Bông tai Porata cấp 3.");
+                    return;
+                }
+
+                boolean success = Util.isTrue(player.combineNew.ratioCombine, 100);
+                if (success) {
+                    byte opt1 = randomOpt();
+                    byte opt2 = randomOpt();
+                    byte p1 = (byte) Util.nextInt(PARAM_MIN, PARAM_MAX);
+                    byte p2 = (byte) Util.nextInt(PARAM_MIN, PARAM_MAX);
+                    bongTai.itemOptions.clear();
+                    bongTai.itemOptions.add(new Item.ItemOption(opt1, p1));
+                    bongTai.itemOptions.add(new Item.ItemOption(opt2, p2));
+                    bongTai.itemOptions.add(new Item.ItemOption((short) 72, 3));
+
+                    CombineService.gI().sendEffectSuccessCombine(player);
+                } else {
+                    CombineService.gI().sendEffectFailCombine(player);
+                }
+                PorataMaterials.consume(player, HON_BONG_TAI_ID, REQUIRED_HON_BONG_TAI);
+                InventoryService.gI().subQuantityItemsBag(player, daXanhLam, 1);
+
+                Service.gI().sendMoney(player);
+                InventoryService.gI().sendItemBags(player);
+                PorataMaterials.refreshSelection(player);
+                CombineService.gI().reOpenItemCombine(player);
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            player.inventory.gem -= player.combineNew.gemCombine;
-            Item bongTai = player.combineNew.itemsCombine.stream()
-                    .filter(it -> it != null && it.isNotNullItem() && it.template != null && it.template.id == BONG_TAI_C3_ID)
-                    .findFirst()
-                    .orElse(null);
-
-            if (bongTai == null) {
-                Service.gI().sendThongBao(player, "Thiếu Bông tai Porata cấp 3.");
-                return;
-            }
-
-            boolean success = Util.isTrue(player.combineNew.ratioCombine, 100);
-            if (success) {
-                byte opt1 = randomOpt();
-                byte opt2 = randomOpt();
-                byte p1 = (byte) Util.nextInt(PARAM_MIN, PARAM_MAX);
-                byte p2 = (byte) Util.nextInt(PARAM_MIN, PARAM_MAX);
-                bongTai.itemOptions.clear();
-                bongTai.itemOptions.add(new Item.ItemOption(opt1, p1));
-                bongTai.itemOptions.add(new Item.ItemOption(opt2, p2));
-                bongTai.itemOptions.add(new Item.ItemOption((short) 72, 3));
-
-                CombineService.gI().sendEffectSuccessCombine(player);
-            } else {
-                CombineService.gI().sendEffectFailCombine(player);
-            }
-            InventoryService.gI().subParamItemsBag(player, HON_BONG_TAI_ID, ITEM_PARAM_INDEX, REQUIRED_HON_BONG_TAI);
-            InventoryService.gI().subQuantityItemsBag(player, daXanhLam, 1);
-
-            Service.gI().sendMoney(player);
-            InventoryService.gI().sendItemBags(player);
-            CombineService.gI().reOpenItemCombine(player);
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

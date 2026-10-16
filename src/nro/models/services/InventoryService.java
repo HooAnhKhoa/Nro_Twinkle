@@ -830,11 +830,12 @@ public class InventoryService {
                 if (it.isNotNullItem() && it.template.id == itemAdd.template.id) {
                     for (Item.ItemOption io : it.itemOptions) {
                         if (io.optionTemplate.id == idParam[0]) {
+                            if ((long) io.param + idParam[1] > Integer.MAX_VALUE) continue;
                             io.param += idParam[1];
+                            itemAdd.quantity = 0;
+                            return true;
                         }
                     }
-                    itemAdd.quantity = 0;
-                    return true;
                 }
             }
         }

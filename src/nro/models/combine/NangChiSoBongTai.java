@@ -14,7 +14,6 @@ import nro.models.utils.Util;
 public class NangChiSoBongTai {
     private static final int GEM_NANG_BT = 1_000;
     private static final int RATIO_NANG_CAP = 45;
-    private static final int ITEM_PARAM_INDEX = 31; 
     private static final int BONG_TAI_ID = 921;
     private static final int HON_BONG_TAI_ID = 934;
     private static final int DA_XANH_LAM_ID = 935;
@@ -44,7 +43,7 @@ public class NangChiSoBongTai {
                 player.combineNew.ratioCombine = RATIO_NANG_CAP;
 
                 // Lấy số lượng Mảnh hồn bông tai từ param (option 31)
-                int currentHonSoLuong = InventoryService.gI().getParam(player, ITEM_PARAM_INDEX, HON_BONG_TAI_ID);
+                long currentHonSoLuong = PorataMaterials.count(player, HON_BONG_TAI_ID);
 
                 String npcSay = "|2|Mở chỉ số Bông tai Porata [+2]" + "\n\n";
                 npcSay += "|2|Tỉ lệ thành công: " + player.combineNew.ratioCombine + "%" + "\n";
@@ -89,48 +88,57 @@ public class NangChiSoBongTai {
     }
 
     public static void nangChiSoBongTai(Player player) {
-        try {
-            int currentHonSoLuong = InventoryService.gI().getParam(player, ITEM_PARAM_INDEX, HON_BONG_TAI_ID);
-            Item daXanhLam = InventoryService.gI().findItemBag(player, DA_XANH_LAM_ID);
-
-            if (currentHonSoLuong < REQUIRED_HON_BONG_TAI || daXanhLam == null) {
-                Service.gI().sendThongBao(player, "Không đủ vật phẩm để thực hiện.");
+        synchronized (player) {
+            if (!PorataMaterials.selected(player, BONG_TAI_ID, HON_BONG_TAI_ID, DA_XANH_LAM_ID)) {
+                Service.gI().sendThongBao(player, "Vật phẩm đã thay đổi. Hãy chọn lại nguyên liệu.");
                 return;
             }
-            if (player.inventory.gem < player.combineNew.gemCombine) {
-                Service.gI().sendThongBao(player, "Bạn không đủ ngọc, còn thiếu " + (player.combineNew.gemCombine - player.inventory.gem) + " ngọc nữa!");
-                return;
-            }
-            
-            player.inventory.gem -= player.combineNew.gemCombine;
-            
-            // Lấy item bông tai từ trong ô combine
-            Item bongTai = player.combineNew.itemsCombine.stream().filter(item -> item.template.id == BONG_TAI_ID).findFirst().orElse(null);
+            player.combineNew.gemCombine = GEM_NANG_BT;
+            player.combineNew.ratioCombine = RATIO_NANG_CAP;
+            try {
+                long currentHonSoLuong = PorataMaterials.count(player, HON_BONG_TAI_ID);
+                Item daXanhLam = InventoryService.gI().findItemBag(player, DA_XANH_LAM_ID);
 
-            if (Util.isTrue(player.combineNew.ratioCombine, 100)) {
-                byte optionId = UPGRADE_OPTIONS[Util.nextInt(0, UPGRADE_OPTIONS.length - 1)];
-                byte param = (byte) Util.nextInt(PARAM_MIN, PARAM_MAX);
-                
-                // Xóa các option cũ trên bông tai và thêm option mới
-                bongTai.itemOptions.clear();
-                bongTai.itemOptions.add(new Item.ItemOption(optionId, param));
-                bongTai.itemOptions.add(new Item.ItemOption(72, 2)); // Option cấp 2
-                
-                CombineService.gI().sendEffectSuccessCombine(player);
-            } else {
-                CombineService.gI().sendEffectFailCombine(player);
-            }
+                if (currentHonSoLuong < REQUIRED_HON_BONG_TAI || daXanhLam == null) {
+                    Service.gI().sendThongBao(player, "Không đủ vật phẩm để thực hiện.");
+                    return;
+                }
+                if (player.inventory.gem < player.combineNew.gemCombine) {
+                    Service.gI().sendThongBao(player, "Bạn không đủ ngọc, còn thiếu " + (player.combineNew.gemCombine - player.inventory.gem) + " ngọc nữa!");
+                    return;
+                }
             
-            // Trừ vật phẩm
-            InventoryService.gI().subParamItemsBag(player, HON_BONG_TAI_ID, ITEM_PARAM_INDEX, REQUIRED_HON_BONG_TAI);
-            InventoryService.gI().subQuantityItemsBag(player, daXanhLam, 1);
+                player.inventory.gem -= player.combineNew.gemCombine;
             
-            Service.gI().sendMoney(player);
-            InventoryService.gI().sendItemBags(player);
-            CombineService.gI().reOpenItemCombine(player);
+                // Lấy item bông tai từ trong ô combine
+                Item bongTai = player.combineNew.itemsCombine.stream().filter(item -> item.template.id == BONG_TAI_ID).findFirst().orElse(null);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+                if (Util.isTrue(player.combineNew.ratioCombine, 100)) {
+                    byte optionId = UPGRADE_OPTIONS[Util.nextInt(0, UPGRADE_OPTIONS.length - 1)];
+                    byte param = (byte) Util.nextInt(PARAM_MIN, PARAM_MAX);
+                
+                    // Xóa các option cũ trên bông tai và thêm option mới
+                    bongTai.itemOptions.clear();
+                    bongTai.itemOptions.add(new Item.ItemOption(optionId, param));
+                    bongTai.itemOptions.add(new Item.ItemOption(72, 2)); // Option cấp 2
+                
+                    CombineService.gI().sendEffectSuccessCombine(player);
+                } else {
+                    CombineService.gI().sendEffectFailCombine(player);
+                }
+            
+                // Trừ vật phẩm
+                PorataMaterials.consume(player, HON_BONG_TAI_ID, REQUIRED_HON_BONG_TAI);
+                InventoryService.gI().subQuantityItemsBag(player, daXanhLam, 1);
+            
+                Service.gI().sendMoney(player);
+                InventoryService.gI().sendItemBags(player);
+                PorataMaterials.refreshSelection(player);
+                CombineService.gI().reOpenItemCombine(player);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }
