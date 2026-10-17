@@ -932,3 +932,11 @@ Admin nhập chat: `botstatus` xem vị trí/trạng thái; `botstop` tắt và 
 `test/TrialBotsTest.java`: 31 kiểm tra QA với kỹ năng từ DB thật, gây sát thương/hạ quái và đánh boss qua SkillService, nhận đồ thật, giữ đồ khi đầy túi, không lấy đồ người khác, chờ hồi sinh, đổi map, boss rời map, 3 bot đúng chế độ, bật/tắt và gỡ khỏi danh sách khu. Chạy thêm 28 kiểm tra hồi quy PetGodFoodTest.
 
 Bot không có session: Service.sendMoney bỏ qua gói tin cho đối tượng không có kết nối, nhưng số dư nhặt được vẫn cập nhật trong bộ nhớ. Kiểm tra thêm nhận vàng/ngọc thực và không phát sinh log NullPointerException.
+
+## Panel Bot tự động (17/10/2026)
+
+Menu **Bot tự động** mở trang riêng trong dashboard. Thêm/bớt số bot luyện quái và săn boss, công tắc bật nhóm, Áp dụng, Tắt tất cả và Hoàn tác lần thay đổi gần nhất; tổng tối đa 3 bot thử nghiệm. Các thẻ runtime hiển thị tên, chế độ, tên map/khu, HP, số đòn, số hạ và đồ nhặt, cập nhật 5 giây. Phân biệt cấu hình đã lưu với số bot game đang chạy; dữ liệu cũ/server offline được ghi rõ, không báo giả đã áp dụng.
+
+PHP chỉ ghi cố định `bot-trial.properties` trong game_root được cấu hình ở `web/game_paths.php`, bằng thay file tạm cùng thư mục. Java hiện có tự đọc sau 2 giây, snapshot sau tối đa 5 giây, không cần restart. Panel tắt giữ số lượng đã chọn cho lần bật sau. Thay đổi số lượng tạo lại nhóm mô phỏng, đồ/tiến trình bot bắt đầu lại. Admin/CSRF bắt buộc cho mọi API; kiểm tra kiểu dữ liệu, giới hạn tổng, checksum cấu hình và khóa ghi để tránh ghi đè thay đổi đồng thời. Đổi bên ngoài làm mất hiệu lực nút hoàn tác cũ. Bản trước lưu ở `data/bot-panel-last-change.json`; không sửa tài khoản hoặc đồ người chơi.
+
+`test/BotPanelTest.php`: 19 kiểm tra file/cấu hình/hoàn tác/xung đột/giới hạn. `test/BotPanelHttpTest.ps1`: 15 kiểm tra HTTP trên bản QA riêng, gồm admin, CSRF, tài khoản thường, lưu/tắt/hoàn tác và lấy tên map. Không đưa các file nạp tiền đang làm dở vào menu hoặc triển khai kèm trang bot.
