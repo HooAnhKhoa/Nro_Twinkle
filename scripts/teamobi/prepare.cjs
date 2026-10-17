@@ -40,6 +40,13 @@ const items=source.map(a=>({id:a.id,TYPE:a.type,gender:a.gender,NAME:a.name,desc
 for(const o of old.item_template){const target=items[itemMap[o.id]];if(target&&+o.id===itemMap[o.id]){target.gold=+o.gold;target.gem=+o.gem;}}
 const flagRows=read('flag-rows'),flags=new Map(flagRows.map(x=>[+x.id,x])),portedFlags=[];
 for(const o of old.item_template){const target=items[itemMap[o.id]],flag=flags.get(+o.part);if(+o.TYPE===11&&target?.TYPE===11&&+o.icon_id===target.icon_id&&flag&&target.part>=0&&target.part!==+o.part){portedFlags.push({...flag,id:target.part,NAME:target.NAME});}}
+// Recovered original animation definitions also belong in fresh canonical migrations.
+const restoredPath='config/teamobi-restored-flags.json';
+if(fs.existsSync(restoredPath))for(const flag of JSON.parse(fs.readFileSync(restoredPath,'utf8'))){
+ const item=items[flag.item_id];
+ if(!item||item.TYPE!==11||item.part!==flag.flag_id||item.icon_id!==flag.icon_id)throw Error('Recovered flag does not match canonical item '+flag.item_id);
+ if(!portedFlags.some(x=>+x.id===flag.flag_id))portedFlags.push({id:flag.flag_id,icon_data:flag.frames.join(','),NAME:flag.name,gold:-1,gem:-1,icon_id:flag.icon_id});
+}
 const imageIds=new Set(read('images').map(x=>x.id));const existing=new Set(fs.readdirSync('data/icon/x4').filter(x=>/^\d+\.png$/.test(x)).map(x=>+x.slice(0,-4)));
 const missingIcons=[...new Set([...source.map(x=>x.iconID),...parts.flatMap(p=>p.pi.map(x=>x.id))])].filter(x=>!imageIds.has(x)&&!existing.has(x));
 const plan={portedFlags,baselineItemsSha256:require('crypto').createHash('sha256').update(JSON.stringify(old.item_template)).digest('hex'),baselinePartsSha256:require('crypto').createHash('sha256').update(JSON.stringify(old.part)).digest('hex'),version:'teamobi-canonical-20261017',itemMap,partMap,items,parts:parts.map((p,id)=>({id,TYPE:p.type,DATA:JSON.stringify(p.pi.map(x=>[x.id,x.dx,x.dy]))})),itemChanges:report,partFallback,unresolvedOutfits:unresolved,outfitMatches:Object.fromEntries(outfits),missingIcons,missingItemIcons:source.filter(x=>missingIcons.includes(x.iconID)).map(x=>({id:x.id,name:x.name,icon:x.iconID}))};

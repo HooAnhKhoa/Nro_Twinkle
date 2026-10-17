@@ -71,6 +71,14 @@
       "gold": "-1",
       "gem": "-1",
       "icon_id": "0"
+    },
+    {
+      "id": 176,
+      "icon_data": "16754,16755,16756,16757",
+      "NAME": "Yêu quái núi lãng lãng",
+      "gold": -1,
+      "gem": -1,
+      "icon_id": 16758
     }
   ],
   "baselineItemsSha256": "79046c69890d1890e3b243c8963ca270aca75e7a2843f2ccf2f56c9d4cf5f64e",
