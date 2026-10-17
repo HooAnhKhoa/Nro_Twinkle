@@ -975,3 +975,10 @@ Nguyên nhân: ItemData gửi toàn bộ template 750..2103 trong một gói -28
 - ItemTemplatePacketTest: 26 kiểm tra trên DB QA chuẩn, giải mã đủ mọi trường của 2.103 món, kiểm tra gói qua MessageSendCollect thật, các dải liên tục, phiên bản cache và từ chối bản ghi đơn quá lớn trước khi gửi template. VerifyRuntimeJar xác nhận đầy đủ 666 class, gồm ConstIgnoreName.
 - Bảo trì lệnh 62 lưu 15 giây, thay JAR khi JVM cũ đã thoát rồi launcher hiện tại tự mở lại sau 10 giây. JVM mới 11760 giữ launcher cha 11208. SHA256 launcher: DA8AF9507662F8D6BC0DC6620999187776E7996CD6BA29ECB2FB008B6A2D160D. Bắt tay game thật qua 127.0.0.1 và 192.168.2.10:14445 đều thành công; error log trống.
 - Bản JAR/source trước sửa ở D:/NroFreeSetup/Backups/item-packet-fix-20261017/. Chỉ khôi phục JAR sau khi bảo trì lưu/thoát. Chưa xác nhận người dùng vào hẳn map; công cụ điều khiển client không khởi tạo được.
+
+### Chọn trang và khóa vật phẩm chưa đủ tài nguyên trong shop (17/10/2026)
+- Vật phẩm có các nút số trang, trước/sau, trang đầu/cuối và dấu lược bớt; trang đang chọn màu cam giống mẫu. Giữ bộ lọc/tìm kiếm khi đổi trang, hỗ trợ bàn phím và bố cục màn hình nhỏ.
+- Bộ chọn của cả cửa hàng vàng/điểm và ngọc đánh mờ món chưa sẵn sàng, vô hiệu hóa nút chọn và ghi nhãn. Dùng chung config/teamobi-assets.json với game; kiểm tra thêm file ảnh web thực tế. Không đọc được manifest thì khóa chọn/lưu thay vì tự cho qua.
+- Kiểm tra lại template và tài nguyên trước cả INSERT lẫn UPDATE, nên sửa request trực tiếp cũng không đưa món thiếu ảnh/model vào shop. Có kiểm tra CSRF cho thao tác thêm/sửa. Giữ nguyên các món và chỉ số đã lưu; không xóa món trong shop đang có.
+- 20 kiểm tra HTTP trên bản sao QA: cả hai shop khóa đồ thiếu costume/mount, chặn thêm/đổi và ID không có, CSRF, giữ nguyên toàn bộ hàng/chỉ số khi bị từ chối; vẫn thêm được món hợp lệ và khôi phục fixture đúng nguyên trạng. PHP và JavaScript xuất ra từ trang shop qua kiểm tra cú pháp. Chưa kiểm tra bằng ảnh chụp trình duyệt do công cụ UI lỗi.
+- Sao lưu trang trước đổi ở D:/NroFreeSetup/Backups/catalog-pagination-shop-20261017/. Chỉ cập nhật web, không cần khởi động lại game.

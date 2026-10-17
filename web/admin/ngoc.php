@@ -22,8 +22,20 @@ if (empty($_SESSION['shop_csrf'])) $_SESSION['shop_csrf'] = bin2hex(random_bytes
 $message_type = "";
 $message_text = "";
 
+require_once __DIR__.'/shop_catalog_assets.php';
+$shopWriteAllowed=true;
+if($_SERVER['REQUEST_METHOD']==='POST'&&(isset($_POST['submit_add_item'])||isset($_POST['submit_edit_full']))){
+    if(!is_string($_POST['csrf']??null)||!hash_equals($_SESSION['shop_csrf'],$_POST['csrf'])){
+        $shopWriteAllowed=false;$message_type='error';$message_text='Phiên thao tác không hợp lệ. Hãy tải lại trang.';http_response_code(403);
+    }else{
+        try{shopCatalogAssert($conn,$_POST['temp_id']??null);}
+        catch(InvalidArgumentException $e){$shopWriteAllowed=false;$message_type='error';$message_text=$e->getMessage();http_response_code(422);}
+    }
+}
+
+
 // -- THÊM VẬT PHẨM --
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit_add_item'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit_add_item']) && $shopWriteAllowed) {
     $temp_id = intval($_POST['temp_id']);
     $cost = intval($_POST['cost']);
     $type_sell = intval($_POST['type_sell']);
@@ -32,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit_add_item'])) {
 
     $stmt = $conn->prepare("INSERT INTO item_shop (temp_id, cost, type_sell, tab_id, icon_spec, sort_order) VALUES (?, ?, ?, ?, 0, ?)");
     $stmt->bind_param("iiiii", $temp_id, $cost, $type_sell, $tab_id, $sort_order);
-    
+
     if ($stmt->execute()) {
         $target_id = $conn->insert_id;
         if (isset($_POST['opt_id']) && is_array($_POST['opt_id'])) {
@@ -54,16 +66,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit_add_item'])) {
 }
 
 // -- SỬA VẬT PHẨM --
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit_edit_full'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit_edit_full']) && $shopWriteAllowed) {
     $id = intval($_POST['id']);
     $temp_id = intval($_POST['temp_id']);
     $cost = intval($_POST['cost']);
     $type_sell = intval($_POST['type_sell']);
     $sort_order = intval($_POST['sort_order']); 
-    
+
     $stmt = $conn->prepare("UPDATE item_shop SET temp_id = ?, cost = ?, type_sell = ?, sort_order = ? WHERE id = ?");
     $stmt->bind_param("iiiii", $temp_id, $cost, $type_sell, $sort_order, $id);
-    
+
     if ($stmt->execute()) {
         $conn->query("DELETE FROM item_shop_option WHERE item_shop_id = $id");
         if (isset($_POST['opt_id']) && is_array($_POST['opt_id'])) {
@@ -120,7 +132,7 @@ if ($current_shop_id > 0) {
 }
 
 $opt_templates = $conn->query("SELECT id, name FROM item_option_template ORDER BY id ASC")->fetch_all(MYSQLI_ASSOC);
-$all_items_list = $conn->query("SELECT id, NAME, icon_id FROM item_template ORDER BY id ASC")->fetch_all(MYSQLI_ASSOC);
+$all_items_list = shopCatalogList($conn->query("SELECT id, NAME, icon_id FROM item_template ORDER BY id ASC")->fetch_all(MYSQLI_ASSOC));
 ?>
 
 <!DOCTYPE html>
@@ -133,7 +145,7 @@ $all_items_list = $conn->query("SELECT id, NAME, icon_id FROM item_template ORDE
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>const shopCsrf = <?php echo json_encode($_SESSION['shop_csrf']); ?>;</script>
     <script src="/admin/update_shop.js"></script>
-    
+
     <style>
         :root { --primary: #4e73df; --bg: #f0f7ff; --text: #333; --green: #28a745; }
         body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 17px; background: linear-gradient(135deg, #e0f2fe, #bae6fd); min-height: 100vh; }
@@ -154,7 +166,7 @@ $all_items_list = $conn->query("SELECT id, NAME, icon_id FROM item_template ORDE
         .tab-content { display: none; } .tab-content.active { display: block; }
         .item-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 15px; }
         .item-card { background: #fff; border-radius: 12px; border: 1px solid #b1b9d1; padding: 15px; position: relative; transition: 0.3s; display: flex; flex-direction: column; justify-content: space-between; }
-        
+
         /* CẬP NHẬT: Ẩn nút mặc định, hiện khi hover */
         .btn-delete-item { position: absolute; top: 8px; right: 8px; background: #ff4d4d; color: white; border: none; width: 29px; height: 29px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; opacity: 0; transform: scale(0.5); transition: 0.2s; }
         .btn-update-icon { position: absolute; top: 42px; right: 8px; background: #4e73df; color: white; border: none; width: 29px; height: 29px; border-radius: 50%; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; opacity: 0; transform: scale(0.5); transition: 0.2s; }
@@ -202,7 +214,9 @@ $all_items_list = $conn->query("SELECT id, NAME, icon_id FROM item_template ORDE
         .update-shop-header { border: 2px solid #2563eb; background: #eff6ff; color: #1d4ed8; padding: 12px 20px; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 16px; }
         .update-shop-header:disabled { opacity: .6; cursor: wait; }
         .add-item-header:hover { background-color: var(--green); color: white; box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3); }
-    </style>
+
+.pick-card:disabled{opacity:.5;cursor:not-allowed;background:#f1f3f7;transform:none!important;box-shadow:none!important}.pick-card small{display:block;margin-top:5px;color:#a04a34}.pick-card{font-family:inherit;color:inherit}
+</style>
 <link rel="stylesheet" href="/typography.css?v=20261014-1"><link rel="stylesheet" href="admin-ui.css?v=20261015-5"><script src="admin-ui.js?v=20261015-3" defer></script><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body class="admin-page" data-admin-page="ngoc"><?php require_once __DIR__.'/admin_ui.php'; adminPageToolbar('Cửa hàng ngọc'); ?>
 
@@ -292,11 +306,12 @@ $all_items_list = $conn->query("SELECT id, NAME, icon_id FROM item_template ORDE
             <i class="fa-solid fa-xmark" onclick="closeModal()" style="cursor:pointer;"></i>
         </div>
         <form method="POST">
+            <input type="hidden" name="csrf" value="<?=htmlspecialchars($_SESSION['shop_csrf'],ENT_QUOTES,'UTF-8')?>">
             <div class="modal-body">
                 <div class="modal-left">
                     <input type="hidden" name="id" id="edit_id">
                     <input type="hidden" name="tab_id" id="edit_tab_id"> 
-                    
+
                     <div class="form-group">
                         <label>Vật phẩm (Template ID)</label>
                         <div style="display: flex; gap: 8px;">
@@ -425,13 +440,17 @@ function openPicker(type, target = null) {
     const grid = document.getElementById('pickerGrid'); grid.innerHTML = '';
     if (type === 'item') {
         allItems.forEach(it => {
-            const div = document.createElement('div'); div.className = 'pick-card';
-            div.dataset.search = removeTones(it.NAME) + ' ' + it.id;
-            div.onclick = () => { document.getElementById("edit_temp_id").value = it.id; updateDemo(); closePicker(); };
-            div.innerHTML = `<img src="/icon/${it.icon_id}.png" onerror="this.src='/icon/0.png'"><div style="font-size:12px;">${it.NAME}</div>`;
+            const div=document.createElement('button');div.type='button';div.className='pick-card';
+            div.dataset.search=removeTones(it.NAME)+' '+it.id;div.disabled=!it.available;
+            div.title=it.available?it.NAME:it.unavailable_reason;
+            if(it.available)div.onclick=()=>{document.getElementById('edit_temp_id').value=it.id;updateDemo();closePicker();};
+            const image=document.createElement('img');image.src='/icon/'+it.icon_id+'.png';image.alt='';image.onerror=()=>{image.hidden=true;};
+            const name=document.createElement('div');name.style.fontSize='12px';name.textContent=it.NAME;
+            div.append(image,name);
+            if(!it.available){const label=document.createElement('small');label.textContent='Chưa sẵn sàng';div.append(label);}
             grid.appendChild(div);
         });
-        
+
 
 } else {
     const redIds = [0, 5, 6, 7, 14, 30, 50, 77, 103, 95, 96, 101, 106]; // Danh sách ID cần tô đỏ
@@ -439,7 +458,7 @@ function openPicker(type, target = null) {
         const div = document.createElement('div'); 
         div.className = 'pick-card';
         div.dataset.search = removeTones(opt.name) + ' ' + opt.id;
-        
+
         // Kiểm tra nếu ID nằm trong danh sách thì gán màu đỏ
         const isRed = redIds.includes(parseInt(opt.id));
         const redStyle = isRed ? 'style="color: #ff4d4d; font-weight: bold; border-color: #ff4d4d;"' : '';
@@ -450,7 +469,7 @@ function openPicker(type, target = null) {
             row.querySelector('.opt-name-display').value = `[${opt.id}] ${opt.name}`;
             updateDemo(); closePicker(); 
         };
-        
+
         // Áp dụng style vào nội dung hiển thị
         div.innerHTML = `
             <div ${redStyle}>ID: ${opt.id}</div>
@@ -491,12 +510,12 @@ function openAddModal() {
     document.getElementById("edit_sort_order").value = "0";
     document.getElementById("btn_save").name = "submit_add_item";
     document.getElementById("btn_save").innerText = "THÊM VẬT PHẨM";
-    
+
     let activeTabId = firstTabId;
     const currentTabLink = document.querySelector(".tab-link.active");
     if (currentTabLink) activeTabId = currentTabLink.getAttribute('onclick').match(/'tab-(\d+)'/)[1];
     document.getElementById("edit_tab_id").value = activeTabId;
-    
+
     document.getElementById("option_container").innerHTML = "";
     updateDemo();
     document.getElementById("editModal").style.display = "block";
@@ -512,7 +531,7 @@ function openEditModal(item) {
     document.getElementById("edit_sort_order").value = item.sort_order;
     document.getElementById("btn_save").name = "submit_edit_full";
     document.getElementById("btn_save").innerText = "LƯU DỮ LIỆU";
-    
+
     const container = document.getElementById("option_container");
     container.innerHTML = "";
     if (item.item_options_raw) {

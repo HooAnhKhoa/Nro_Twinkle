@@ -34,9 +34,19 @@ function render() {
     }
     $('pagination').replaceChildren();
     if(pages>1){
-        const prev=node('button','','← Trước'),next=node('button','','Sau →');prev.type=next.type='button';prev.disabled=page===1;next.disabled=page===pages;
-        const change=n=>{page+=n;render();window.scrollTo({top:0});$('search').focus({preventScroll:true});};
-        prev.onclick=()=>change(-1);next.onclick=()=>change(1);$('pagination').append(prev,node('span','',page+' / '+pages),next);
+        const change=target=>{page=target;render();window.scrollTo({top:0});document.querySelector('#pagination [aria-current="page"]')?.focus({preventScroll:true});};
+        const prev=node('button','','← Trước'),next=node('button','','Sau →');
+        prev.type=next.type='button';prev.disabled=page===1;next.disabled=page===pages;
+        prev.onclick=()=>change(page-1);next.onclick=()=>change(page+1);$('pagination').append(prev);
+        const visible=new Set([1,pages]);
+        for(let n=Math.max(1,Math.min(page-1,pages-2));n<=Math.min(pages,Math.max(page+1,3));n++)visible.add(n);
+        let previous=0;
+        for(const n of [...visible].sort((a,b)=>a-b)){
+            if(previous&&n-previous>1){const dots=node('span','page-gap','…');dots.setAttribute('aria-hidden','true');$('pagination').append(dots);}
+            const button=node('button','page-number',String(n));button.type='button';button.setAttribute('aria-label','Trang '+n);
+            if(n===page)button.setAttribute('aria-current','page');button.onclick=()=>change(n);$('pagination').append(button);previous=n;
+        }
+        $('pagination').append(next,node('span','page-summary','Trang '+page+' / '+pages));
     }
 }
 function facts(item) {
