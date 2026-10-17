@@ -940,3 +940,7 @@ Menu **Bot tự động** mở trang riêng trong dashboard. Thêm/bớt số bo
 PHP chỉ ghi cố định `bot-trial.properties` trong game_root được cấu hình ở `web/game_paths.php`, bằng thay file tạm cùng thư mục. Java hiện có tự đọc sau 2 giây, snapshot sau tối đa 5 giây, không cần restart. Panel tắt giữ số lượng đã chọn cho lần bật sau. Thay đổi số lượng tạo lại nhóm mô phỏng, đồ/tiến trình bot bắt đầu lại. Admin/CSRF bắt buộc cho mọi API; kiểm tra kiểu dữ liệu, giới hạn tổng, checksum cấu hình và khóa ghi để tránh ghi đè thay đổi đồng thời. Đổi bên ngoài làm mất hiệu lực nút hoàn tác cũ. Bản trước lưu ở `data/bot-panel-last-change.json`; không sửa tài khoản hoặc đồ người chơi.
 
 `test/BotPanelTest.php`: 19 kiểm tra file/cấu hình/hoàn tác/xung đột/giới hạn. `test/BotPanelHttpTest.ps1`: 15 kiểm tra HTTP trên bản QA riêng, gồm admin, CSRF, tài khoản thường, lưu/tắt/hoàn tác và lấy tên map. Không đưa các file nạp tiền đang làm dở vào menu hoặc triển khai kèm trang bot.
+
+## Bot đánh theo kiểu TĐLT (17/10/2026)
+
+Bot luyện quái và săn boss áp sát mục tiêu trong tick đánh thay vì đi từng bước. Chỉ dịch chuyển khi có thể dùng kỹ năng; sát thương, KI, hồi chiêu và hiệu ứng khống chế vẫn do SkillService kiểm tra. Không đánh xuyên map hoặc bỏ qua phạm vi đấm; giữ quyền nhặt đồ, phạm vi map và giới hạn 3 bot. Đây là mô phỏng TĐLT phía server cho bot không có client, không bật hoặc tiêu hao vật phẩm TĐLT của người chơi. Trạng thái panel ghi TĐLT khi đánh. Thêm kiểm tra áp sát từ xa, hồi chiêu và thiếu KI trong TrialBotsTest.

@@ -15,7 +15,13 @@ public class TrialBotsTest {
   Target m=new Target(z1);new Target(z2);new Target(z8);new Target(z15);
   TrialBot farm=new TrialBot(TrialBot.Mode.FARM,1);check(farm.isBot&&!farm.isPl()&&farm.getSession()==null,"bot has no account/session and cannot receive VNĐ bounty");check(farm.inventory.itemsBag.size()==100&&farm.inventory.itemsBody.size()==11,"bot bag stays within client100 slot limit");check(farm.playerSkill.skills.size()==1&&farm.playerSkill.skillSelect.template.id==0,"bot loads actual class punch skill");
   long now=System.currentTimeMillis();farm.farmRoute(now);check(farm.zone==z1,"farm enters allowed route");long power=farm.nPoint.power;
-  for(int i=0;i<15&&!m.isDie();i++){farm.playerSkill.skillSelect.lastTimeUseThisSkill=0;farm.tick(now+i*2000);}
+  farm.location.x=900;farm.location.y=400;farm.tick(now);
+  check(m.hits==1&&Math.abs(farm.location.x-m.location.x)<=70&&Math.abs(farm.location.y-m.location.y)<=70,"TDLT closes distant gap and uses real skill in same attack tick");
+  int firstHits=m.hits;int firstMp=farm.nPoint.mp;farm.tick(now+1);
+  check(m.hits==firstHits&&farm.nPoint.mp==firstMp,"TDLT repeated tick respects skill cooldown and does not spend extra KI");
+  farm.playerSkill.skillSelect.lastTimeUseThisSkill=0;farm.nPoint.mp=0;farm.tick(now+2000);
+  check(m.hits==firstHits,"TDLT cannot attack without KI");farm.nPoint.mp=firstMp;
+  for(int i=2;i<17&&!m.isDie();i++){farm.playerSkill.skillSelect.lastTimeUseThisSkill=0;farm.tick(now+i*2000);}
   check(m.hits>0&&m.isDie()&&farm.attacks>0&&farm.kills==1,"real SkillService attack damages and defeats mob");check(farm.nPoint.power>power&&farm.nPoint.tiemNang>0,"farm gains simulation power and potential");
   farm.location.x=200;farm.location.y=100;ItemMap own=new ItemMap(z1,220,1,200,100,farm.id),foreign=new ItemMap(z1,221,1,200,100,999),publicLoot=new ItemMap(z1,222,1,200,100,-1);farm.pickup();check(own.isPickedUp&&farm.pickups==1,"bot actually picks owned item");check(!foreign.isPickedUp&&!publicLoot.isPickedUp,"bot leaves other players and public loot untouched");
   for(int i=0;i<farm.inventory.itemsBag.size();i++)farm.inventory.itemsBag.set(i,ItemService.gI().createNewItem((short)650));ItemMap full=new ItemMap(z1,223,1,200,100,farm.id);farm.pickup();check(!full.isPickedUp&&z1.items.contains(full),"full bag keeps item on ground without fake removal");

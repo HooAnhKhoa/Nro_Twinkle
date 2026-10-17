@@ -91,8 +91,8 @@ public final class TrialBot extends Player {
         }
         if (mode == Mode.HUNT && ownBoss(bossTarget)) {
             if (bossTarget.zone!=zone) { bossTarget=null; return; }
-            activity = "Săn " + bossTarget.name;
-            if (approach(bossTarget.location.x,bossTarget.location.y) && ready(now)) {
+            activity = "TĐLT săn " + bossTarget.name;
+            if (ready(now) && approach(bossTarget.location.x,bossTarget.location.y)) {
                 boolean deadBefore=bossTarget.isDie(); SkillService.gI().useSkill(this,bossTarget,null,0,null); attacks++;
                 if (!deadBefore&&bossTarget.isDie()) kills++;
             }
@@ -103,8 +103,8 @@ public final class TrialBot extends Player {
                     .filter(m -> m.tempId>0 && !m.isDie() && !m.isBigBoss() && m.point.maxHp<=Math.max(10000,nPoint.dame*30))
                     .min(Comparator.comparingInt(m -> Math.abs(m.location.x-location.x))).orElse(null);
             if (mobTarget!=null) {
-                activity="Luyện quái " + mobTarget.tempId;
-                if (approach(mobTarget.location.x,mobTarget.location.y) && ready(now)) {
+                activity="TĐLT quái " + mobTarget.tempId;
+                if (ready(now) && approach(mobTarget.location.x,mobTarget.location.y)) {
                     int hp=mobTarget.point.hp; SkillService.gI().useSkill(this,null,mobTarget,0,null); attacks++;
                     if(hp>0&&mobTarget.isDie()) {
                         kills++; long gain=Math.max(100,mobTarget.point.maxHp/10); nPoint.power+=gain; nPoint.tiemNang+=gain;
@@ -116,18 +116,21 @@ public final class TrialBot extends Player {
         pickup();
     }
     private boolean ready(long now) {
-        if (now-lastAttack<Math.max(800,playerSkill.skillSelect.coolDown)
+        if (now-lastAttack<Math.max(250,playerSkill.skillSelect.coolDown)
                 || !SkillService.gI().canUseSkillWithCooldown(this) || !SkillService.gI().canUseSkillWithMana(this)) return false;
         lastAttack=now; return true;
     }
+    /** Server-side TĐLT: close the gap on an attack tick; SkillService still owns damage/KI/cooldown. */
     private boolean approach(int x,int y) {
-        int dx=x-location.x;
-        if(Math.abs(dx)>70 || Math.abs(y-location.y)>70) {
-            int nx=location.x+Math.max(-45,Math.min(45,dx));
-            int ny=location.y+Math.max(-45,Math.min(45,y-location.y));
-            PlayerService.gI().playerMove(this,nx,ny); return false;
+        if(zone==null || isDie() || effectSkill.isHaveEffectSkill())return false;
+        if(Math.abs(x-location.x)>40 || Math.abs(y-location.y)>40) {
+            int nx=Math.max(24,Math.min(x-24,zone.map.mapWidth-24));
+            int ny=Math.max(0,Math.min(y,zone.map.mapHeight-24));
+            Zone targetZone=zone;
+            PlayerService.gI().playerMove(this,nx,ny);
+            if(zone!=targetZone)return false;
         }
-        return true;
+        return Math.abs(x-location.x)<=70 && Math.abs(y-location.y)<=70;
     }
     void farmRoute(long now) {
         int[] maps=gender==1?new int[]{8,9,10,11,12,13}:gender==2?new int[]{15,16,17,18,19,20}:new int[]{1,2,3,4,5,6};
