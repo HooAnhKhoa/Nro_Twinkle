@@ -1024,3 +1024,10 @@ Kiểm tra trên DB QA: 100.000 lượt quay xác định, biên 1 và 100 ngọ
 ## Bỏ thưởng +5 Point khi hạ boss (17/10/2026)
 
 Đã bỏ 67 đoạn cộng 5 điểm sự kiện và thông báo +5 Point trong các lớp boss. Không trừ điểm đã nhận trước đó. Thưởng VNĐ, ngọc xanh ngẫu nhiên 1–100, thỏi vàng theo bậc, Ngọc Rồng và tiến độ nhiệm vụ/danh hiệu vẫn dùng cơ chế hiện tại. Sao lưu JAR trước thay đổi ở `D:/NroFreeSetup/Backups/remove-boss-five-points-20261017`.
+
+
+## Giảm tiếp thỏi vàng boss (17/10/2026)
+
+Theo yêu cầu giảm thêm 2/3 tỷ lệ và 1/2 số lượng: tỷ lệ bậc 1–5 còn 5/3%, 10/3%, 5%, 20/3%, 25/3% (panel làm tròn hiển thị hai chữ số). Lượng quay theo khoảng gốc rồi chia hai, làm tròn xuống, tối thiểu một thỏi khi trúng; khoảng hiển thị lần lượt 1, 1, 1–2, 2–4, 4–6. Ngọc xanh 1–100, VNĐ và Ngọc Rồng giữ nguyên.
+
+Journal đã tạo trước thay đổi giữ nguyên số lượng đã quay; khôi phục chấp nhận cả khoảng cũ và khoảng mới, không quay lại thưởng đang chờ. Sao lưu JAR/web ở `D:/NroFreeSetup/Backups/boss-bounty-reduced-20261017`.

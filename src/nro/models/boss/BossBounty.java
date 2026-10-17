@@ -51,7 +51,7 @@ public final class BossBounty {
                 if(!file.getFileName().toString().equals(UUID.fromString(s.key).toString()+".json")||s.account<=0||s.player<=0||!combat(s.bossKey)||s.tier==null||!TIERS.contains(s.tier)||s.loot==null||s.loot.size()>2||s.gems<0||s.gems>100)throw new IllegalArgumentException("Invalid pending bounty");
                 Set<Integer> ids=new HashSet<>();
                 for(Loot row:s.loot){if(!ids.add(row.id))throw new IllegalArgumentException("Duplicate pending loot");
-                    if(row.id==457){if(row.quantity<s.tier.barsMin||row.quantity>s.tier.barsMax)throw new IllegalArgumentException("Invalid pending bars");}
+                    if(row.id==457){if(row.quantity<barsMin(s.tier)||row.quantity>s.tier.barsMax)throw new IllegalArgumentException("Invalid pending bars");}
                     else if(row.id<15||row.id>17||row.quantity!=1)throw new IllegalArgumentException("Invalid pending ball");
                 }
                 if(s.loot.stream().filter(row->row.id>=15&&row.id<=17).count()>1)throw new IllegalArgumentException("Multiple pending balls");
@@ -72,10 +72,12 @@ public final class BossBounty {
             map>=92&&map<=94||map>=96&&map<=100||map==102||map==103?3:map>=63&&map<=83?2:1;
         int level=h==5?5:Math.max(1,Math.min(5,(h*3+d+m+2)/5));return TIERS.get(level-1);
     }
-    public static double barsPercent(Tier tier){return tier.level()*5d;}
+    public static double barsPercent(Tier tier){return tier.level()*5d/3;}
+    public static int barsMin(Tier tier){return Math.max(1,tier.barsMin()/2);}
+    public static int barsMax(Tier tier){return Math.max(1,tier.barsMax()/2);}
     public static int rollGems(Random random){return 1+random.nextInt(100);}
     public static List<Loot> roll(Tier tier,Random random){
-        List<Loot> loot=new ArrayList<>();if(random.nextDouble()*100<barsPercent(tier))loot.add(new Loot(457,tier.barsMin()+random.nextInt(tier.barsMax()-tier.barsMin()+1)));
+        List<Loot> loot=new ArrayList<>();if(random.nextDouble()*100<barsPercent(tier))loot.add(new Loot(457,Math.max(1,(tier.barsMin()+random.nextInt(tier.barsMax()-tier.barsMin()+1))/2)));
         // A single mutually exclusive draw: at most one 2/3/4-star ball per kill.
         double draw=random.nextDouble()*100;
         if(draw<tier.two())loot.add(new Loot(15,1));else if(draw<tier.two()+tier.three())loot.add(new Loot(16,1));else if(draw<tier.two()+tier.three()+tier.four())loot.add(new Loot(17,1));
@@ -86,7 +88,7 @@ public final class BossBounty {
         int index=Math.max(0,Math.min(b.currentLevel,b.data.length-1));BossData data=b.data[index];
         long hp=b.zone!=null?b.nPoint.hpMax:data.getHp()[0],damage=b.zone!=null?b.nPoint.dame:data.getDame();
         int map=b.zone!=null?b.zone.map.mapId:data.getMapJoin()!=null&&data.getMapJoin().length>0?data.getMapJoin()[0]:-1;
-        Tier t=tier(hp,damage,map);Map<String,Object> result=new LinkedHashMap<>();result.putAll(Map.of("eligible",true,"tier",t.level(),"vnd",t.vnd(),"bars_min",t.barsMin(),"bars_max",t.barsMax(),"ball_4",t.four(),"ball_3",t.three(),"ball_2",t.two(),"live",b.zone!=null));result.put("bars_percent",barsPercent(t));result.put("gems_min",1);result.put("gems_max",100);return result;
+        Tier t=tier(hp,damage,map);Map<String,Object> result=new LinkedHashMap<>();result.putAll(Map.of("eligible",true,"tier",t.level(),"vnd",t.vnd(),"bars_min",barsMin(t),"bars_max",barsMax(t),"ball_4",t.four(),"ball_3",t.three(),"ball_2",t.two(),"live",b.zone!=null));result.put("bars_percent",barsPercent(t));result.put("gems_min",1);result.put("gems_max",100);return result;
     }
     private static Grant prepare(Boss boss,Player attacker){
         Player p=attacker instanceof Pet pet?pet.master:attacker;
