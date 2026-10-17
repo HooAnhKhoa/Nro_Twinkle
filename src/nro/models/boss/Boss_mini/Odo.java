@@ -182,9 +182,6 @@ public class Odo extends Boss {
             }
 
             BadgesTaskService.updateCountBagesTask(plKill, ConstTaskBadges.O_DO, 1);
-            int diem = 5;
-            plKill.event.addEventPoint(diem);
-            Service.gI().sendThongBao(plKill, "+5 Point");
 
         } catch (Exception e) {
             e.printStackTrace();

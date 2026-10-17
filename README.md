@@ -1019,3 +1019,8 @@ Mỗi lần hạ boss hợp lệ cộng thẳng ngẫu nhiên đều 1–100 ng�
 Lưu ngọc, VNĐ và biên nhận trong cùng transaction dưới khóa người chơi; cập nhật bộ nhớ sau commit nên autosave không ghi đè. Journal lưu cố định số ngọc và kế hoạch đồ rơi, thử lại không quay lại. Nếu đang thoát/offline hoặc chạm trần tiền/ngọc, giữ thưởng chờ đăng nhập/đủ chỗ rồi thử lại. Journal cũ thiếu trường gems vẫn trả đúng phần thưởng cũ, không tự thêm ngọc. Các cột gems/gems_before/gems_after được thêm idempotent vào boss_bounty_receipt, không xóa biên nhận cũ.
 
 Kiểm tra trên DB QA: 100.000 lượt quay xác định, biên 1 và 100 ngọc, chết lặp/đồng thời, pet/bot, trigger SQL lỗi, hoàn nguyên, khôi phục journal, chạm trần, chờ đăng nhập và journal cũ. Sao lưu triển khai tại `D:/NroFreeSetup/Backups/boss-bounty-gems-20261017`. Hoàn tác JAR/web khi game dừng; giữ nguyên biên nhận và journal để tránh phát trùng hoặc mất thưởng.
+
+
+## Bỏ thưởng +5 Point khi hạ boss (17/10/2026)
+
+Đã bỏ 67 đoạn cộng 5 điểm sự kiện và thông báo +5 Point trong các lớp boss. Không trừ điểm đã nhận trước đó. Thưởng VNĐ, ngọc xanh ngẫu nhiên 1–100, thỏi vàng theo bậc, Ngọc Rồng và tiến độ nhiệm vụ/danh hiệu vẫn dùng cơ chế hiện tại. Sao lưu JAR trước thay đổi ở `D:/NroFreeSetup/Backups/remove-boss-five-points-20261017`.

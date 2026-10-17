@@ -75,9 +75,6 @@ public class SuperBu extends Boss {
 
     @Override
     public void reward(Player plKill) {
-        int diem = 5;
-        plKill.event.addEventPoint(diem);
-        Service.gI().sendThongBao(plKill, "+5 Point");
         TaskService.gI().checkDoneTaskKillBoss(plKill, this);
     }
 

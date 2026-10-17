@@ -37,9 +37,6 @@ public class SonTinh extends Boss {
     public void reward(Player plKill) {
         if (!nro.models.event.EventManager.bossEnabled(this)) return;
         nro.models.event.EventDrops.rewardStamp(this,plKill);
-        int diem = 5;
-        plKill.event.addEventPoint(diem);
-        Service.gI().sendThongBao(plKill, "+5 Point");
         this.parentBoss.playerReward = plKill;
         this.parentBoss.changeStatus(BossStatus.AFK);
     }
