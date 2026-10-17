@@ -17,6 +17,7 @@ public class SetClothes {
         this.player = player;
     }
 
+    public byte gohan;
     public byte songoku;
     public byte thienXinHang;
     public byte kirin;
@@ -81,10 +82,16 @@ public class SetClothes {
         for (int i = 0; i < 5; i++) {
             Item item = this.player.inventory.itemsBody.get(i);
 
-            // Loại bỏ điều kiện kiểm tra isNotNullItem
+            if (item == null || !item.isNotNullItem()) continue;
+            // Only actual equipped pieces count toward a set.
             boolean isActSet = false;
             for (Item.ItemOption io : item.itemOptions) {
                 switch (io.optionTemplate.id) {
+                    case 233:
+                    case 234:
+                        isActSet = true;
+                        gohan++;
+                        break;
                     case 129:
                     case 141:
                         isActSet = true;
@@ -180,6 +187,7 @@ public class SetClothes {
     }
 
     private void setDefault() {
+        this.gohan = 0;
         this.songoku = 0;
         this.thienXinHang = 0;
         this.kirin = 0;

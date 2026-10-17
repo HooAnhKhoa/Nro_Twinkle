@@ -1063,21 +1063,9 @@ public class SkillService {
                     return false;
                 }
             }
-            switch (player.playerSkill.skillSelect.template.manaUseType) {
-                case 0 -> {
-                    return player.nPoint.mp >= player.playerSkill.skillSelect.manaUse;
-                }
-                case 1 -> {
-                    int mpUse = (player.nPoint.mpMax * player.playerSkill.skillSelect.manaUse / 100);
-                    return player.nPoint.mp >= mpUse;
-                }
-                case 2 -> {
-                    return player.nPoint.mp > 0;
-                }
-                default -> {
-                    return false;
-                }
-            }
+            int cost = manaCost(player);
+            return cost >= 0 && (player.playerSkill.skillSelect.template.manaUseType != 2
+                    || player.nPoint.mp > 0) && player.nPoint.mp >= cost;
         } else {
             return false;
         }
@@ -1116,23 +1104,24 @@ public class SkillService {
         setLastTimeUseSkill(player, skillId);
     }
 
+    private int manaCost(Player player) {
+        Skill skill = player.playerSkill.skillSelect;
+        long cost = switch (skill.template.manaUseType) {
+            case 0 -> skill.manaUse;
+            case 1 -> (long) player.nPoint.mpMax * skill.manaUse / 100;
+            case 2 -> player.nPoint.mp;
+            default -> -1;
+        };
+        Intrinsic intrinsic = player.playerIntrinsic.intrinsic;
+        if (cost >= 0 && intrinsic != null && intrinsic.id == 3 && skill.template.id == Skill.THAI_DUONG_HA_SAN)
+            cost = cost * (100 - Math.max(0, Math.min(100, intrinsic.param2))) / 100;
+        return (int) Math.min(Integer.MAX_VALUE, cost);
+    }
+
     private void setMpAffterUseSkill(Player player) {
         if (player.playerSkill.skillSelect != null) {
-            switch (player.playerSkill.skillSelect.template.manaUseType) {
-                case 0 -> {
-                    if (player.nPoint.mp >= player.playerSkill.skillSelect.manaUse) {
-                        player.nPoint.setMp(player.nPoint.mp - player.playerSkill.skillSelect.manaUse);
-                    }
-                }
-                case 1 -> {
-                    int mpUse = (int) (player.nPoint.mpMax * player.playerSkill.skillSelect.manaUse / 100);
-                    if (player.nPoint.mp >= mpUse) {
-                        player.nPoint.setMp(player.nPoint.mp - mpUse);
-                    }
-                }
-                case 2 ->
-                    player.nPoint.setMp(0);
-            }
+            int cost = manaCost(player);
+            if (cost >= 0 && player.nPoint.mp >= cost) player.nPoint.setMp(player.nPoint.mp - cost);
             PlayerService.gI().sendInfoHpMpMoney(player);
         }
     }
@@ -1182,9 +1171,6 @@ public class SkillService {
                 }
             }
             case Skill.MASENKO -> {
-                if (intrinsic.id == 9) {
-                    subTimeParam = intrinsic.param1;
-                }
                 if (player.setClothes.nail == 4) {
                     subTimeParam = subTimeParam + 20; // Nếu nail = 4, cộng thêm 20
                 }
@@ -1194,9 +1180,10 @@ public class SkillService {
                 }
             }
         }
-        player.playerSkill.skillSelect.lastTimeUseThisSkill = System.currentTimeMillis() - 1;
+        subTimeParam = Math.max(0, Math.min(100, subTimeParam));
         int coolDown = player.playerSkill.skillSelect.coolDown;
         long lastTimeUseSkill = System.currentTimeMillis() - ((long) coolDown * subTimeParam / 100);
+        player.playerSkill.skillSelect.lastTimeUseThisSkill = lastTimeUseSkill;
         if (subTimeParam != 0) {
             EffectSkillService.gI().setIntrinsic(player, skillId, coolDown, lastTimeUseSkill);
         }

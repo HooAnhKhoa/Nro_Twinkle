@@ -273,7 +273,17 @@ public class EffectSkillService {
     public void releaseCooldownSkillByIntrinsic(Player player) {
         player.effectSkill.isIntrinsic = false;
         Skill skill = SkillUtil.getSkillbyId(player, player.effectSkill.skillID);
-        Service.gI().releaseCooldownSkill(player, skill);
+        if (skill == null) return;
+        skill.lastTimeUseThisSkill = System.currentTimeMillis() - skill.coolDown;
+        try {
+            Message message = new Message(-94);
+            message.writer().writeShort(skill.skillId);
+            message.writer().writeInt(0);
+            player.sendMessage(message);
+            message.cleanup();
+        } catch (Exception error) {
+            nro.models.utils.Logger.logException(EffectSkillService.class, error);
+        }
     }
 
     public void setIsBinh(Player plAtt, Player player, int time) {

@@ -143,7 +143,8 @@ public class NPoint {
     /**
      * Tỉ lệ vàng cộng thêm
      */
-    public short tlGold;
+    public int tlGold;
+    public int tlLuck;
 
     /**
      * Tỉ lệ né đòn
@@ -356,6 +357,13 @@ public class NPoint {
                             break;
                         case 99: //Xuyen giap can chien
                             this.tlxgcc += io.param;
+                            break;
+                        case 155:
+                            this.tlDame.add(-50); this.tlHp.add(-50); this.tlMp.add(-50);
+                            this.tlTNSM.add(io.param); this.tlGold += io.param;
+                            break;
+                        case 236:
+                            this.tlLuck += io.param;
                             break;
                         case 100: //+#% vàng từ quái
                             this.tlGold += io.param;
@@ -585,6 +593,13 @@ public class NPoint {
                 break;
             case 99: //Xuyen giap can chien
                 this.tlxgcc += io.param;
+                break;
+            case 155:
+                this.tlDame.add(-50); this.tlHp.add(-50); this.tlMp.add(-50);
+                this.tlTNSM.add(io.param); this.tlGold += io.param;
+                break;
+            case 236:
+                this.tlLuck += io.param;
                 break;
             case 100: //+#% vàng từ quái
                 this.tlGold += io.param;
@@ -1269,6 +1284,7 @@ public class NPoint {
         this.tlTNSM.clear();
         this.tlDameAttMob.clear();
         this.tlGold = 0;
+        this.tlLuck = 0;
         this.tlNeDon = 0;
         this.tlNeDonXinbato = 0;
         this.tlBom = 0;
@@ -1349,6 +1365,7 @@ public class NPoint {
     }
 
     public int getDameAttack(boolean isAttackMob) {
+        intrinsic = this.player.playerIntrinsic.intrinsic;
         setIsCrit();
         long dameAttack = this.dame;
         intrinsic = this.player.playerIntrinsic.intrinsic;
@@ -1407,13 +1424,13 @@ public class NPoint {
                 break;
             case Skill.MASENKO:
                 if (intrinsic != null && intrinsic.id == 9) {
-                    percentXDame += intrinsic.param1;
+                    percentDameIntrinsic = intrinsic.param1;
                 }
                 if (this.player.setClothes.nail == 5) {
                     percentXDame += 80;
                 }
 
-                percentDameSkill = skillSelect.damage + percentXDame;
+                percentDameSkill = skillSelect.damage;
                 break;
 
             case Skill.LIEN_HOAN:
@@ -1575,6 +1592,7 @@ public class NPoint {
     }
 
     public long calSucManhTiemNang(long tiemNang) {
+        intrinsic = this.player.playerIntrinsic.intrinsic;
         if (power < getPowerLimit()) {
             if (this.tlTNSM != null) {
                 for (Integer tl : this.tlTNSM) {

@@ -220,6 +220,7 @@ public class ItemTime {
             }
         }
         if (isUseCoBonLa) {
+            if (timeLengthCoBonLa <= 0) timeLengthCoBonLa = TIME_CO_BON_LA;
             long now = System.currentTimeMillis();
             long timeLeft = (lastTimeUseCoBonLa + timeLengthCoBonLa) - now;
             if (timeLeft <= 0) {

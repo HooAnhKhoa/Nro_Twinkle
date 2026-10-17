@@ -99,7 +99,7 @@ public final class October20 {
         if(!enabled()||!EventManager.enabled("mob_rewards")||!owner.isPl()||mob.zone==null||mob.isBigBoss()||mob.tempId==ConstMob.MOC_NHAN||mob.tempId==ConstMob.BU_NHIN_MA_QUAI)return;
         // Independent rolls; no fall-through into unrelated map-specific reward branches.
         int[] rates={5,5,3,1};
-        for(int i=0;i<MATERIALS.length;i++)if(PanelBridge.rollDrop("october20","october20."+MATERIAL_KEYS[i],rates[i],100))drops.add(new ItemMap(mob.zone,MATERIALS[i],1,x,y,owner.id));
+        for(int i=0;i<MATERIALS.length;i++)if(nro.models.mob.MobDropBonuses.roll(owner,"october20","october20."+MATERIAL_KEYS[i],rates[i],100))drops.add(new ItemMap(mob.zone,MATERIALS[i],1,x,y,owner.id));
     }
     private October20(){}
 }

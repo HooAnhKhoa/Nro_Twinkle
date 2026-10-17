@@ -1543,6 +1543,7 @@ public class UseItem {
             case 1635: // co bon la
                 pl.itemTime.lastTimeUseCoBonLa = System.currentTimeMillis();
                 pl.itemTime.isUseCoBonLa = true;
+                pl.itemTime.timeLengthCoBonLa = nro.models.item.ItemTime.TIME_CO_BON_LA;
                 break;
             case 1614: // nuoc mia 1
                 if (pl.itemTime.isUseNuocMia2 || pl.itemTime.isUseNuocMia3) {
