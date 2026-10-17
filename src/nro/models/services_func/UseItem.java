@@ -670,6 +670,10 @@ public class UseItem {
                                 PetService.Pet2(pl, 2076, 1752, 1753);
                                 Service.gI().point(pl);
                                 break;
+                            case 1559: // Canonical random one-piece activation capsule.
+                                try {ItemService.gI().OpenSKH(pl,1559,Util.nextInt(5));}
+                                catch(Exception error){Logger.logException(UseItem.class,error);Service.gI().sendThongBao(pl,"Chưa mở được Capsule. Hãy thử lại.");}
+                                break;
                             case 1655: // capule kich hoat
                                 UseItem.gI().CapsuleKichHoat(pl, item);
                                 break;

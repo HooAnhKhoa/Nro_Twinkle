@@ -42,12 +42,30 @@ public class TrungThuCompetitionTest{
    TrungThuCompetition.buyVip(p);ok(TrungThuRuntimeTest.qty(p,2079)==1&&p.inventory.gem==gem-20&&p.inventory.gold==gold,"VIP purchase uses configured real currency");
    ok(n(c,"SELECT score FROM trung_thu_score WHERE player_id="+p.id+" AND board='vip'")==1,"VIP purchase counted only once");
    ok(TrungThuCommerce.boxKind(2079)!=null,"VIP box has an actual open handler");
+   p.inventory.gem=10000;
+   int totalBoxes=1;
+   for(int quantity:new int[]{10,50,100}){
+    Thread.sleep(550);int beforeGems=p.inventory.gem;int beforeBoxes=TrungThuRuntimeTest.qty(p,2079);
+    TrungThuCompetition.buyVip(p,quantity);totalBoxes+=quantity;
+    ok(TrungThuRuntimeTest.qty(p,2079)==beforeBoxes+quantity&&p.inventory.gem==beforeGems-20*quantity,"bulk "+quantity+" grants exact quantity and cost");
+    ok(n(c,"SELECT score FROM trung_thu_score WHERE player_id="+p.id+" AND board='vip'")==totalBoxes,"bulk "+quantity+" counts every acquired box");
+   }
+   int boxesBefore=TrungThuRuntimeTest.qty(p,2079),gemsBefore=p.inventory.gem;
+   TrungThuCompetition.buyVip(p,11);ok(TrungThuRuntimeTest.qty(p,2079)==boxesBefore&&p.inventory.gem==gemsBefore,"unsupported batch does not charge");
+   Thread.sleep(550);p.inventory.gem=0;TrungThuCompetition.buyVip(p,100);ok(TrungThuRuntimeTest.qty(p,2079)==boxesBefore,"insufficient gems gives no boxes");p.inventory.gem=gemsBefore;
+   var npc=new nro.models.npc.Npc(0,1,0,0,13,0){public void openBaseMenu(nro.models.player.Player p){}public void confirmMenu(nro.models.player.Player p,int i){}};
+   TrungThuCompetition.openNpc(p,npc);TrungThuCompetition.confirm(p,npc,1);
+   try(var reader=new java.io.DataInputStream(new java.io.ByteArrayInputStream(p.menuPacket))){reader.readShort();String text=reader.readUTF();ok(text.contains("10 hộp:")&&text.contains("50 hộp:")&&text.contains("100 hộp:")&&reader.readUnsignedByte()==5,"native menu shows batch quantities and total prices");}
+   Thread.sleep(550);TrungThuCompetition.confirm(p,npc,1);ok(TrungThuRuntimeTest.qty(p,2079)==boxesBefore+10,"menu selection one exchanges ten boxes");
+   TrungThuCompetition.confirm(p,npc,1);ok(TrungThuRuntimeTest.qty(p,2079)==boxesBefore+10,"replayed menu packet cannot exchange twice");
+
    // Deterministic tie: earlier reached_ms precedes smaller ID; ID is final tie breaker.
    for(String board:List.of("vip","normal","vegetarian"))for(int i=0;i<105;i++)sql(c,"INSERT INTO trung_thu_score VALUES("+season+",'"+board+"',"+(3000000+i)+","+(40000-i)+","+(now+i)+")");
    sql(c,"UPDATE trung_thu_score SET score=50000,reached_ms="+now+" WHERE player_id="+p.id+" AND board='normal'");
    sql(c,"UPDATE trung_thu_score SET score=50000,reached_ms="+(now-1)+" WHERE player_id=3000001 AND board='normal'");
    sql(c,"UPDATE trung_thu_season SET end_ms="+(System.currentTimeMillis()-1));reload(c);
    ok(!nro.models.event.EventManager.enabled("trung_thu"),"event stops automatically at exclusive end");
+   int endedBoxes=TrungThuRuntimeTest.qty(p,2079);TrungThuCompetition.buyVip(p,100);ok(TrungThuRuntimeTest.qty(p,2079)==endedBoxes,"bulk exchange remains closed after event end");
    ok(n(c,"SELECT COUNT(*) FROM trung_thu_prize WHERE board IN ('vip','normal','vegetarian')")==300,"only top100 on each board receive rank packages");
    ok(n(c,"SELECT place FROM trung_thu_prize WHERE player_id="+p.id+" AND board='normal'")==2,"tied points rank earlier achievement first");
    ok(n(c,"SELECT COUNT(*) FROM trung_thu_prize WHERE board='milestone'")==105,"VIP milestone includes qualified players outside top100");

@@ -14,9 +14,10 @@ public final class TrungThuCommerce {
         if(nro.models.server.Maintenance.isRunning){Service.gI().sendThongBao(p,"Máy chủ đang bảo trì. Giao dịch chưa thực hiện.");return false;}
         return tradeCounted(p,cost,gain,-1,"");
     }
-    public static boolean tradeCounted(Player p,BagExchange.Cost cost,BagExchange.Gain gain,int item,String basis){
+    public static boolean tradeCounted(Player p,BagExchange.Cost cost,BagExchange.Gain gain,int item,String basis){return tradeCounted(p,cost,gain,item,basis,1);}
+    public static boolean tradeCounted(Player p,BagExchange.Cost cost,BagExchange.Gain gain,int item,String basis,int quantity){
         if(!nro.models.event.EventManager.allowNpc(p,"trung_thu")||nro.models.server.Maintenance.isRunning)return false;
-        BagExchange.Result result=EXCHANGE.execute(p,cost,gain,player->TrungThuCompetition.persist(player,item,basis));
+        BagExchange.Result result=EXCHANGE.execute(p,cost,gain,player->TrungThuCompetition.persist(player,item,basis,quantity));
         notifyResult(p,result);return result==BagExchange.Result.SUCCESS;
     }
     public static void notifyResult(Player p,BagExchange.Result result){

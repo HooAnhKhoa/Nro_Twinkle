@@ -15,6 +15,8 @@ public final class TrungThuCompetition {
     public record Schedule(long id,long start,long end,boolean scheduled,String basis,long gold,int gems,boolean closed){}
     private static volatile Schedule schedule;
     private static final int MENU=202610300;
+    private static final int VIP_MENU=202610301;
+    private static final int[] VIP_QUANTITIES={1,10,50,100};
     private static final BagExchange CLAIM=new BagExchange(500,System::currentTimeMillis);
     public static Boolean scheduledEnabled(){Schedule s=schedule;return s==null||!s.scheduled?null:!s.closed&&System.currentTimeMillis()>=s.start&&System.currentTimeMillis()<s.end;}
     public static void publish(Schedule s){schedule=s;}
@@ -64,26 +66,44 @@ public final class TrungThuCompetition {
     }
     public static String board(int id){if(id==2079)return "vip";if(id==2078||id==1316)return "normal";if(id==2080||id==1317)return "vegetarian";return null;}
     /** Called only inside the SAME transaction as the player's consumed/gained items and money. */
-    static void count(Connection c,Player p,int item,String basis)throws SQLException{
+    static void count(Connection c,Player p,int item,String basis)throws SQLException{count(c,p,item,basis,1);}
+    static void count(Connection c,Player p,int item,String basis,int quantity)throws SQLException{
+        if(quantity<1||quantity>100)throw new SQLException("Invalid counted quantity");
         String board=board(item);if(board==null)return;
         try(Statement q=c.createStatement();ResultSet r=q.executeQuery("SELECT * FROM trung_thu_season ORDER BY id DESC LIMIT 1 FOR UPDATE")){
             if(!r.next())return;long now=System.currentTimeMillis();
             if(!r.getBoolean("scheduled")||r.getTimestamp("closed_at")!=null||!basis.equals(r.getString("basis"))||now<r.getLong("start_ms")||now>=r.getLong("end_ms"))return;
-            try(PreparedStatement add=c.prepareStatement("INSERT INTO trung_thu_score(season_id,board,player_id,score,reached_ms) VALUES(?,?,?,1,?) ON DUPLICATE KEY UPDATE score=score+1,reached_ms=VALUES(reached_ms)")){
-                add.setLong(1,r.getLong("id"));add.setString(2,board);add.setLong(3,p.id);add.setLong(4,now);add.executeUpdate();
+            try(PreparedStatement add=c.prepareStatement("INSERT INTO trung_thu_score(season_id,board,player_id,score,reached_ms) VALUES(?,?,?,?,?) ON DUPLICATE KEY UPDATE score=score+VALUES(score),reached_ms=VALUES(reached_ms)")){
+                add.setLong(1,r.getLong("id"));add.setString(2,board);add.setLong(3,p.id);add.setInt(4,quantity);add.setLong(5,now);add.executeUpdate();
             }
         }
     }
-    static void persist(Player p,int item,String basis)throws SQLException{
+    static void persist(Player p,int item,String basis)throws SQLException{persist(p,item,basis,1);}
+    static void persist(Player p,int item,String basis,int quantity)throws SQLException{
         try(Connection c=LocalManager.getConnection()){
-            c.setAutoCommit(false);try{count(c,p,item,basis);TrungThuStore.persistBag(c,p);c.commit();}catch(SQLException e){c.rollback();throw e;}
+            c.setAutoCommit(false);try{count(c,p,item,basis,quantity);TrungThuStore.persistBag(c,p);c.commit();}catch(SQLException e){c.rollback();throw e;}
         }
     }
     public static BagExchange.Cost vipCost(){Schedule s=schedule;return s!=null&&!s.closed&&s.scheduled&&s.gold+s.gems>0?TrungThuCommerce.cost(Map.of(),s.gold,s.gems):null;}
-    public static void buyVip(Player p){
-        BagExchange.Cost cost=vipCost();
+    public static BagExchange.Cost vipCost(int quantity){
+        if(Arrays.stream(VIP_QUANTITIES).noneMatch(q->q==quantity))return null;
+        BagExchange.Cost cost=vipCost();if(cost==null)return null;
+        try{return TrungThuCommerce.cost(Map.of(),Math.multiplyExact(cost.gold(),quantity),Math.multiplyExact(cost.gems(),quantity));}
+        catch(ArithmeticException e){return null;}
+    }
+    public static void buyVip(Player p){buyVip(p,1);}
+    public static void buyVip(Player p,int quantity){
+        BagExchange.Cost cost=vipCost(quantity);
         if(cost==null||!Boolean.TRUE.equals(scheduledEnabled())){Service.gI().sendThongBao(p,"Chưa mở đổi hộp VIP. Xem lịch đua top tại Quy Lão.");return;}
-        TrungThuCommerce.tradeCounted(p,cost,TrungThuCommerce.gain(TrungThuRewards.item(2079,1,0)),2079,"acquired");
+        TrungThuCommerce.tradeCounted(p,cost,TrungThuCommerce.gain(TrungThuRewards.item(2079,quantity,0)),2079,"acquired",quantity);
+    }
+    private static void openVip(Player p,Npc npc){
+        BagExchange.Cost unit=vipCost();
+        if(unit==null||!Boolean.TRUE.equals(scheduledEnabled())){Service.gI().sendThongBao(p,"Đợt Trung Thu đã kết thúc hoặc chưa mở đổi hộp VIP.");return;}
+        var format=java.text.NumberFormat.getIntegerInstance(java.util.Locale.forLanguageTag("vi-VN"));
+        StringBuilder text=new StringBuilder("ĐỔI HỘP TRUNG THU VIP\nChọn số hộp cần đổi:\n");
+        for(int quantity:VIP_QUANTITIES){BagExchange.Cost cost=vipCost(quantity);if(cost==null){Service.gI().sendThongBao(p,"Giá hộp vượt giới hạn, cần chỉnh lại cấu hình.");return;}text.append(quantity).append(" hộp: ").append(format.format(cost.gold())).append(" vàng + ").append(format.format(cost.gems())).append(" ngọc\n");}
+        npc.createOtherMenu(p,VIP_MENU,text.toString(),"Đổi 1 hộp","Đổi 10 hộp","Đổi 50 hộp","Đổi 100 hộp","Đóng");
     }
     static List<Item> decode(String json)throws SQLException{
         try{
@@ -146,6 +166,10 @@ public final class TrungThuCompetition {
         BagExchange.Cost cost=vipCost();
         npc.createOtherMenu(p,MENU,"Đua top Trung Thu. Quà được chốt tự động khi hết lịch; có thể nhận sau khi sự kiện tắt.\n"+(cost==null?"Chưa cấu hình giá hộp VIP.":"Hộp VIP: "+cost.gold()+" vàng + "+cost.gems()+" ngọc."),"Xem top","Đổi hộp VIP","Nhận quà top","Đóng");
     }
-    public static boolean confirm(Player p,Npc npc,int select){if(p.idMark.getIndexMenu()!=MENU)return false;p.idMark.setIndexMenu(-1);switch(select){case 0->Service.gI().sendThongBaoOK(p,standings(p));case 1->buyVip(p);case 2->claim(p);}return true;}
+    public static boolean confirm(Player p,Npc npc,int select){
+        int menu=p.idMark.getIndexMenu();if(menu!=MENU&&menu!=VIP_MENU)return false;p.idMark.setIndexMenu(-1);
+        if(menu==VIP_MENU){if(select>=0&&select<VIP_QUANTITIES.length)buyVip(p,VIP_QUANTITIES[select]);return true;}
+        switch(select){case 0->Service.gI().sendThongBaoOK(p,standings(p));case 1->openVip(p,npc);case 2->claim(p);}return true;
+    }
     private TrungThuCompetition(){}
 }

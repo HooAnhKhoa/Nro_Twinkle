@@ -23,6 +23,7 @@ import nro.models.map.Zone;
 public class ItemService {
 
     private static ItemService i;
+    private static final nro.models.event.trungthu2026.BagExchange SKH_EXCHANGE = new nro.models.event.trungthu2026.BagExchange(0,System::currentTimeMillis);
 
     public static ItemService gI() {
         if (i == null) {
@@ -128,21 +129,18 @@ public class ItemService {
     }
 
     public void OpenSKH(Player player, int itemUseId, int select) throws Exception {
+        synchronized(player){
+        if(nro.models.server.Maintenance.isRunning||!player.isPl()||(itemUseId!=1559&&itemUseId!=1655))return;
         if (select < 0 || select > 4) {
             return;
         }
-        if (InventoryService.gI().getCountEmptyBag(player) <= 0) {
-            Service.gI().sendThongBao(player, "Bạn phải có ít nhất 1 ô trống trong hành trang!");
-            return;
-        }
-
         Item itemUse = InventoryService.gI().findItem(player.inventory.itemsBag, itemUseId);
-        if (itemUse == null) {
+        if (itemUse == null || !itemUse.isNotNullItem() || itemUse.quantity < 1) {
             return;
         }
 
         int gender = player.gender;
-        if (gender > 2) {
+        if (gender < 0 || gender > 2) {
             gender = 2;
         }
         int[][][] itemIds = {
@@ -182,11 +180,16 @@ public class ItemService {
 
         Item item = createItemSKH(itemId, optionRandom);
         if (item != null) {
-            InventoryService.gI().addItemBag(player, item);
-            InventoryService.gI().sendItemBags(player);
-            Service.gI().sendThongBao(player, "Bạn đã nhận được " + item.template.name);
-            InventoryService.gI().subQuantityItemsBag(player, itemUse, 1);
-            InventoryService.gI().sendItemBags(player);
+            var result=SKH_EXCHANGE.execute(player,
+                new nro.models.event.trungthu2026.BagExchange.Cost(Map.of(itemUseId,1),0,0),
+                new nro.models.event.trungthu2026.BagExchange.Gain(List.of(item),0,0,0),
+                nro.models.event.trungthu2026.TrungThuStore::persistBag);
+            if(result==nro.models.event.trungthu2026.BagExchange.Result.SUCCESS){
+                InventoryService.gI().sendItemBags(player);
+                Service.gI().sendThongBao(player,"Bạn đã nhận được "+item.template.name);
+            }else Service.gI().sendThongBao(player,result==nro.models.event.trungthu2026.BagExchange.Result.BAG_FULL
+                ?"Hành trang không đủ chỗ. Capsule được giữ nguyên.":"Chưa mở được Capsule. Vật phẩm được giữ nguyên, hãy thử lại.");
+        }
         }
     }
 
