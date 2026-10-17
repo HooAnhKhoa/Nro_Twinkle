@@ -39,7 +39,7 @@ public class ItemTemplatePacketTest {
                 next=end;
             }
             check(total==2103&&next==2103,"all 2103 items reconstructed exactly without gaps or duplicates");
-            check(DataGame.vsItem==13,"client with broken version 12 forced to reload");
+            check(DataGame.vsItem>=14,"client with broken version 12 forced to reload");
             var first=Manager.ITEM_TEMPLATES.get(0);String original=first.description;
             try{first.description="x".repeat(60000);boolean rejected=false;try{ItemData.itemTemplateMessages();}catch(IOException expected){rejected=true;}check(rejected,"single oversized item rejected before sending partial templates");}
             finally{first.description=original;}

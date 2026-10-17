@@ -44,6 +44,7 @@ for(const o of old.item_template){const target=items[itemMap[o.id]],flag=flags.g
 const restoredPath='config/teamobi-restored-flags.json';
 if(fs.existsSync(restoredPath))for(const flag of JSON.parse(fs.readFileSync(restoredPath,'utf8'))){
  const item=items[flag.item_id];
+ if(item&&flag.original_part!==undefined&&item.part===flag.original_part)item.part=flag.flag_id;
  if(!item||item.TYPE!==11||item.part!==flag.flag_id||item.icon_id!==flag.icon_id)throw Error('Recovered flag does not match canonical item '+flag.item_id);
  if(!portedFlags.some(x=>+x.id===flag.flag_id))portedFlags.push({id:flag.flag_id,icon_data:flag.frames.join(','),NAME:flag.name,gold:-1,gem:-1,icon_id:flag.icon_id});
 }

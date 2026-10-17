@@ -8,16 +8,20 @@ function restoreCanonicalFlags(mysqli $db,string $root):array{
         if($row['flag_id']<0||$row['flag_id']>255||empty($row['frames'])||count($row['frames'])>255)throw new RuntimeException('Flag protocol range');
         foreach(array_merge([$row['icon_id']],$row['frames']) as $frame){
             if(!is_int($frame)||$frame<0||$frame>32767)throw new RuntimeException('Frame protocol range');
-            foreach(range(1,4) as $zoom){$image=@getimagesize($root.'/data/icon/x'.$zoom.'/'.$frame.'.png');if(!$image||$image[0]<1||$image[1]<1)throw new RuntimeException('Missing frame '.$frame.' at x'.$zoom);}
+            foreach(range(1,4) as $zoom){$image=@getimagesize($root.'/data/icon/x'.$zoom.'/'.$frame.'.png');if(!$image||$image[0]<=1||$image[1]<=1)throw new RuntimeException('Missing frame '.$frame.' at x'.$zoom);}
         }
         $validated[]=$row;
     }
     $db->begin_transaction();
     try{
-        $added=0;
+        $added=0;$remapped=0;
         foreach($validated as $row){
             $q=$db->prepare('SELECT id,TYPE,NAME,part,icon_id FROM item_template WHERE id=? FOR UPDATE');$q->bind_param('i',$row['item_id']);$q->execute();$item=$q->get_result()->fetch_assoc();
-            if(!$item||(int)$item['TYPE']!==11||(int)$item['part']!==$row['flag_id']||(int)$item['icon_id']!==$row['icon_id']||$item['NAME']!==$row['name'])throw new RuntimeException('Canonical template differs');
+            if(!$item||(int)$item['TYPE']!==11||!in_array((int)$item['part'],[$row['flag_id'],$row['original_part']??$row['flag_id']],true)||(int)$item['icon_id']!==$row['icon_id']||$item['NAME']!==$row['name'])throw new RuntimeException('Canonical template differs');
+            if((int)$item['part']!==$row['flag_id']){
+                $update=$db->prepare('UPDATE item_template SET part=? WHERE id=?');
+                $update->bind_param('ii',$row['flag_id'],$row['item_id']);$update->execute();$remapped++;
+            }
             $q=$db->prepare('SELECT * FROM flag_bag WHERE id=? FOR UPDATE');$q->bind_param('i',$row['flag_id']);$q->execute();$existing=$q->get_result()->fetch_assoc();$frames=implode(',',$row['frames']);
             if($existing){
                 $current=array_map('intval',explode(',',$existing['icon_data']));
@@ -27,7 +31,7 @@ function restoreCanonicalFlags(mysqli $db,string $root):array{
             $q=$db->prepare('INSERT INTO flag_bag(id,icon_data,NAME,gold,gem,icon_id) VALUES(?,?,?,-1,-1,?)');
             $q->bind_param('issi',$row['flag_id'],$frames,$row['name'],$row['icon_id']);$q->execute();$added++;
         }
-        $db->commit();return ['added'=>$added,'checked'=>count($validated)];
+        $db->commit();return ['added'=>$added,'remapped'=>$remapped,'checked'=>count($validated)];
     }catch(Throwable $e){$db->rollback();throw $e;}
 }
 if(PHP_SAPI==='cli'&&realpath($_SERVER['SCRIPT_FILENAME'])===__FILE__){
