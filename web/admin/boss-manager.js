@@ -34,11 +34,11 @@ function updateTimers(){if(!chosen||!modal.open)return;byId('timers').replaceChi
 function updateBounty(){
  const box=byId('bountyPreview');if(!box||!chosen)return;box.replaceChildren();
  const profiles=(chosen.timings||[]).map(t=>t.bounty).filter(p=>p&&p.eligible);
- if(!profiles.length){box.append(node('span','Không có thưởng VNĐ/thỏi vàng bổ sung cho đối tượng này.'));return;}
+ if(!profiles.length){box.append(node('span','Không có thưởng VNĐ/ngọc xanh/thỏi vàng bổ sung cho đối tượng này.'));return;}
  const unique=[...new Map(profiles.map(p=>[`${p.tier}:${p.live}`,p])).values()];
  box.append(node('strong','Thưởng hạ boss'));
- for(const p of unique){box.append(node('p',`Bậc ${p.tier}: +${Number(p.vnd).toLocaleString('vi-VN')} VNĐ · ${p.bars_min}–${p.bars_max} thỏi vàng`));box.append(node('p',`Ngọc Rồng 2 sao ${p.ball_2}% · 3 sao ${p.ball_3}% · 4 sao ${p.ball_4}%`));}
- box.append(node('small','Ngọc quay một lượt, tối đa một viên 2–4 sao. Bậc tính theo HP, sát thương và map thực tế lúc hạ; boss đang nghỉ chỉ hiện dự kiến. Trang bị/nguyên liệu gốc giữ nguyên.'));
+ for(const p of unique){box.append(node('p',`Bậc ${p.tier}: +${Number(p.vnd).toLocaleString('vi-VN')} VNĐ · +1–100 ngọc xanh · Thỏi vàng ${p.bars_percent??100}% (${p.bars_min}–${p.bars_max} thỏi khi trúng)`));box.append(node('p',`Ngọc Rồng 2 sao ${p.ball_2}% · 3 sao ${p.ball_3}% · 4 sao ${p.ball_4}%`));}
+ box.append(node('small','Thỏi vàng quay độc lập; ngọc xanh cộng thẳng cho người hạ boss. Ngọc Rồng quay một lượt, tối đa một viên 2–4 sao. Bậc tính theo HP, sát thương và map thực tế lúc hạ; boss đang nghỉ chỉ hiện dự kiến. Trang bị/nguyên liệu gốc giữ nguyên.'));
 }
 function updateDetails(){
  if(!chosen)return;byId('bossTitle').textContent=chosen.name;byId('bossPortrait').src=chosen.image;byId('bossState').textContent=Number(chosen.enabled)?chosen.online_count+' đang xuất hiện · '+(bossLive(chosen)?'Đã kết nối server':'Chưa kết nối server'):'Boss đang tắt';

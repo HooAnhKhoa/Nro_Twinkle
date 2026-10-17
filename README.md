@@ -1008,3 +1008,14 @@ Bộ ItemTemplates phía client đánh dấu isUpToUp=false cho toàn bộ 2.103
 ItemStacks so sánh ID và đầy đủ chỉ số không phụ thuộc thứ tự; bỏ qua duy nhất option rỗng 73/0. Khác khóa giao dịch, khác chỉ số hoặc có hạn dùng/expire riêng thì giữ tách. Tối đa 99.999 món mỗi chồng; phần dư vào ô tiếp theo. Nếu thiếu chỗ, thêm đồ thất bại không sửa chồng đang có. Counter cũ của TĐLT/Porata cộng đúng số phút/số mảnh và vẫn giữ khóa giao dịch.
 
 Khi đăng nhập, túi và rương tự gộp các chồng tương thích, giữ vị trí các ô còn lại và tổng số lượng. Không ghi đè túi người đang online bằng bản sao cũ. Đã kiểm tra mẫu bốn chồng đậu 13 = 52, đồng thời replay bản sao dữ liệu hiện tại của beuyen. Sao lưu JAR/cờ template/túi-rương trước thay đổi trong `D:/NroFreeSetup/Backups/item-stacks-20261017`; hoàn tác code/JAR khi game đã dừng, khôi phục riêng cờ template khi cần, không khôi phục túi cũ sau khi người chơi đã phát sinh giao dịch.
+
+
+## Thưởng boss: tỷ lệ thỏi vàng và ngọc xanh (17/10/2026)
+
+Thay cơ chế 100% thỏi vàng bằng bậc 1/2/3/4/5 lần lượt 5%/10%/15%/20%/25%. Khi trúng vẫn ra 1–2 / 2–3 / 3–5 / 5–8 / 8–12 thỏi theo bậc. Bậc dùng chung hàm HP, sát thương và map thực tế; không nhân hệ số rơi quái. Ngọc Rồng 2–3–4 sao giữ tỷ lệ cũ, quay độc lập với thỏi vàng. Boss ngoài danh sách chiến đấu trước đây tiếp tục không có thưởng bổ sung.
+
+Mỗi lần hạ boss hợp lệ cộng thẳng ngẫu nhiên đều 1–100 ngọc xanh, cùng 1.000–5.000 VNĐ theo bậc như cũ. Panel Boss → chọn boss → thông tin hiển thị % thỏi vàng, số lượng khi trúng và khoảng ngọc. Đệ hạ boss thì chủ nhận; bot không có thưởng.
+
+Lưu ngọc, VNĐ và biên nhận trong cùng transaction dưới khóa người chơi; cập nhật bộ nhớ sau commit nên autosave không ghi đè. Journal lưu cố định số ngọc và kế hoạch đồ rơi, thử lại không quay lại. Nếu đang thoát/offline hoặc chạm trần tiền/ngọc, giữ thưởng chờ đăng nhập/đủ chỗ rồi thử lại. Journal cũ thiếu trường gems vẫn trả đúng phần thưởng cũ, không tự thêm ngọc. Các cột gems/gems_before/gems_after được thêm idempotent vào boss_bounty_receipt, không xóa biên nhận cũ.
+
+Kiểm tra trên DB QA: 100.000 lượt quay xác định, biên 1 và 100 ngọc, chết lặp/đồng thời, pet/bot, trigger SQL lỗi, hoàn nguyên, khôi phục journal, chạm trần, chờ đăng nhập và journal cũ. Sao lưu triển khai tại `D:/NroFreeSetup/Backups/boss-bounty-gems-20261017`. Hoàn tác JAR/web khi game dừng; giữ nguyên biên nhận và journal để tránh phát trùng hoặc mất thưởng.

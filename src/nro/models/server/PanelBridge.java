@@ -92,6 +92,7 @@ public final class PanelBridge {
             for(String file:new String[]{"panel_schema.sql","boss_web.sql","server_rates.sql","drop_rates.sql","drop_rules.sql","intrinsic_schema.sql","event_schema.sql","trung_thu_top_schema.sql","october20_schema.sql","boss_bounty_schema.sql","toribot_schema.sql"}) {
                 for(String sql:Files.readString(Path.of("web",file)).split(";"))if(!sql.trim().isEmpty())s.execute(sql);
             }
+            nro.models.boss.BossBounty.ensureSchema(c);
             nro.models.event.EventManager.reload(c);
             nro.models.vip.ToriVipConfig.reload(c);
             double[] defaults={50,20,10,5,1,.7,.5,.1,.1};
