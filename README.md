@@ -1040,3 +1040,10 @@ Client Unity hiện tại lưu template reset vào NRitem1 và template append v
 Server nay phát lại đầy đủ catalog bằng các gói dưới 60.000 byte ngay trước packet nhân vật ở bước client-ready của mỗi lần đăng nhập. Version item tăng 16 để loại cache version 15 thiếu dữ liệu. Không cắt mô tả, đổi ID hay xóa vật phẩm; không sửa/xóa cache client của người dùng. Do client chỉ lưu hai phần, lần đăng nhập sau vẫn cần phát lại catalog; overhead khoảng 145 KB mỗi lần vào nhân vật. Cần source client để thay cách lưu thành nhiều phần bền vững.
 
 Đã kiểm tra cache hai-slot tái hiện lỗ hổng ID, phát lại ba gói khôi phục đủ 2.103 mẫu, và kích thước frame thật. Sao lưu JAR và hai file cache gây lỗi (chỉ đọc bản gốc) tại `D:/NroFreeSetup/Backups/client-item-cache-20261017`.
+
+
+## Chặn vòng lặp tải/game ở client-ready (17/10/2026)
+
+Bản phát lại catalog ban đầu gửi lại ở mọi ready, nên chính quá trình cập nhật template tạo thêm ready và gây vòng lặp. Mỗi MySession nay ghi nhận khi catalog đã gửi đủ, chỉ phát lại khi phiên chưa có catalog. Sau phát lại chờ ready xác nhận tiếp theo rồi mới gửi nhân vật. Cổng AtomicBoolean bảo đảm khởi tạo nhân vật duy nhất một lần dù ready đến lặp/đồng thời; kết nối mới có trạng thái riêng. Không dùng trạng thái của cache trên đĩa làm bằng chứng catalog đã đủ trong phiên.
+
+Bài ClientReadyHandshakeTest đi qua Controller.messageNotMap thật, kiểm tra cached/fresh login, 100 ready lặp, catalog gửi dở/thử lại, chờ ack và ready đồng thời; spy chặn phần khởi tạo bản đồ/tài khoản thật ở biên bắt đầu nhân vật. Kiểm tra cache 2-slot và đủ 2.103 template vẫn giữ. JAR cũ được sao lưu ở `D:/NroFreeSetup/Backups/client-ready-loop-20261017`. Cần người dùng đăng nhập lại xác nhận hành trang trên client thật.

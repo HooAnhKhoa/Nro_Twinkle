@@ -17,7 +17,7 @@ public class ItemData {
     public static void updateItem(MySession session) {
         updateItemOptionItemplate(session);
         updateItemArrHead2FTemplate(session);
-        sendItemTemplates(session);
+        if(sendItemTemplates(session))session.markItemCatalogSent();
     }
 
     private static void updateItemOptionItemplate(MySession session) {
@@ -88,14 +88,16 @@ public class ItemData {
         return packets;
     }
 
-    private static void sendItemTemplates(MySession session) {
+    private static boolean sendItemTemplates(MySession session) {
         try {
             for (Message msg : itemTemplateMessages()) {
                 session.doSendMessage(msg);
                 msg.cleanup();
             }
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 

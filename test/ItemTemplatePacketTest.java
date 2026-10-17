@@ -57,6 +57,7 @@ public class ItemTemplatePacketTest {
             check(java.util.stream.IntStream.range(0,cached.length).allMatch(i->cached[i]),"ready-phase replay repairs every cached hole before character parsing");
             check(cached[1089]&&cached[1632]&&cached[2078],"Inosuke, Himmel and new event boxes all available after replay");
             if(java.nio.file.Files.exists(java.nio.file.Path.of("client-NRitem1"))){boolean[] actual=new boolean[2103];apply(java.nio.file.Files.readAllBytes(java.nio.file.Path.of("client-NRitem1")),actual);apply(java.nio.file.Files.readAllBytes(java.nio.file.Path.of("client-NRitem2")),actual);check(!actual[1089]&&actual[1632],"read-only snapshot of actual Unity cache reproduces reported gap");for(byte[] payload:savedPayloads)apply(Arrays.copyOfRange(payload,1,payload.length),actual);check(java.util.stream.IntStream.range(0,actual.length).allMatch(i->actual[i]),"same replay repairs actual client cache snapshot completely");}
+            ClientReadyHandshakeTest.run();
             var first=Manager.ITEM_TEMPLATES.get(0);String original=first.description;
             try{first.description="x".repeat(60000);boolean rejected=false;try{ItemData.itemTemplateMessages();}catch(IOException expected){rejected=true;}check(rejected,"single oversized item rejected before sending partial templates");}
             finally{first.description=original;}

@@ -24,6 +24,11 @@ public class MySession extends Session {
 
     private static final Map<String, AntiLogin> ANTILOGIN = new HashMap<>();
     public Player player;
+    private volatile boolean itemCatalogSent;
+    private final java.util.concurrent.atomic.AtomicBoolean characterLoadStarted=new java.util.concurrent.atomic.AtomicBoolean();
+    public boolean hasItemCatalog(){return itemCatalogSent;}
+    public void markItemCatalogSent(){itemCatalogSent=true;}
+    public boolean beginCharacterLoad(){return itemCatalogSent&&characterLoadStarted.compareAndSet(false,true);}
 
     public byte timeWait = 100;
     public boolean sentKey;
