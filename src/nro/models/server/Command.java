@@ -53,6 +53,9 @@ public class Command {
     }
 
     private void initAdminCommands() {
+        adminCommands.put("botstatus", p -> Service.gI().sendThongBaoOK(p, nro.models.Bot.TrialBots.gI().summary()));
+        adminCommands.put("botstart", p -> trialBots(p,true));
+        adminCommands.put("botstop", p -> trialBots(p,false));
         adminCommands.put("item", player -> Input.gI().createFormGiveItem(player));
         adminCommands.put("brl", player -> BrolyManager.gI().showListBoss(player));
         adminCommands.put("getitem", player -> Input.gI().createFormGetItem(player));
@@ -65,6 +68,11 @@ public class Command {
                 + "\nThreads: " + Thread.activeCount()
                 + " luồng" + "\n" + SystemMetrics.ToString(),
                 "Ngọc rồng", "Đệ tử", "Bảo trì", "Tìm kiếm\nngười chơi", "Boss", "Đóng"));
+    }
+
+    private void trialBots(Player p, boolean enabled) {
+        try { nro.models.Bot.TrialBots.gI().configure(enabled); Service.gI().sendThongBaoOK(p,nro.models.Bot.TrialBots.gI().summary()); }
+        catch (Exception e) { Service.gI().sendThongBao(p,"Không lưu được cấu hình bot: " + e.getMessage()); }
     }
 
     private void initParameterizedCommands() {
@@ -86,7 +94,7 @@ public class Command {
                     + "Player online : " + Client.gI().getPlayers().size() + "\n"
                     + "\b|1|Thread: " + Thread.activeCount() + "\n"
                     + "\n Sessions: " + SessionManager.gI().getNumSession() + "\n"
-                    + "Bot online : " + BotManager.gI().bot.size(),
+                    + "Bot online : " + (BotManager.gI().bot.size() + nro.models.Bot.TrialBots.gI().snapshot().size()),
                     "Bot\nPem Quái", "Bot\nBán Item", "Bot\nSăn Boss", "Bot\nAttack Player");
             return;
         });

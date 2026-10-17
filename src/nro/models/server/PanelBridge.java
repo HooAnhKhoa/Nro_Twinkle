@@ -158,6 +158,7 @@ public final class PanelBridge {
             String message;
             if(command.stale)message="Lệnh hết hạn; không thực hiện.";
             else if("kick".equals(command.action)){Player p=Client.gI().getPlayer(command.playerId);if(p==null)message="Nhân vật đã offline.";else{Client.gI().kickSession(p.getSession());message="Đã kick nhân vật theo quy trình lưu / thoát của server.";}}
+            else if("bots_start".equals(command.action)||"bots_stop".equals(command.action)){nro.models.Bot.TrialBots.gI().configure("bots_start".equals(command.action));message=nro.models.Bot.TrialBots.gI().summary();}
             else if("maintenance".equals(command.action)){Maintenance.gI().startSeconds(15);message="Đã bắt đầu bảo trì sau 15 giây.";}
             else message="Lệnh không hợp lệ.";
             try(Connection c=LocalManager.getConnection();PreparedStatement done=c.prepareStatement("UPDATE panel_command SET completed_at=NOW(),result=? WHERE id=?")){done.setString(1,message);done.setLong(2,command.id);done.executeUpdate();}

@@ -340,6 +340,7 @@ public class Zone {
 
 
                             if (InventoryService.gI().addItemBag(player, item)) {
+                                picked = true;
                                 int itemType = item.template.type;
                                 Message msg;
                                 try {

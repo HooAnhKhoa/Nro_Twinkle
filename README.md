@@ -918,3 +918,17 @@ Lượng vàng rơi = lượng gốc × (100 + tổng option 100/155 + nội t�
 Nội tại: Masenko (9) trước đây nhân hai lượt và còn giảm hồi chiêu sai mô tả; nay chỉ tăng sát thương một lượt. Hồi chiêu 3/4/5/10/11/12/15/19/20/21 đồng bộ mốc thời gian thật của server, hoàn thành hồi không tự hồi đầy KI. Thái Dương Hạ San (3) áp dụng giảm KI bằng param2 cho cả kiểm tra dùng chiêu và lượng KI trừ. Nội tại chí mạng (25), TN/SM (24) đọc giá trị hiện tại trước phép tính, không chờ một lần tấn công để cập nhật.
 
 `test/LootEffectsTest.java`: 69 kiểm tra QA bao phủ nội tại 1–25, sát thương thực, hồi chiêu server, KI, đòn kế, thay nội tại, option trang bị, set thiếu/đủ, dùng/hết hạn cỏ, xác suất nhỏ, điều kiện x0, nhặt vàng thật trên map thường/lạnh, rơi đá và nguyên liệu sự kiện. Chạy thêm 28 kiểm tra `PetGodFoodTest` để bảo đảm set thần linh của đệ vẫn rơi thức ăn đúng.
+
+## Ba bot thử nghiệm luyện quái và săn boss (17/10/2026)
+
+`TrialBots` chạy trên một vòng lặp 250 ms riêng, tối đa 3 bot theo `bot-trial.properties`: `enabled=true`, `farm=2`, `hunt=1`. Cấu hình thiếu thì không bật; thay đổi được đọc sau tối đa 2 giây. Nhóm này tách khỏi bot legacy, không tạo tài khoản/session hoặc ghi nhân vật vào DB.
+
+Hai bot `BOT Luyen1`, `BOT Luyen2` dùng kỹ năng đấm đúng chủng tộc, di chuyển tới quái còn sống, đánh theo hồi chiêu/KI thật qua SkillService, tăng sức mạnh/tiềm năng mô phỏng khi tự hạ quái, cải thiện HP/SD mỗi 10 lần hạ. Đi theo tuyến Trái Đất map 1–6 / Namếc map 8–13, đổi map mỗi 2 phút; không vào nhà/phó bản. `BOT SanBoss` tìm boss chiến đấu đang ACTIVE trên map mở (HP tối đa 200 triệu), chuyển map/khu tới boss, đánh bằng SkillService; khi không có mục tiêu thì luyện quái. Không tấn công người chơi/NPC/boss tập luyện hoặc boss đang nói chuyện.
+
+Mỗi bot có 100 ô túi, chỉ nhặt đồ có quyền sở hữu đúng ID của mình, tối đa 3 món mỗi tick, không lấy đồ công cộng/người khác. Túi đầy giữ đồ ngoài đất, không đánh dấu hoặc xóa giả. Bot chết đợi 30 giây rồi hồi sinh; có hồi phục chậm khi chạy. Đồ/sức mạnh mô phỏng không lưu sau restart; không giao dịch, không đủ điều kiện nhận thưởng VNĐ boss. `Zone.pickItem` sửa biến `picked` chưa từng được đặt true sau nhận thành công, để trạng thái nhận đồ phản ánh đúng kết quả; giữ ngoại lệ đậu thần #74 như cũ.
+
+Admin nhập chat: `botstatus` xem vị trí/trạng thái; `botstop` tắt và gỡ cả nhóm khỏi map, lưu `enabled=false`; `botstart` bật lại 2 luyện + 1 săn. PanelBridge cũng nhận các lệnh nội bộ `bots_start`/`bots_stop`. Snapshot chẩn đoán cập nhật 5 giây tại `data/trial-bots-status.json`, gồm map/khu, HP, số đòn, quái hạ, đồ nhặt, lỗi. Tắt không tạo bot trùng, không ảnh hưởng người chơi.
+
+`test/TrialBotsTest.java`: 31 kiểm tra QA với kỹ năng từ DB thật, gây sát thương/hạ quái và đánh boss qua SkillService, nhận đồ thật, giữ đồ khi đầy túi, không lấy đồ người khác, chờ hồi sinh, đổi map, boss rời map, 3 bot đúng chế độ, bật/tắt và gỡ khỏi danh sách khu. Chạy thêm 28 kiểm tra hồi quy PetGodFoodTest.
+
+Bot không có session: Service.sendMoney bỏ qua gói tin cho đối tượng không có kết nối, nhưng số dư nhặt được vẫn cập nhật trong bộ nhớ. Kiểm tra thêm nhận vàng/ngọc thực và không phát sinh log NullPointerException.

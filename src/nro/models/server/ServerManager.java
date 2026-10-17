@@ -137,6 +137,7 @@ public class ServerManager {
             new Thread(GasDestroyManager.gI(), "Update gas destroy boss").start();
 
             new Thread(BotManager.gI(), "Thread Bot Game").start();
+            new Thread(nro.models.Bot.TrialBots.gI(), "Trial bots").start();
             new Thread(ChonAiDay_Gem.gI(), "Thread MiniGame").start();
             new Thread(ChonAiDay_Gold.gI(), "Thread MiniGame").start();
             new Thread(ConSoMayManGold.gI(), "ConSoMayManGoldThread").start();
