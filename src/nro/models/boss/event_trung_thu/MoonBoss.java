@@ -30,7 +30,7 @@ public class MoonBoss extends Boss {
         String key=switch(kind){case 0->"monkey";case 1->"rabbit";default->"rival";};
         String outfitKey=switch(kind){case 0->"monkey";case 1->"rabbit";case 2->"gogeta";default->"omega";};
         int[] parts=numbers("boss."+outfitKey+"-outfit");short[] outfit={(short)parts[0],(short)parts[1],(short)parts[2],-1,-1,-1};
-        return new BossData(new String[]{"Khỉ đêm trăng","Thỏ Đại Ca","Gogeta Trung Thu","Omega Trung Thu"}[kind],(byte)2,outfit,number("boss."+key+"-damage"),new int[]{number("boss."+key+"-hp")},numbers(kind==0?"map.monkey":kind==1?"map.rabbit":"map.rivals"),new int[][]{{Skill.GALICK,1,1000},{Skill.ANTOMIC,1,3000}},new String[]{},new String[]{},new String[]{},number("boss.rival-rest-seconds"));
+        return new BossData(new String[]{"Khỉ Xayda","Thỏ Đại Ca","Gogeta Trung Thu","Omega Trung Thu"}[kind],(byte)2,outfit,number("boss."+key+"-damage"),new int[]{number("boss."+key+"-hp")},numbers(kind==0?"map.monkey":kind==1?"map.rabbit":"map.rivals"),new int[][]{{Skill.GALICK,1,1000},{Skill.ANTOMIC,1,3000}},new String[]{},new String[]{},new String[]{},number("boss.rival-rest-seconds"));
     }
     public static boolean immune(Player player){return player instanceof MoonBoss boss&&boss.kind==0;}
     public static boolean basic(Player attacker){if(attacker==null||!attacker.isPl()||attacker.playerSkill.skillSelect==null)return false;int id=attacker.playerSkill.skillSelect.template.id;return id==Skill.DRAGON||id==Skill.DEMON||id==Skill.GALICK||id==Skill.KAMEJOKO||id==Skill.MASENKO||id==Skill.ANTOMIC;}
@@ -63,7 +63,7 @@ public class MoonBoss extends Boss {
             int count=Util.nextInt(number("drop.material-min"),number("drop.material-max"));
             if(nro.models.server.PanelBridge.rollDrop("trung_thu",kind==0?"trung_thu.monkey_tail":"trung_thu.carrot",100,100))
                 Service.gI().dropItemMap(zone,new ItemMap(zone,item(kind==0?"monkey-tail":"carrot"),count,location.x,location.y,p.id));
-            if(kind==0)TrungThuRuntime.monkeyReward(p);
+
         }else{
             if(nro.models.server.PanelBridge.rollDrop("trung_thu",kind==2?"trung_thu.gogeta_costume":"trung_thu.omega_costume",number("drop.costume-percent"),100)){int[] days=numbers("reward.costume-days");drop(p,TrungThuRewards.item(kind==2?"gogeta-costume":"omega-costume",1,days[Util.nextInt(0,days.length-1)]));}
             if(nro.models.server.PanelBridge.rollDrop("trung_thu",kind==2?"trung_thu.gogeta_board":"trung_thu.omega_board",number("drop.board-percent"),100))drop(p,TrungThuRewards.item("moon-board",1,Util.isTrue(number("drop.board-permanent-percent"),100)?0:number("drop.board-days")));

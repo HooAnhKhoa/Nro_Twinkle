@@ -17,15 +17,19 @@ public final class TrungThuQuest {
         var task=p.playerTask.sideTask;
         if(!enabled()||task.template==null||!task.isDone()||(task.level!=ConstTask.HARD&&task.level!=ConstTask.VERY_HARD))return false;
         String kind="quest_"+task.level;
+        boolean lanternEligible;
         try(Connection c=LocalManager.getConnection()){
-            if(TrungThuStore.claimed(c,p.id,kind))return false;
+            lanternEligible=!TrungThuStore.claimed(c,p.id,kind);
         }catch(SQLException error){Service.gI().sendThongBao(p,"Chưa đọc được thưởng Trung Thu. Nhiệm vụ được giữ nguyên.");return true;}
         boolean hard=task.level==ConstTask.HARD;
-        var rewards=List.of(TrungThuRewards.item(hard?706:705,1,30),TrungThuRewards.item("lantern-offering",number(hard?"quest.hard-lanterns":"quest.very-hard-lanterns"),0),TrungThuRewards.item("lotus-seed",number("quest.lotus-seeds"),0));
+        List<nro.models.item.Item> rewards=new ArrayList<>();
+        rewards.add(TrungThuRewards.item(hard?706:705,1,30));
+        rewards.add(TrungThuRewards.item("lotus-seed",number("quest.lotus-seeds"),0));
+        if(lanternEligible)rewards.add(TrungThuRewards.item("lantern-offering",number(hard?"quest.hard-lanterns":"quest.very-hard-lanterns"),0));
         var result=EXCHANGE.execute(p,TrungThuCommerce.cost(Map.of(),0,0),new BagExchange.Gain(rewards,hard?ConstTask.GOLD_HARD:ConstTask.GOLD_VERY_HARD,0,0),player->{
             try(Connection c=LocalManager.getConnection()){
                 c.setAutoCommit(false);try{
-                    TrungThuStore.receipt(c,p.id,kind);TrungThuStore.persistBag(c,p);
+                    if(lanternEligible)TrungThuStore.receipt(c,p.id,kind);TrungThuStore.persistBag(c,p);
                     JSONArray reset=new JSONArray();reset.add(-1);reset.add(task.receivedTime);reset.add(0);reset.add(task.maxCount);reset.add(task.leftTask);reset.add(0);
                     try(PreparedStatement q=c.prepareStatement("UPDATE player SET data_side_task=? WHERE id=?")){q.setString(1,reset.toJSONString());q.setLong(2,p.id);q.executeUpdate();}c.commit();
                 }catch(SQLException error){c.rollback();throw error;}

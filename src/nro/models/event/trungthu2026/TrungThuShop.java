@@ -39,6 +39,8 @@ public final class TrungThuShop {
         seed(c, summons, item("moon"), number("price.moon-gems"), 1, 0);
         seed(c, summons, item("rabbit-summon"), number("price.rabbit-gold"), 0, 1);
         seed(c, goods, item("lantern-offering"), number("price.lantern-gems"), 1, 0);
+        migrateBox(c,goods,item("legacy-normal-box"),item("normal-box"));
+        migrateBox(c,goods,item("legacy-vegetarian-box"),item("vegetarian-box"));
         seed(c, goods, item("normal-box"), number("price.normal-box-gems"), 1, 1);
         seed(c, goods, item("vegetarian-box"), number("price.vegetarian-box-gold"), 0, 2);
         int[] rabbits = numbers("item.rabbit-costumes");
@@ -57,6 +59,11 @@ public final class TrungThuShop {
                     "SD, HP và KI +"+cake.percent()+"% trong 10 phút. Chỉ một cấp bánh có hiệu lực.", cake.id());
             order++;
         }
+    }
+
+    private static void migrateBox(Connection c,int tab,int oldId,int newId)throws SQLException{
+        if(oldId!=newId&&id(c,"SELECT id FROM item_shop WHERE tab_id=? AND temp_id=?",tab,newId)<0)
+            execute(c,"UPDATE item_shop SET temp_id=? WHERE tab_id=? AND temp_id=?",newId,tab,oldId);
     }
 
     private static int tab(Connection c, int shop, String name) throws SQLException {

@@ -16,7 +16,7 @@ public final class TrungThuClan {
     public static synchronized void click(Player p,String kind){
         if(!Set.of("parade","attendance").contains(kind)||!nro.models.event.EventManager.allowNpc(p,"trung_thu"))return;
         if(p.clan==null||p.zone==null||p.zone.map.mapId!=number("map.clan-area")||!equipped(p)){Service.gI().sendThongBao(p,"Cần ở Lãnh địa Bang Hội và đeo lồng đèn/cờ lồng đèn.");return;}
-        Clan clan=p.clan;String key=clan.id+":"+kind;String day=TrungThuStore.today();long now=System.currentTimeMillis();
+        Clan clan=p.clan;String key=clan.id+":"+kind;String day=TrungThuStore.today();long now=System.currentTimeMillis();Set<Long> awarded=Set.of();
         try(Connection c=LocalManager.getConnection()){
             if(TrungThuStore.claimed(c,clan.id,kind)){Service.gI().sendThongBao(p,"Bang đã nhận thưởng hoạt động này hôm nay.");return;}
             Session session=SESSIONS.get(key);
@@ -36,12 +36,13 @@ public final class TrungThuClan {
                 TrungThuStore.receipt(c,clan.id,kind);
                 long until=now+number(kind.equals("parade")?"buff.parade-minutes":"buff.attendance-minutes")*60000L;
                 try(PreparedStatement update=c.prepareStatement("INSERT INTO trung_thu_2026_state(player_id,double_until) VALUES(?,?) ON DUPLICATE KEY UPDATE double_until=GREATEST(double_until,VALUES(double_until))")){
-                    for(var member:new ArrayList<>(clan.members)){update.setLong(1,member.id);update.setLong(2,until);update.addBatch();}update.executeBatch();
+                    for(long id:session.roster){update.setLong(1,id);update.setLong(2,until);update.addBatch();}update.executeBatch();
                 }c.commit();
             }catch(SQLException error){c.rollback();throw error;}
-            for(var member:new ArrayList<>(clan.members))TrungThuStore.invalidate(member.id);
-            SESSIONS.remove(key);Service.gI().sendThongBao(p,"Cả bang đã nhận X2 EXP 1 giờ. Mỗi loại hoạt động nhận một lần/ngày.");
-        }catch(SQLException error){nro.models.utils.Logger.logException(TrungThuClan.class,error);Service.gI().sendThongBao(p,"Chưa lưu được thưởng bang hội, hãy thử lại.");}
+            awarded=session.roster;SESSIONS.remove(key);
+        }catch(SQLException error){nro.models.utils.Logger.logException(TrungThuClan.class,error);Service.gI().sendThongBao(p,"Chưa lưu được thưởng bang hội, hãy thử lại.");return;}
+        for(long id:awarded)TrungThuStore.invalidate(id);
+        Service.gI().sendThongBao(p,"Các thành viên tham gia đã nhận X2 EXP 1 giờ. Mỗi loại hoạt động nhận một lần/ngày.");
     }
     private TrungThuClan(){}
 }

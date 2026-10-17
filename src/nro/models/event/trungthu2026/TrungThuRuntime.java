@@ -30,7 +30,7 @@ public final class TrungThuRuntime {
         for(String table:List.of("tails","carrots","lantern","normal-box","vegetarian-box"))TrungThuRewards.table(table);
         for(String key:List.of("moon","rabbit-summon","two-can-lantern","moon-board","omega-costume","normal-box","vegetarian-box","chicken-cake","lotus-cake"))ItemService.gI().getTemplate((short)item(key));
         monkey=new MoonBoss.Monkey();rabbit=new MoonBoss.Rabbit();new MoonBoss.Gogeta();new MoonBoss.Omega();
-        for(nro.models.map.Map map:Manager.MAPS)if(map.mapId==5||map.mapId==84){
+        for(nro.models.map.Map map:Manager.MAPS)if(Arrays.stream(numbers("map.event-npc")).anyMatch(id->id==map.mapId)){
             if(map.npcs.stream().noneMatch(n->n.tempId==number("npc.event")))map.addNpc(NpcFactory.createNPC(map.mapId,1,Math.min(520,map.mapWidth-80),map.yPhysicInTop(Math.min(520,map.mapWidth-80),0),number("npc.event")));
         }
     }
@@ -38,7 +38,7 @@ public final class TrungThuRuntime {
         if(TrungThuCakeBuff.use(p,used))return true;
         int id=used.template.id;
         if(id==item("monkey-tail")){Service.gI().sendThongBao(p,"Gom "+number("exchange.monkey-tails")+" đuôi khỉ, đổi tại NPC Trung Thu.");return true;}
-        if(id==item("normal-box")||id==item("vegetarian-box"))return TrungThuCommerce.useBox(p,used);
+        if(TrungThuCommerce.boxKind(id)!=null)return TrungThuCommerce.useBox(p,used);
         if(id!=item("moon")&&id!=item("rabbit-summon"))return false;
         if(!nro.models.event.EventManager.allowNpc(p,"trung_thu"))return true;
         synchronized(p){MoonBoss boss=id==item("moon")?monkey:rabbit;
@@ -56,14 +56,6 @@ public final class TrungThuRuntime {
                 boss.arm(zone);InventoryService.gI().sendItemBags(p);Service.gI().sendThongBao(p,"Boss sẽ xuất hiện tại "+zone.map.mapName+", khu "+zone.zoneId+".");
             }
         }return true;
-    }
-    public static void monkeyReward(Player killer){
-        long now=System.currentTimeMillis();String race=killer.gender==1?"namec":killer.gender==0?"earth":"xayda";
-        java.util.Map<Long,Long> grants=new HashMap<>();
-        if(killer.clan!=null)for(var member:new ArrayList<>(killer.clan.members))grants.put((long)member.id,now+number("buff.monkey.clan-minutes")*60000L);
-        grants.merge(killer.id,now+number("buff.monkey."+race+"-minutes")*60000L,Math::max);
-        TrungThuStore.grantBatch("monkey_until",grants);
-        Service.gI().sendThongBao(killer,"Bạn nhận X3 EXP Trung Thu. Thời gian vẫn trôi khi offline; không cộng với bùa trí tuệ/X2.");
     }
     public static void touchRabbit(Player p){
         Item costume=p.inventory.itemsBody.size()>5?p.inventory.itemsBody.get(5):null;

@@ -38,7 +38,7 @@ public final class TrungThuStore {
     }
     public static int multiplier(Player player){
         if(!TrungThuConfig.enabled()||!player.isPl())return 1;
-        State state=state(player);long now=System.currentTimeMillis();return state.monkeyUntil>now?3:state.doubleUntil>now?2:1;
+        State state=state(player);long now=System.currentTimeMillis();return state.doubleUntil>now?2:1;
     }
     public static boolean carrot(Player p){return TrungThuConfig.enabled()&&p.isPl()&&state(p).carrotUntil>System.currentTimeMillis();}
     public static void invalidate(long id){synchronized(CACHE){CACHE.keySet().removeIf(p->p.id==id);}}
@@ -51,13 +51,15 @@ public final class TrungThuStore {
             c.setAutoCommit(false);try{
                 for(var grant:grants.entrySet()){q.setLong(1,grant.getKey());q.setLong(2,grant.getValue());q.addBatch();}q.executeBatch();c.commit();
             }catch(SQLException error){c.rollback();throw error;}
-            for(long id:grants.keySet())invalidate(id);
         }catch(SQLException error){throw new IllegalStateException("Không lưu được buff Trung Thu",error);}
+        // Release the only SQL connection before taking the shared state-cache monitor.
+        for(long id:grants.keySet())invalidate(id);
     }
     public static void side(Player p,int side)throws SQLException{
         try(Connection c=LocalManager.getConnection();PreparedStatement q=c.prepareStatement("INSERT INTO trung_thu_2026_state(player_id,side) VALUES(?,?) ON DUPLICATE KEY UPDATE side=VALUES(side)")){
-            q.setLong(1,p.id);q.setInt(2,side);q.executeUpdate();CACHE.remove(p);
+            q.setLong(1,p.id);q.setInt(2,side);q.executeUpdate();
         }
+        CACHE.remove(p);
     }
     public static String bag(Player p){
         JSONArray bag=new JSONArray();

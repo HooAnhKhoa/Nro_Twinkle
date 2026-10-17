@@ -19,12 +19,12 @@ function check(bool $condition,string $message):void{
     echo "PASS: $message\n";
 }
 $expected=[
-    'item.two-can-lantern'=>[1047,11,'Lồng đèn lon'],
+    'item.two-can-lantern'=>[1888,11,'Lồng đèn 2 lon'],
     'item.moon-board'=>[735,23,'Lồng đèn cá chép'],
-    'item.omega-costume'=>[1685,5,'CT rồng'],
+    'item.omega-costume'=>[1685,5,'CT Omega'],
     'item.premium-chicken-cake'=>[890,27,'Bánh trung thu Gà quay'],
-    'item.normal-box'=>[1316,27,'Giỏ bánh trung thu'],
-    'item.vegetarian-box'=>[1317,27,'Giỏ bánh trung thu độc đáo']
+    'item.normal-box'=>[2078,27,'Hộp bánh Trung Thu 2026'],
+    'item.vegetarian-box'=>[2080,27,'Hộp bánh Trung Thu Chay 2026']
 ];
 $rows=[];
 foreach($expected as $key=>[$id,$type,$name]){
@@ -38,7 +38,7 @@ foreach($expected as $key=>[$id,$type,$name]){
     }
     $rows[$key]=$item;
 }
-check((int)$rows['item.two-can-lantern']['part']===80,'lantern has an existing wearable back part');
+check((int)$rows['item.two-can-lantern']['part']===162,'lantern has the restored canonical two-can back part');
 $mountPart=(int)$rows['item.moon-board']['part'];
 foreach([0,1] as $direction){
     $name='mount_'.$mountPart.'_'.$direction;
@@ -59,5 +59,5 @@ $npcId=(int)$config['npc.lantern-offering'];
 $statement=$conn->prepare('SELECT NAME FROM npc_template WHERE id=?');
 $statement->bind_param('i',$npcId);$statement->execute();$npc=$statement->get_result()->fetch_assoc();
 check($npc!==null&&$npcId===(int)$config['npc.event']&&$npc['NAME']==='Trung thu','lantern offering reuses the existing event NPC');
-check($config['map.rabbit']==='84'&&$config['shop.vip-enabled']==='false','supermarket-only rabbit and disabled VIP box remain unchanged');
+check($config['map.rabbit']==='84,126'&&$config['shop.vip-enabled']==='false','rabbit includes public Santa while VIP ranking box stays excluded');
 echo "PASS: $checks resource checks; no templates, players or running server changed\n";

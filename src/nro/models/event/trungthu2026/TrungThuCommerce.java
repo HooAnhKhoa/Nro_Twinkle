@@ -49,8 +49,13 @@ public final class TrungThuCommerce {
     public static void pet(Player p,int select){String[] pets={"grey-rabbit","white-rabbit","black-cat"};if(select<0||select>2)return;
         trade(p,petCost(select),gain(TrungThuRewards.item(pets[select],1,TrungThuRewards.petDays(RANDOM))));
     }
+    public static String boxKind(int id){
+        if(id==item("normal-box")||id==item("legacy-normal-box"))return "normal-box";
+        if(id==item("vegetarian-box")||id==item("legacy-vegetarian-box"))return "vegetarian-box";
+        return null;
+    }
     public static boolean useBox(Player p,Item box){
-        String key=box.template.id==item("normal-box")?"normal-box":box.template.id==item("vegetarian-box")?"vegetarian-box":null;
+        String key=boxKind(box.template.id);
         if(key==null)return false;
         synchronized(p){if(!p.inventory.itemsBag.contains(box)||box.quantity<1)return true;trade(p,cost(Map.of((int)box.template.id,1),0,0),TrungThuRewards.roll(key,RANDOM));}return true;
     }

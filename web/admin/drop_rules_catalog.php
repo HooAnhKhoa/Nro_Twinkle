@@ -46,10 +46,10 @@ function dropRules(): array {
     $add('trung_thu.chicken','trung_thu','Gà quay nguyên con #887',2,'Quái ở bản đồ thường và bản đồ riêng',$tt);
     $add('trung_thu.flour','trung_thu','Bột mì #888',5,'Doanh trại, Kho báu, Con đường rắn độc, Khí gas hủy diệt',$tt);
     $add('trung_thu.beans','trung_thu','Đậu xanh #889',5,'Doanh trại, Kho báu, Con đường rắn độc, Khí gas hủy diệt',$tt);
-    $add('trung_thu.monkey_tail','trung_thu','Đuôi khỉ #1045',100,'Khỉ đêm trăng · map 37/20/19','Boss được triệu hồi bằng Ánh trăng. Giữ số lượng 1–3 và thưởng EXP khi hạ boss.');
-    $add('trung_thu.carrot','trung_thu','Củ cà rốt #462',100,'Thỏ Đại Ca · Siêu Thị (84)','Boss được triệu hồi bằng Thỏ ngọc. Giữ số lượng 1–3 mỗi lần rơi.');
+    $add('trung_thu.monkey_tail','trung_thu','Đuôi khỉ #1045',100,'Khỉ Xayda · map 37/20/19','Boss được triệu hồi bằng Ánh trăng. Rơi 1–3 đuôi khỉ, không tặng buff X3 TNSM.');
+    $add('trung_thu.carrot','trung_thu','Củ cà rốt #462',100,'Thỏ Đại Ca · Siêu Thị (84), Thành phố Santa (126)','Boss được triệu hồi bằng Thỏ ngọc. Giữ số lượng 1–3 mỗi lần rơi.');
     $add('trung_thu.gogeta_costume','trung_thu','Cải trang Gogeta',20,'Gogeta Trung Thu · Siêu Thị (84)','Giữ điều kiện phe đối lập, kiếm gỗ và hạn dùng 3/5/7/15 ngày.');
-    $add('trung_thu.omega_costume','trung_thu','Cải trang phe Omega',20,'Omega Trung Thu · Siêu Thị (84)','Dùng cải trang rồng thay thế; giữ điều kiện phe đối lập, kiếm gỗ và hạn dùng.');
+    $add('trung_thu.omega_costume','trung_thu','Cải trang phe Omega',20,'Omega Trung Thu · Siêu Thị (84)','Dùng CT Omega #1685; giữ điều kiện phe đối lập, kiếm gỗ và hạn dùng.');
     $add('trung_thu.gogeta_board','trung_thu','Ván bay cung trăng · Gogeta',1,'Gogeta Trung Thu · Siêu Thị (84)','Dùng lồng đèn cá chép thay thế. Khi đã rơi, giữ 1% vĩnh viễn / 99% hạn 7 ngày.');
     $add('trung_thu.omega_board','trung_thu','Ván bay cung trăng · Omega',1,'Omega Trung Thu · Siêu Thị (84)','Dùng lồng đèn cá chép thay thế. Khi đã rơi, giữ 1% vĩnh viễn / 99% hạn 7 ngày.');
     foreach(['roses'=>['Hoa hồng giấy #1508',5],'paper'=>['Giấy màu #1505',5],'chocolate'=>['Sôcôla Trái Tim #1507',3],'bow'=>['Nơ trang trí #1509',1]] as $key=>$item)$add('october20.'.$key,'october20',$item[0],$item[1],'Quái thường ở mọi map','Cần bật 20/10 và Vật phẩm EV; trừ mộc nhân, bù nhìn và big boss.');

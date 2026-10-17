@@ -3,6 +3,8 @@ require __DIR__.'/../web/admin/drop_rules_catalog.php';
 require __DIR__.'/../web/admin/drop_catalog.php';
 $rules=dropRules();$catalog=dropCatalog();$source=file_get_contents(__DIR__.'/../src/nro/models/mob/Mob.java');
 preg_match_all('/PanelBridge\.rollDrop\("([a-z_]+)","([a-z_.0-9]+)"/',$source,$matches,PREG_SET_ORDER);
+preg_match_all('/MobDropBonuses\\.roll\\([^,]+,\\s*"([a-z_]+)",\\s*"([a-z_.0-9]+)"/',$source,$luckMatches,PREG_SET_ORDER);
+$matches=array_merge($matches,$luckMatches);
 $found=[];foreach($matches as $m){if(!isset($rules[$m[2]])||$rules[$m[2]]['category']!==$m[1])throw new RuntimeException('Invalid mapping '.$m[2]);$found[$m[2]]=true;}
 if(!str_contains($source,'MapService.gI().isMapCold(mapid) ? "upgrade_stone.cold" : "upgrade_stone.normal"'))throw new RuntimeException('Stone regions not exclusive');
 $found['upgrade_stone.cold']=$found['upgrade_stone.normal']=true;

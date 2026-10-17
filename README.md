@@ -341,118 +341,90 @@ Các nguồn chính: OngGiaNoel.java, ChristmasGifts.java, Santa.java, Zone.java
 ---
 
 <a id="doc-trung-thu-2026"></a>
-## Hướng dẫn Trung Thu
+## Hướng dẫn Trung Thu 2026
 
-## Trung Thu 2026
-
-Đã nạp trên máy chính ngày 15/10/2026. Giữ công tắc Trung Thu đang bật và các sự kiện khác theo trạng thái có sẵn. Xác nhận heartbeat game, bốn định nghĩa boss mới, Gogeta/Omega đang ở Siêu Thị; Khỉ/Thỏ chưa gọi không tự xuất hiện. JAR SHA256: `4EB31E96DF88C81B445B5529859DFA541B5D03FE0579606DD53E66EA66F0C74E`.
-
-Bản sao lưu trước khi nạp: `C:\Downloads\NroFreeSetup\Backups\trung-thu-20261015-131337`. Server tiếp tục dùng cùng cửa sổ `run.bat`, không mở thêm terminal.
+Cập nhật ngày 17/10/2026 theo thể lệ mới: săn Khỉ/Thỏ, làm bánh, đổi pet, treo đèn, Gogeta–Omega, rước đèn và shop. Bỏ đua top, khuyến mãi nạp và mọi buff X3 từ Khỉ, kể cả hạn X3 cũ đã lưu. Công tắc vẫn bật/tắt thủ công trên web theo lựa chọn trước; không áp dụng lại lịch tháng 8–9 đã qua.
 
 ### Cách chơi
 
-1. Web → Sự kiện → Trung Thu 2026 để bật/tắt thủ công. Không chạy theo lịch cũ. Bật **Vật phẩm EV từ quái** nếu muốn rơi nguyên liệu làm bánh.
-2. Gặp NPC **Trung thu** tại Đảo Kame hoặc Siêu Thị. Các NPC này tự ẩn khi tắt sự kiện.
-3. Mua **Ánh trăng tròn** 10 ngọc rồi dùng: gọi một Khỉ tại map ngẫu nhiên trong Thung lũng đen (37), Vách núi đen (20), Thành phố Vegeta (19). Thông báo cho biết map/khu. Chỉ có một Khỉ được gọi tại một thời điểm; gọi khi đã có Khỉ không mất vật phẩm. Khỉ chỉ nhận đấm/chưởng cơ bản của người chơi, miễn khống chế. Hạ Khỉ rơi 1–3 đuôi, nhận X3 EXP: Namec 50 phút, Trái Đất 40 phút, Xayda 30 phút; thành viên bang kể cả offline nhận 20 phút.
-4. **Thỏ ngọc** 10 triệu vàng gọi Thỏ Đại Ca tại Siêu Thị (84), chưa mở map Santa. Đến gần trong phạm vi 40 bị hóa cà rốt 5 phút, giảm 15% sát thương. Cải trang Thỏ đỏ Chi Chi/Thỏ đen Android 18 miễn hóa cà rốt. Hạ Thỏ rơi 1–3 cà rốt.
-5. Đổi 99 đuôi hoặc 99 cà rốt tại NPC Trung thu; treo mỗi lần 1 **Lồng đèn treo** để nhận quà. Thưởng theo bảng đã duyệt. Treo đèn dùng menu NPC hiện có.
-6. Chọn phe Gogeta hoặc Omega; NPC cấp một **Kiếm gỗ** không giao dịch. Giữ kiếm trong túi và cờ đúng phe, đánh boss đối lập tại Siêu Thị. Có 20% nhận cải trang đối lập hạn 3/5/7/15 ngày; lượt riêng 1% ra thú cưỡi, trong đó 1% vĩnh viễn, còn lại 7 ngày. Hai boss hồi sau 15 phút, tồn tại tối đa 15 phút mỗi lượt.
-7. Làm bánh bằng trứng/gà (mỗi nhóm 2% ở map thường) và bột/đậu (mỗi nhóm 5% ở doanh trại, kho báu, đường rắn, khí gas). Đệ tử đánh quái cũng có thể rơi nguyên liệu cho chủ. Mộc nhân/bù nhìn/big boss không rơi nguyên liệu qua nhánh này.
-8. Mỗi công thức: 10 bột + 10 đậu + 2 trứng, thêm 1 gà và 20 triệu vàng để làm bánh Gà quay; trả 20 ngọc thay vàng được cùng bánh Gà quay và 30% thêm bánh Thập Cẩm. Bánh Hạt sen dùng 1 hạt sen thay gà, trả 20 ngọc.
-9. Đổi 20 Gà quay → Thỏ xám; 10 Thập Cẩm → Thỏ trắng; 10 Hạt sen → Mèo đen đuôi vàng. Hạn 3/5/7/15 ngày/vĩnh viễn theo tỷ lệ 40/30/20/9/1%.
-10. Bò Mộng có thêm mức **Siêu khó**. Lần trả nhiệm vụ Khó đầu tiên mỗi ngày nhận 1 đèn + 1 hạt sen; Siêu khó nhận 2 đèn + 1 hạt sen. Mỗi mức nhận riêng một lần/ngày, ngoài thưởng nhiệm vụ thường.
-11. Quy Lão → Nói chuyện → Về khu vực bang. Đeo lồng đèn/cờ lồng đèn, gặp Giu-ma Đầu Bò, bang chủ bắt đầu Rước đèn hoặc Điểm danh Trung Thu. Danh sách chốt theo người đang online, ở cùng khu và đeo đèn; từng người xác nhận. Đủ người thì toàn bang, kể cả offline, nhận X2 EXP 1 giờ. Mỗi loại hoạt động một lần/ngày theo giờ Việt Nam. Thành viên bỏ khu/tháo đèn làm hủy lượt; lượt chờ hết sau 5 phút. Bang chủ có thể bắt đầu lại nếu chưa nhận thưởng.
+1. Web → Sự kiện → Trung Thu 2026 để bật/tắt. Bật thêm Vật phẩm EV từ quái để rơi nguyên liệu. Tắt sẽ ẩn NPC sự kiện, dừng boss, chặn mua/đổi/dùng vật phẩm và tạm ngừng buff; đồ đang có được giữ nguyên.
+2. NPC Trung Thu ở Đảo Kame (5), Siêu Thị (84), Thành phố Santa (126). Menu có Thể lệ và Đến Santa/Về Siêu Thị. Santa 149 là map phó bản Khí gas, không dùng để đặt boss sự kiện.
+3. Ánh trăng tròn giá mặc định 10 ngọc gọi Khỉ Xayda ngẫu nhiên ở Thung lũng đen (37), Vách núi đen (20), Thành phố Vegeta (19). Thông báo map/khu. Khỉ chỉ nhận đấm/chưởng cơ bản, miễn khống chế; hạ rơi 1–3 đuôi khỉ. Không có X3 TNSM. Chỉ một lượt Khỉ được gọi tại một thời điểm, gọi trùng không trừ đồ.
+4. Thỏ ngọc giá mặc định 10 triệu vàng gọi Thỏ Đại Ca tại Siêu Thị hoặc Thành phố Santa. Đến gần trong phạm vi 40 có thể hóa cà rốt 5 phút, giảm 15% sức đánh. Mặc Thỏ đỏ Chi Chi/Thỏ đen Android 18 của sự kiện để miễn hóa. Hạ rơi 1–3 cà rốt. Gọi trùng không trừ đồ.
+5. Đổi 99 đuôi khỉ hoặc 99 cà rốt tại NPC. Treo mỗi lần 1 Lồng đèn treo để nhận quà; đèn mua mặc định 50 ngọc hoặc nhận từ nhiệm vụ. Treo đèn có cơ hội nhận đúng Lồng đèn 2 lon (1888) hạn 7 ngày hoặc vĩnh viễn.
+6. Chọn phe Gogeta/Omega, nhận Kiếm gỗ không giao dịch. Giữ kiếm trong túi, dùng đúng cờ phe và hạ boss đối lập ở Siêu Thị. Mặc định 20% rơi cải trang đối lập hạn 3/5/7/15 ngày; lượt riêng 1% rơi thú cưỡi, trong đó 1% vĩnh viễn và 99% hạn 7 ngày. Boss hồi sau 15 phút, tồn tại tối đa 15 phút. Omega dùng đúng bộ ngoại hình CT Omega chuẩn.
+7. Trứng/gà rơi từ quái map thường, mặc định mỗi loại 2%. Bột mì/đậu xanh rơi từ quái phó bản Doanh trại, Kho báu, Con đường rắn độc và Khí gas, mặc định mỗi loại 5%. Đệ tử đánh cũng có thể rơi cho chủ. Không farm nguyên liệu từ mộc nhân/bù nhìn/big boss.
+8. Hạt sen nhận mỗi lần hoàn thành nhiệm vụ khó/siêu khó Bò Mộng. Lồng đèn nhận riêng mỗi mức một lần/ngày: khó 1 đèn, siêu khó 2 đèn. Những lần trả nhiệm vụ tiếp theo vẫn nhận hạt sen và thưởng nhiệm vụ thường, không thêm đèn.
+9. Làm bánh và đổi pet theo bảng dưới. Bột mì, đậu xanh, hạt sen chỉ ký gửi bằng vàng; phí ký gửi giữ mức đang có.
+10. Quy Lão → Về khu vực bang → Giu-ma (Ngưu Ma Vương). Bang chủ bắt đầu Rước đèn hoặc Điểm danh; thành viên online cùng khu, đeo lồng đèn và xác nhận đủ lượt sẽ nhận X2 TNSM 1 giờ. Chỉ danh sách tham gia nhận thưởng, thành viên offline không nhận. Mỗi hoạt động một lần/ngày theo giờ Việt Nam. Rời khu/tháo đèn hủy lượt; thời gian xác nhận 5 phút.
 
-### Vật phẩm và giá bổ sung
+### Làm bánh và đổi pet
 
-- Hộp thường dùng **Giỏ bánh trung thu (1316)** giá 20 ngọc; hộp chay dùng **Giỏ bánh trung thu độc đáo (1317)** giá 10 triệu vàng. Bảng thưởng riêng, không dùng hộp đua top 1701. Hộp chỉ mở khi sự kiện bật, tắt vẫn giữ vật phẩm.
-- Lồng Đèn 2 Lon dùng **Lồng đèn lon (1047)**. Ván Bay Cung Trăng dùng **Lồng đèn cá chép bay (735)**. Cải trang Omega dùng **CT rồng (1685)**. Giữ tên/hình thật, không đổi template dùng chung.
-- Lồng đèn treo giá 50 ngọc. Có thể mua **Lồng đèn Ông Sao (467)** đeo để rước đèn, giá cấu hình mặc định 50 ngọc. Cải trang thỏ dùng giá cấu hình mặc định 100 ngọc/món; không thêm chỉ số chiến đấu tùy tiện.
-- Bột mì, đậu xanh và hạt sen chỉ ký gửi bằng vàng. Người bán nhận vàng sau phí 10% hiện có, không nhận thỏi vàng thay cho vàng.
-- Hộp VIP, mọi nội dung đua top và khuyến mãi X3 không triển khai.
+| Công thức | Chi phí thêm | Nhận |
+| --- | --- | --- |
+| 10 bột mì + 10 đậu xanh + 2 trứng + 1 thịt gà | 20 triệu vàng | 1 bánh Gà quay |
+| 10 bột mì + 10 đậu xanh + 2 trứng + 1 thịt gà | 20 ngọc | 1 bánh Gà quay, thêm 30% nhận bánh Thập Cẩm |
+| 10 bột mì + 10 đậu xanh + 2 trứng + 1 hạt sen | 20 ngọc | 1 bánh Hạt sen |
 
-### Cấu hình và lưu dữ liệu
+| Đổi | Nhận |
+| --- | --- |
+| 20 bánh Gà quay | Pet Thỏ xám |
+| 10 bánh Thập Cẩm | Pet Thỏ trắng |
+| 10 bánh Hạt sen | Pet Mèo đen đuôi vàng |
 
-`config/trung-thu-2026.properties` chứa ID, giá, công thức, bảng thưởng, tỷ lệ, thời gian, hình boss và danh sách lồng đèn hợp lệ. Thay cấu hình cần khởi động lại; công tắc web áp dụng khi game đang chạy.
+Pet hạn 3/5/7/15 ngày hoặc vĩnh viễn; tỷ lệ đã duyệt 40/30/20/9/1%. Bản Gà quay trả ngọc dùng cùng template 890 vì bộ chuẩn không có template Hảo hạng riêng.
 
-`web/trung_thu_schema.sql` tạo hai bảng InnoDB: `trung_thu_2026_state` (thời điểm hết hạn buff/hóa cà rốt, phe) và `trung_thu_2026_daily` (biên nhận thưởng ngày). Tự tạo trước khi nạp dữ liệu game. Không có bảng top.
+### Cửa hàng và tài nguyên
 
-Buff lấy hạn dài hơn khi nhận lại, không cộng nối vô hạn. Thời gian offline vẫn trôi. Buff Trung Thu lấy hệ số cao nhất (X3 hoặc X2); không cộng bùa trí tuệ, buff đuôi khỉ cũ, X2 kho báu hoặc bùa Santa liên quan. Các hệ số VIP/trang bị/map khác giữ cách tính cũ. Tắt EV tạm ngừng tác dụng, không dừng đồng hồ hết hạn.
+NPC mở shop chuẩn bốn tab: Triệu hồi, Đồ sự kiện, Trang phục, Bánh tăng chỉ số. Giá cấu hình chỉ dùng khi tạo món lần đầu; giữ giá/chỉ số admin đã sửa.
+- Hộp bánh Trung Thu 2026 (2078): mặc định 20 ngọc.
+- Hộp bánh Trung Thu Chay 2026 (2080): mặc định 10 triệu vàng.
+- Các hộp cũ 1316/1317 đang trong túi vẫn mở theo bảng thưởng tương ứng. Đổi hàng đang bán sang ID chuẩn chỉ sửa template, giữ ID hàng, giá và chỉ số.
+- Lồng đèn 2 lon (1888) và CT Omega (1685) dùng đúng mẫu chuẩn. Ván bay cung trăng 1887 còn thiếu bộ chuyển động, tiếp tục dùng mẫu tương đương Lồng đèn cá chép bay (735) đã được chấp thuận; không mở khóa model thiếu tài nguyên.
+- Lồng đèn Ông Sao (467) để đeo rước đèn giá mặc định 50 ngọc; hai cải trang Thỏ mặc định 100 ngọc/món.
+- Hộp VIP và mọi thưởng/xếp hạng top không được nối vào sự kiện.
 
-Giao dịch khóa theo người chơi, có chống bấm liên tục; lưu túi và tiền trong cùng transaction trước khi gửi gói tin. Hết chỗ, vượt giới hạn tiền hoặc lỗi lưu sẽ hoàn nguyên. Trả nhiệm vụ Trung Thu lưu cả trạng thái nhiệm vụ và biên nhận trong cùng transaction. Autosave dùng cùng khóa để không ghi đè một giao dịch đang thực hiện.
+### Chỉnh tỷ lệ trên web
 
-### Kiểm tra đã chạy
+Web → Rơi đồ → Vật phẩm Trung Thu: 10 dòng độc lập cho trứng, gà, bột mì, đậu xanh, đuôi khỉ, cà rốt, hai cải trang và hai lượt thú cưỡi. Giữ tỷ lệ/hệ số đã quản trị viên chỉnh. Không đổi tỷ lệ quà mở hộp hoặc vật phẩm nhiệm vụ. Phải bật cả Trung Thu và Vật phẩm EV cho các nhánh rơi; x0 vẫn tắt rơi.
 
-- 69 kiểm tra tích hợp Trung Thu trên DB QA: tỷ lệ chính xác trên 10.000 giá trị quay, đổi bánh/mở hộp/lỗi lưu, buff và đăng nhập lại, NPC bán đồ, boss/map/khu, miễn khống chế, phe/kiếm, thưởng nhiệm vụ và bang, ký gửi, nguồn nguyên liệu, tắt EV.
-- 13 kiểm tra an toàn BagExchange, 53 kiểm tra template/ảnh, hồi quy Noel 39 và Giỗ Tổ 73 kiểm tra; kiểm tra ẩn/hiện NPC và nhóm boss trên web đều qua.
-- JAR kiểm tra đủ `ConstIgnoreName`; 617 application class nạp được, không khởi động server trong kiểm tra đóng gói.
+### Bánh tăng chỉ số đang có
 
-Không giả lập thao tác bằng client game thật trong các bài QA; sau khi nạp cần vào NPC Trung thu để xem hình/menu trên client đang sử dụng.
-
-### Hoàn tác
-
-Trước khi nạp: sao lưu JAR, config, hai file PHP của web và SQL các bảng người chơi/bang/ký gửi/cấu hình sự kiện vào thư mục `Backups/trung-thu-20261015-*`. Muốn quay lại, bảo trì lưu dữ liệu, phục hồi JAR và file web trước đó rồi khởi động lại. Hai bảng mới có thể giữ nguyên; bản cũ không dùng chúng. Không phục hồi toàn DB sau khi người chơi đã tiếp tục chơi nếu chưa đối chiếu dữ liệu phát sinh.
-
-### Cửa hàng chuẩn và chỉnh tỷ lệ rơi trên web
-
-NPC Trung Thu → Cửa hàng mở cửa sổ shop giống các NPC thường: bốn tab **Triệu hồi**, **Đồ sự kiện**, **Trang phục**, **Bánh tăng chỉ số**, mười một món có ảnh và giá vàng/ngọc. Shop có tag `TRUNG_THU_2026`, NPC41. Có thể quản lý giá và các món bán trong mục Cửa hàng trên web. Giá từ file cấu hình chỉ dùng khi tạo món lần đầu; khởi động lại không ghi đè giá admin đã chỉnh. Các mục làm bánh, đổi pet, đổi nguyên liệu và chọn phe vẫn ở menu NPC. Tắt Trung Thu thì cửa hàng đang mở cũng không mua được. Mua hàng tiếp tục dùng giao dịch lưu tiền/vật phẩm cùng lúc, không thu tiền khi đầy túi hoặc lưu thất bại.
-
-Web → Rơi đồ → **Vật phẩm Trung Thu** có 10 dòng chỉnh % độc lập, mặc định thu gọn:
-
-- Trứng vịt muối / gà quay nguyên con: mỗi món2% ở quái map thường và map riêng.
-- Bột mì / đậu xanh: mỗi món5% ở Doanh trại, Kho báu, Con đường rắn độc, Khí gas hủy diệt.
-- Đuôi khỉ / củ cà rốt:100% từ đúng boss triệu hồi; vẫn giữ1–3 món mỗi lần rơi.
-- Cải trang Gogeta / cải trang thay thế Omega:20%, chỉnh riêng từng boss.
-- Ván bay thay thế:1%, chỉnh riêng Gogeta/Omega. Khi đã rơi, vẫn giữ1% vĩnh viễn,99% hạn7ngày.
-
-Các % trên là tỷ lệ gốc khi hệ số nhóm và toàn server đều x1. Có thể nhập % riêng thay hệ số, hoặc bấm Mặc định để trở lại cách tính hệ số. x0 vẫn tắt rơi. Phải bật Trung Thu và Vật phẩm EV. Không đổi điều kiện kiếm gỗ/cờ phe, nguồn nhận hạt sen từ nhiệm vụ hay bảng thưởng mở hộp. Game nhận thay đổi tỷ lệ trong khoảng3giây.
-
-### Bánh tăng chỉ số tạm thời
-
-| Bánh | Tăng đồng thời SD / HP / KI | Thời gian mỗi bánh | Giá mặc định |
+| Bánh | SD / HP / KI | Thời gian mỗi bánh | Giá mặc định |
 | --- | --- | --- | --- |
-| Bánh Trung Thu 1 trứng (465) | 20% | 10 phút | 20 ngọc xanh |
-| Bánh Trung Thu 2 trứng (466) | 25% | 10 phút | 30 ngọc xanh |
-| Bánh Trung Thu Đặc Biệt (472) | 30% | 10 phút | 40 ngọc xanh |
+| 1 trứng (465) | 20% | 10 phút | 20 ngọc |
+| 2 trứng (466) | 25% | 10 phút | 30 ngọc |
+| Đặc biệt (472) | 30% | 10 phút | 40 ngọc |
 
-Chỉ có một cấp bánh hiệu lực, không cộng dồn phần trăm. Dùng cùng cấp cộng 10 phút thời gian; dùng cấp cao hơn thay buff cũ bằng 10 phút ở cấp mới. Khi đang có cấp cao hơn, bánh yếu hơn không bị tiêu hao và không gia hạn cấp mạnh. Tăng HP/KI tối đa, không tự hồi đầy. Hết hạn sẽ đưa HP/KI hiện tại về trong giới hạn tối đa mới.
+Giữ cơ chế cũ: chỉ một cấp bánh hiệu lực, không cộng dồn %. Dùng cùng cấp cộng 10 phút; cấp cao hơn thay bằng 10 phút ở cấp mới; cấp thấp hơn không bị tiêu hao khi đang có cấp mạnh. Hết hạn hoặc tắt sự kiện không tự hồi đầy HP/KI.
 
-Bảng `trung_thu_2026_cake` lưu cấp và mốc hết hạn tuyệt đối. Đăng xuất, khởi động lại hoặc tắt event thì thời gian vẫn trôi. Tắt Trung Thu dừng hiệu lực và chặn dùng bánh; bật lại tiếp tục nếu chưa hết hạn. Buff và trừ bánh lưu cùng transaction, lỗi lưu không mất bánh. Có icon và thời gian còn lại trên client. Dữ liệu item được nâng phiên bản 11 để client cập nhật mô tả 10 phút.
+### Lưu dữ liệu, kiểm tra và hoàn tác
 
-Giá mặc định chỉ dùng khi thêm món mới. Giá/chỉ số shop đã quản trị viên chỉnh không bị ghi đè khi khởi động. Chỉ số có hiệu lực của ba bánh được quy định trong `config/trung-thu-2026.properties`; option trên món là nội dung hiển thị của shop, không thể dùng sửa option để tạo buff vượt cấp đã cấu hình.
+Túi/tiền, nhiệm vụ và biên nhận thưởng lưu trong transaction trước khi trả kết quả; lỗi lưu/đầy túi không mất nguyên liệu. Buff lưu mốc hết hạn tuyệt đối, offline vẫn trôi. X2 bang hội lấy hạn dài hơn, không cộng nối thời gian khi nhận hai hoạt động sát nhau. Không tạo thêm bảng top hoặc thay hệ số EXP chung của server.
+
+Kiểm tra lần này: 151 kiểm tra tích hợp, 26 kiểm tra thể lệ mới, 53 kiểm tra ảnh/template, 180 chu kỳ cập nhật đồng thời với một kết nối SQL và đủ 61 quy tắc rơi trong danh mục. JAR nạp đủ 667 class, gồm ConstIgnoreName. Không xác nhận trực quan bằng client thật.
+
+Sao lưu trước thay đổi tại D:/NroFreeSetup/Backups/trungthu-rules-20261017/: JAR/source/config/web và dữ liệu shop/trạng thái sự kiện. Khi hoàn tác phải bảo trì lưu game trước. Không khôi phục toàn DB hoặc đè tiền/túi đồ cũ lên dữ liệu người chơi phát sinh. Nếu đã phát sinh hộp mới 2078/2080, giữ khả năng mở chúng khi sửa tiếp hoặc quay lui.
 
 ---
 
 <a id="doc-trung-thu-2026-assets"></a>
 ## Tài nguyên Trung Thu
 
-## Tài nguyên thay thế Trung Thu 2026
+Ánh xạ hiện hành sau khi nhập bộ chuẩn và phục hồi model ngày 17/10/2026:
 
-Ngày 15/10/2026, người dùng cho phép dùng thứ tương đương vì không tìm được ID/hình chính xác. Quyết định này thay yêu cầu chờ tài nguyên trước đó. Các ID dưới đây đã được đọc và đối chiếu từ DB game hiện có; không tự cấp ID hoặc đổi tên template dùng chung.
+| Nội dung | ID đang dùng | Trạng thái |
+| --- | --- | --- |
+| Lồng đèn 2 lon | 1888 | Đúng mẫu; flag 162, sáu khung ảnh gốc 15804–15809 |
+| CT Omega | 1685 | Đúng mẫu; đầu/thân/chân 1569/1570/1571 |
+| CT Gogeta | 1697 | Đúng mẫu; đầu/thân/chân 1578/1581/1582 |
+| Hộp bánh Trung Thu 2026 | 2078 | Đúng tên/ảnh chuẩn, mở bảng thưởng hộp thường |
+| Hộp bánh Trung Thu Chay 2026 | 2080 | Đúng tên/ảnh chuẩn, mở bảng thưởng hộp chay |
+| Bánh Gà quay trả ngọc | 890 | Dùng chung bánh Gà quay; thêm lượt 30% nhận Thập Cẩm |
+| Ván bay cung trăng | 735 | Mẫu thay thế đã duyệt; bản gốc 1887 còn thiếu mount 59 |
+| Hộp cũ đang sở hữu | 1316/1317 | Tiếp tục mở theo bảng thưởng cũ tương ứng |
 
-| Vai trò theo đặc tả | Tài nguyên thực tế | ID | Cách dùng |
-|---|---|---:|---|
-| Lồng Đèn 2 Lon | Lồng đèn lon | 1047 | Phụ kiện lưng loại 11, part 80; giữ xác suất và hạn đã duyệt |
-| Ván Bay Cung Trăng | Lồng đèn cá chép | 735 | Thú cưỡi loại 23, part 3, bay không tốn KI; có hoạt ảnh `mount_3_0` và `mount_3_1` |
-| Cải trang phe Omega | CT rồng | 1685 | Cải trang loại 5, bộ phận 1569/1570/1571; không hiển thị tên giả là Omega |
-| Bánh Gà Quay hảo hạng | Bánh trung thu Gà quay | 890 | Dùng cùng bánh thường; công thức trả 20 ngọc vẫn có 30% thêm bánh thập cẩm, không tạo biến thể ID mới |
-| Hộp Bánh Trung Thu 2026 | Giỏ bánh trung thu | 1316 | Bảng thưởng hộp thường; giá 20 ngọc |
-| Hộp Bánh Trung Thu Chay 2026 | Giỏ bánh trung thu độc đáo | 1317 | Bảng thưởng hộp chay; giá 10 triệu vàng; không trộn với hộp thường |
-| NPC Cây Lồng Đèn | Menu treo đèn tại NPC Trung thu | 41 | Thêm chức năng vào NPC hiện có; không dùng cây thông Noel làm cây lồng đèn |
-
-Cải trang Gogeta tiếp tục dùng 1697. Thỏ Đại Ca chỉ ở Siêu Thị (84). Hộp VIP vẫn chưa triển khai theo đề xuất đã duyệt. Không dùng hộp 1701 vì là vật phẩm đua top cũ.
-
-### Ảnh hưởng và giới hạn
-
-- Giữ nguyên tỷ lệ thưởng, thời hạn và giá đã duyệt; chỉ thay vật phẩm nhận được bằng tài nguyên tương đương nêu trên.
-- Không chạy SQL sửa template, không đổi ảnh hoặc tên vật phẩm của người chơi đang có.
-- Hai công thức bánh gà quay tạo cùng ID 890 nên dùng chung khi đổi pet thỏ xám. Phần phân biệt công thức trả ngọc là 30% thưởng bánh thập cẩm.
-- Giỏ bánh 1316 và 1317 đã được nối vào hai bảng thưởng riêng qua `TrungThuCommerce.useBox`; không thay đổi nhánh hộp cũ khác.
-- Kiểm tra tài nguyên đầu vào đã hoàn tất. Trạng thái triển khai và hướng dẫn hiện tại xem `README.md#doc-trung-thu-2026` và `README.md#doc-trung-thu-2026-implementation`.
-
-### Kiểm tra
-
-`test/TrungThuAssetsTest.php` đọc config đã chốt và DB, xác minh đúng loại item, bộ phận cải trang, hoạt ảnh thú cưỡi, các file icon và việc tách riêng hai hộp. Test chỉ đọc DB; không khởi động server hay sửa tài khoản.
+NPC 41 giữ hình Thỏ đỏ Chi Chi có sẵn; NPC xuất hiện ở Kame, Siêu Thị và Santa khi bật sự kiện. Treo đèn thao tác tại menu NPC này. Không thêm ID tự chế hoặc thay hình template dùng chung. Kiểm tra trực tiếp client khi nhận mẫu mới để đánh giá vị trí và kích thước hiển thị.
 
 ---
 
@@ -1000,3 +972,13 @@ Nguyên nhân: ItemData gửi toàn bộ template 750..2103 trong một gói -28
 - 155 kiểm tra Java trên DB QA: từng món trang bị thật, part hợp lệ, đủ dữ liệu hoạt ảnh, giải mã gói -63, 800 ảnh ở đủ zoom, không tạo trùng và giữ khóa món thiếu. Ba kiểm tra PHP cho xung đột/rollback/bất biến và chạy lại idempotent. 26 kiểm tra giao thức template tiếp tục qua, không tái phát gói vượt 65535 byte. JAR đầy đủ 666 class.
 - Tăng vsItem=14 để client tải lại tham chiếu ngoại hình, bảo trì lệnh 64 lưu người chơi rồi thay JAR/manifest khi offline. JVM mới 6784 giữ launcher cha 11208, nạp 181 flag, error log trống, heartbeat tốt. Kiểm tra live xác nhận cả 25 món đúng khung và được chọn trong shop; 61 món còn thiếu vẫn khóa. Chưa kiểm tra trực quan từng model trong client.
 - JAR live SHA256: 6E25AB5D5D94EB2763DA2CF871E6221358BA644C8226DA48C34B50BFC0CEF08A. Sao lưu tại D:/NroFreeSetup/Backups/models-remaining-20261017/ gồm source/version trước sửa, JAR, manifest/csv/định nghĩa cũ và database-before.json của flag/template liên quan. Không đụng tiền, túi đồ, nhiệm vụ hoặc cấp vật phẩm cho người chơi.
+
+### Điều chỉnh Trung Thu theo thể lệ mới (17/10/2026)
+- Người dùng yêu cầu bỏ đua top, khuyến mãi nạp và X3 TNSM; xác nhận thêm Thành phố Santa. Dùng map 126 công cộng có Tapion; loại map 149 vì là phó bản Khí gas. NPC Trung Thu được thêm ở Santa, có nút đi/về Siêu Thị và Thể lệ. Không thay lịch bật/tắt thủ công đã chọn trước.
+- Bỏ gọi monkeyReward khi hạ Khỉ; multiplier bỏ qua monkey_until cũ, còn X2 rước đèn/điểm danh. Giữ cột cũ để không phá dữ liệu khi quay lui. Không đổi bùa/EXP toàn server.
+- Dùng Lồng đèn 2 lon 1888 đã khôi phục, hộp 2026 đúng tên 2078/2080; hỗ trợ mở tiếp 1316/1317 đang sở hữu. Shop cập nhật riêng temp_id của hàng cũ trong đúng tab sự kiện, giữ ID hàng/giá/chỉ số. Omega dùng mẫu chuẩn 1569/1570/1571. Giữ mẫu ván bay tương đương 735 do bộ gốc 1887 thiếu ảnh.
+- Nhiệm vụ khó/siêu khó: hạt sen mỗi lần trả; đèn vẫn một lần/mức/ngày. Bang hội chỉ thưởng danh sách online cùng khu, đeo đèn và đủ xác nhận. Thêm lồng đèn mới vào điều kiện rước đèn.
+- Sửa thứ tự khóa cache/kết nối trong cập nhật trạng thái/chọn phe/phát thưởng bang: trả kết nối SQL trước khi vô hiệu hóa cache chung. Bài kiểm tra 180 chu kỳ grant/side/read với sáu luồng và database.max=1 hoàn tất, không stale cache hoặc deadlock.
+- 151 kiểm tra tích hợp và 26 kiểm tra thể lệ mới trên DB riêng nro_trungthu_rules_20261017; 53 kiểm tra tài nguyên chỉ đọc; danh mục đủ 61 quy tắc rơi. Fixture nhân vật lấy đầy đủ cột bắt buộc từ bản sao QA rồi thay ID riêng; không ghi nhân vật thật. Kiểm thử danh mục được cập nhật nhận đường MobDropBonuses.roll đã thay cho một số PanelBridge.rollDrop từ bản may mắn trước đó.
+- Bảo trì lệnh 65 lưu 15 giây rồi launcher 11208 mở JVM mới 6508 sau 10 giây. JAR SHA256 32564F8B76C1AB8E607B3AB128AAFF590DECA4FB06C77F4026DCC0FD5914F096; 667 class đóng gói đầy đủ. Game bắt tay tại 192.168.2.10:14445 thành công, heartbeat tốt, bảo trì tắt, error log trống.
+- Kiểm tra live 11 hàng shop/option so với bản sao trước thay đổi: chỉ hai ID hộp thay đổi; giá/chỉ số/công tắc/tỷ lệ rơi giữ nguyên. Hai file mô tả panel được cập nhật. Sao lưu ở D:/NroFreeSetup/Backups/trungthu-rules-20261017/. Chưa kiểm tra trực quan toàn bộ menu trong client, không tự cấp đồ test hay thay tiền người chơi.
