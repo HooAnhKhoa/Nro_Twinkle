@@ -15,7 +15,7 @@ public class NangChiSoBongTai3 {
     // Chi phí & tỉ lệ
     private static final int GEM_NANG_BT = 1_000;
     private static final int RATIO_NANG_CAP = 30;
-    private static final int BONG_TAI_C3_ID = 1819;
+    private static final int BONG_TAI_C3_ID = 1884;
     private static final int HON_BONG_TAI_ID = 934;
     private static final int DA_XANH_LAM_ID = 935;
     private static final int REQUIRED_HON_BONG_TAI = 99;

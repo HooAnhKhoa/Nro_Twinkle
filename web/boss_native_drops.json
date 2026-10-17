@@ -152,9 +152,9 @@
         566,
         567,
         992,
-        1785,
-        1786,
-        1788
+        1762,
+        1763,
+        1764
       ],
       "complete": true,
       "unresolved": [],
@@ -773,7 +773,7 @@
       "ids": [
         17,
         611,
-        1824
+        1935
       ],
       "complete": true,
       "unresolved": [],
@@ -790,7 +790,7 @@
     "nro.models.boss.doanh_trai.RobotVeSi": {
       "ids": [
         17,
-        1824
+        1935
       ],
       "complete": true,
       "unresolved": [],
@@ -800,7 +800,7 @@
       "ids": [
         17,
         611,
-        1824
+        1935
       ],
       "complete": true,
       "unresolved": [],
@@ -809,7 +809,7 @@
     "nro.models.boss.doanh_trai.TrungUyTrang": {
       "ids": [
         17,
-        1824
+        1935
       ],
       "complete": true,
       "unresolved": [],
@@ -819,7 +819,7 @@
       "ids": [
         17,
         611,
-        1824
+        1935
       ],
       "complete": true,
       "unresolved": [],

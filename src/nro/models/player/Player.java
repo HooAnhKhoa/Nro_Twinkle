@@ -647,9 +647,9 @@ public class Player implements Runnable {
         {870, 871, 872},
         {873, 874, 875},
         {867, 868, 869},
-        {1866, 1859, 1860}, //td btc3
-        {1861, 1864, 1865}, //nm btc3
-        {1856, 1859, 1860} 
+        {1817, 1810, 1811}, //td btc3
+        {1812, 1815, 1816}, //nm btc3
+        {1807, 1810, 1811}
     };
 
     public static final short[][] idOutfitGod = {
@@ -661,7 +661,7 @@ public class Player implements Runnable {
             {545, 548, 549}, {547, 548, 549}, {546, 548, 549}
         },
         {
-            {2082, 2085, 2086}, {2084, 2085, 2086}, {2083, 2085, 2086}
+            {545, 548, 549}, {547, 548, 549}, {546, 548, 549}
         },
         {
             {760, 761, 762}, {760, 761, 762}, {760, 761, 762}
@@ -738,7 +738,7 @@ public class Player implements Runnable {
             return -1;
         }
         for (Card card : this.Cards) {
-            if (card != null && (card.Id == 956 || card.Id == 1792 || card.Id == 1793 || card.Id == 1791 || card.Id == 1204 || card.Id == 1142) && card.Level > 1) {
+            if (card != null && (card.Id == 956 || card.Id == 2040 || card.Id == 2040 || card.Id == 1771 || card.Id == 1204 || card.Id == 1142) && card.Level > 1) {
                 RadarCard radarTemplate = RadarService.gI().RADAR_TEMPLATE.stream().filter(r -> r.Id == card.Id).findFirst().orElse(null);
                 if (radarTemplate != null) {
                     return (byte) radarTemplate.AuraId;
@@ -852,7 +852,7 @@ public class Player implements Runnable {
             return 412;
         } else if (fusion != null && fusion.typeFusion != ConstPlayer.NON_FUSION) {
             if (nPoint != null && nPoint.isGogeta) {
-                return 2100;
+                return 1578;
             } else if (fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE) {
                 return idOutfitFusion[this.gender == ConstPlayer.NAMEC ? 2 : 0][0];
             } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA) {
@@ -910,7 +910,7 @@ public class Player implements Runnable {
             return idOutfitGod[this.gender][1];
         } else if (fusion != null && fusion.typeFusion != ConstPlayer.NON_FUSION) {
             if (nPoint != null && nPoint.isGogeta) {
-                return 2101;
+                return 1581;
             } else if (fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE) {
                 return idOutfitFusion[this.gender == ConstPlayer.NAMEC ? 2 : 0][1];
             } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA) {
@@ -971,7 +971,7 @@ public class Player implements Runnable {
             return idOutfitGod[this.gender][2];
         } else if (fusion != null && fusion.typeFusion != ConstPlayer.NON_FUSION) {
             if (nPoint != null && nPoint.isGogeta) {
-                return 2102;
+                return 1582;
             } else if (fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE) {
                 return idOutfitFusion[this.gender == ConstPlayer.NAMEC ? 2 : 0][2];
             } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA) {
@@ -1337,6 +1337,10 @@ public class Player implements Runnable {
         if (isPl() && inventory != null && inventory.itemsBody.get(7) != null) {
             Item it = inventory.itemsBody.get(7);
             if (it != null && it.isNotNullItem() && newPet == null) {
+                if(it.template.type==18&&it.template.head>=0&&it.template.body>=0&&it.template.leg>=0){
+                    PetService.Pet2(this,it.template.head,it.template.body,it.template.leg);
+                    return;
+                }
                 switch (it.template.id) {
                     case 892 -> {
                         PetService.Pet2(this, 882, 883, 884);
@@ -1574,8 +1578,8 @@ public class Player implements Runnable {
                         PetService.Pet2(this, 1464, 1465, 1466);
                         Service.gI().point(this);
                     }
-                    case 1765 -> {
-                        PetService.Pet2(this, 1662, 1663, 1764);
+                    case 1813 -> {
+                        PetService.Pet2(this, 1733, 1734, 0);
                         Service.gI().point(this);
                     }
                     case 1729 -> {
@@ -1586,32 +1590,32 @@ public class Player implements Runnable {
                         PetService.Pet2(this, 1616, 1617, 1618);
                         Service.gI().point(this);
                     }
-                    case 1789 -> {
-                        PetService.Pet2(this, 1724, 1725, 1726);
+                    case 1830 -> {
+                        PetService.Pet2(this, 1767, 1768, 1769);
                         Service.gI().point(this);
                     }
-                    case 1766 -> {
-                        PetService.Pet2(this, 1665, 1666, 1667);
+                    case 1814 -> {
+                        PetService.Pet2(this, 2076, 1737, 1738);
                         Service.gI().point(this);
                     }
-                    case 1767 -> {
-                        PetService.Pet2(this, 1668, 1669, 1670);
+                    case 1815 -> {
+                        PetService.Pet2(this, 2076, 1740, 1741);
                         Service.gI().point(this);
                     }
-                    case 1768 -> {
-                        PetService.Pet2(this, 1671, 1672, 1673);
+                    case 1816 -> {
+                        PetService.Pet2(this, 2076, 1743, 1744);
                         Service.gI().point(this);
                     }
-                    case 1769 -> {
-                        PetService.Pet2(this, 1674, 1675, 1676);
+                    case 1817 -> {
+                        PetService.Pet2(this, 2076, 1746, 1747);
                         Service.gI().point(this);
                     }
-                    case 1770 -> {
-                        PetService.Pet2(this, 1677, 1678, 1679);
+                    case 1818 -> {
+                        PetService.Pet2(this, 2076, 1749, 1750);
                         Service.gI().point(this);
                     }
-                    case 1771 -> {
-                        PetService.Pet2(this, 1680, 1681, 1682);
+                    case 1819 -> {
+                        PetService.Pet2(this, 2076, 1752, 1753);
                         Service.gI().point(this);
                     }
                 }

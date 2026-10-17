@@ -31,10 +31,10 @@ import nro.models.player_system.Template.BgItem;
 
 public class DataGame {
 
-    public static byte vsData = 9;
+    public static byte vsData = 10;
     public static byte vsMap = 2;
     public static byte vsSkill = 1;
-    public static byte vsItem = 11;
+    public static byte vsItem = 12;
     public static int vsRes = 1;
     public static short maxSmallVersion = 32767;
 
@@ -322,7 +322,7 @@ public class DataGame {
             msg = new Message(-77);
             msg.writer().writeShort(maxSmallVersion);
             for (int i = 0; i < maxSmallVersion; i++) {
-                msg.writer().writeByte(0);
+                msg.writer().writeByte(1);
             }
             session.sendMessage(msg);
             msg.cleanup();

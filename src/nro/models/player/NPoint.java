@@ -438,7 +438,7 @@ public class NPoint {
         }
         if (this.player.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA3) {
             this.player.inventory.itemsBag.stream()
-                    .filter(it -> it.isNotNullItem() && it.template.id == 1819)
+                    .filter(it -> it.isNotNullItem() && it.template.id == 1884)
                     .findFirst()
                     .ifPresent(btc3 -> {
                         for (ItemOption io : btc3.itemOptions) {

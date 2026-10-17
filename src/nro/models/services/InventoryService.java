@@ -287,6 +287,7 @@ public class InventoryService {
     }
 
     public Item putItemBody(Player player, Item item) {
+        if(item!=null&&item.isNotNullItem()&&!CatalogAssets.check(player,item.template.id))return item;
         byte type = item.getType();
         Item sItem = item;
         if (!item.isNotNullItem()) {
@@ -295,7 +296,7 @@ public class InventoryService {
 
         // Kiểm tra các loại item hợp lệ
         switch (item.template.type) {
-            case 0, 1, 2, 3, 4, 5, 32, 23, 24, 11, 27, 25 -> {
+            case 0, 1, 2, 3, 4, 5, 32, 23, 24, 11, 27, 18, 25 -> {
             }
             default -> {
                 Service.gI().sendThongBaoOK(player.isPet ? ((Pet) player).master : player, "Trang bị không phù hợp!1");
@@ -353,6 +354,7 @@ public class InventoryService {
                 index = 8;
                 break;
             case 27:
+            case 18:
                 index = 7;
                 break;
             case 25:
@@ -368,7 +370,7 @@ public class InventoryService {
             }
         }
 
-        if (player.isPet && (item.template.type == 23 || item.template.type == 24 || item.template.type == 27)) {
+        if (player.isPet && (item.template.type == 23 || item.template.type == 24 || item.template.type == 27 || item.template.type == 18)) {
             Player recipient = ((Pet) player).master;
             if (recipient == null) {
                 recipient = player;
@@ -800,7 +802,7 @@ public class InventoryService {
             }
         }
         // Check item rồng nhí vĩnh viễn
-        if (item.template.id >= 1765 && item.template.id <= 1771) {
+        if (item.template.id >= 1813 && item.template.id <= 1819) {
             boolean check_options = false;
             for (Item.ItemOption op : item.itemOptions) {
                 if (op.optionTemplate != null && op.optionTemplate.id == 93) {
@@ -1021,12 +1023,12 @@ public class InventoryService {
     }
     public boolean findItemBongTaiCap3(Player player) {
         for (Item item : player.inventory.itemsBag) {
-            if (item.isNotNullItem() && item.template.id == 1819) {
+            if (item.isNotNullItem() && item.template.id == 1884) {
                 return true;
             }
         }
         for (Item item : player.inventory.itemsBox) {
-            if (item.isNotNullItem() && item.template.id == 1819) {
+            if (item.isNotNullItem() && item.template.id == 1884) {
                 return true;
             }
         }

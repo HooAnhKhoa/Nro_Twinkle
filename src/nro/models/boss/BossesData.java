@@ -2059,7 +2059,7 @@ public class BossesData {
     public static final BossData NGUYETTHAN = new BossData(
             "Nguyệt thần", //name
             ConstPlayer.XAYDA, //gender
-            new short[]{2058, 2059, 2060, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
+            new short[]{307, 1427, 306, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             1000, //dame
             new int[]{50000000}, //hp
             new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}, //map join
@@ -2076,7 +2076,7 @@ public class BossesData {
     public static final BossData NHATTTHAN = new BossData(
             "Nhật thần", //name
             ConstPlayer.XAYDA, //gender
-            new short[]{2065, 2066, 2067, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
+            new short[]{1436, 306, 307, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             1000, //dame
             new int[]{50000000}, //hp
             new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}, //map join
@@ -2294,7 +2294,7 @@ public class BossesData {
     public static final BossData THUY_TINH = new BossData(
             "Thủy Tinh", //name
             ConstPlayer.XAYDA, //gender
-            new short[]{1686, 1687, 1688, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
+            new short[]{1757, 1758, 1759, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             1000, //dame
             new int[]{50000000}, //hp
             new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 79, 80, 81, 82, 83, 84, 92, 93, 94, 96, 97, 98, 99, 100, 102, 103, 104, 105, 106, 107, 108, 109, 110}, //map join
@@ -2312,7 +2312,7 @@ public class BossesData {
     public static final BossData SON_TINH = new BossData(
             "Sơn Tinh", //name
             ConstPlayer.XAYDA, //gender
-            new short[]{1683, 1684, 1685, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
+            new short[]{1754, 1755, 1756, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             1000, //dame
             new int[]{50000000}, //hp
             new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 79, 80, 81, 82, 83, 84, 92, 93, 94, 96, 97, 98, 99, 100, 102, 103, 104, 105, 106, 107, 108, 109, 110}, //map join
@@ -2561,7 +2561,7 @@ public class BossesData {
     public static final BossData RONG_NHI = new BossData(
             "Rồng Nhí",
             ConstPlayer.TRAI_DAT,
-            new short[]{1662, 1663, 1664, -1, -1, -1},
+            new short[]{1733, 1734, 1735, -1, -1, -1},
             1,
             new int[]{50000000}, //hp
             new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37}, //map join
@@ -2576,7 +2576,7 @@ public class BossesData {
     public static final BossData CADIC_M = new BossData(
             "Cadic M", //name
             ConstPlayer.TRAI_DAT, //gender
-            new short[]{1639, 1632, 1633, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
+            new short[]{1636, 1632, 1633, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             10000, //dame
             new int[]{6000000}, //hp
             new int[]{165}, //map join
@@ -2599,7 +2599,7 @@ public class BossesData {
     public static final BossData BABY = new BossData(
             "Baby",
             ConstPlayer.XAYDA,
-            new short[]{1715, 1716, 1717, -1, -1, -1},
+            new short[]{0, 1660, 1661, -1, -1, -1},
             200000,
             new int[]{2000000000},
             new int[]{14},
@@ -2640,7 +2640,7 @@ public class BossesData {
     public static final BossData BABY_2 = new BossData(
             "Baby",
             ConstPlayer.XAYDA,
-            new short[]{1718, 1719, 1720, -1, -1, -1},
+            new short[]{1659, 1660, 1661, -1, -1, -1},
             250000,
             new int[]{2000000000},
             new int[]{14},
@@ -2672,7 +2672,7 @@ public class BossesData {
     public static final BossData BABY_3 = new BossData(
             "Baby",
             ConstPlayer.XAYDA,
-            new short[]{1721, 1722, 1723, -1, -1, -1},
+            new short[]{1662, 1663, 1664, -1, -1, -1},
             30000,
             new int[]{2000000000},
             new int[]{14},

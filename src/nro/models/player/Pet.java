@@ -866,7 +866,7 @@ public class Pet extends Player {
         } else if (this.typePet == 1 && !this.isTransform) {
             return 298;
         } else if (this.typePet == 2 && !this.isTransform) {
-            return 947;
+            return 1292;
         } else if (this.typePet == 3 && !this.isTransform) {
             return 1423;
         } else if (this.typePet == 4) {

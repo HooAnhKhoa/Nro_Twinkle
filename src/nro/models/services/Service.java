@@ -2006,7 +2006,7 @@ public class Service {
         int legEffId = -1;
 
         switch (costumeId) {
-            case 1794:
+            case 1851:
                 headEffId = 281;
                 bodyEffId = 282;
                 legEffId = 283;

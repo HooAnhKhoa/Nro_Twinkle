@@ -15,7 +15,7 @@ public class HimmelPunchComboTest {
  static class TargetPlayer extends TrungThuRuntimeTest.User{TargetPlayer(){super(2026102603);playerTask.taskMain=new nro.models.task.TaskMain();while(inventory.itemsBody.size()<11)inventory.itemsBody.add(new Item());nPoint.hp=100000;nPoint.hpMax=100000;}@Override public synchronized int injured(nro.models.player.Player p,long damage,boolean piercing,boolean mob){int d=(int)Math.min(nPoint.hp,Math.max(0,damage));nPoint.hp-=d;return d;}}
  public static void main(String[] args)throws Exception{
   try(Connection c=LocalManager.getConnection()){
-   check("nro_panel_qa_20261013".equals(c.getCatalog()),"QA database guard");
+   check(java.util.Set.of("nro_panel_qa_20261013","nro_teamobi_qa_20261017_v2","nro_teamobi_qa_20261017_v3").contains(c.getCatalog()),"QA database guard");
    try(var q=c.createStatement();var r=q.executeQuery("SELECT * FROM item_template ORDER BY id")){while(r.next())Manager.ITEM_TEMPLATES.add(new ItemTemplate((short)r.getInt("id"),r.getByte("TYPE"),r.getByte("gender"),r.getString("NAME"),r.getString("description"),r.getShort("icon_id"),r.getShort("part"),false,0));}
    try(var q=c.createStatement();var r=q.executeQuery("SELECT * FROM item_option_template ORDER BY id")){while(r.next())Manager.ITEM_OPTION_TEMPLATES.add(new ItemOptionTemplate(r.getInt("id"),r.getString("NAME"),0));}
   }

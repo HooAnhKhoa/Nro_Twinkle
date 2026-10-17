@@ -17,18 +17,18 @@ import nro.models.services.Service;
 
 /** A paid entry to the castle; moving between castle maps and leaving are free. */
 public final class ThanhCo {
-    public static final int TICKET=2000;
+    public static final int TICKET=1876;
     public static boolean isCastle(int id){return id>=183&&id<=185;}
 
     /** Runs before loading item templates and shops, so a fresh checkout can use the new ID. */
     public static void ensureData(Connection connection){
         try(Statement statement=connection.createStatement()){
-            try(ResultSet row=statement.executeQuery("SELECT NAME FROM item_template WHERE id=2000")){
-                if(row.next()&&!"Vé Thành Cổ".equals(row.getString(1)))throw new IllegalStateException("Item 2000 already belongs to another item; refusing to reuse it");
+            try(ResultSet row=statement.executeQuery("SELECT NAME FROM item_template WHERE id=1876")){
+                if(row.next()&&!"Vé vàng".equals(row.getString(1)))throw new IllegalStateException("Item 1876 already belongs to another item; refusing to reuse it");
             }
             for(String sql:Files.readString(Path.of("web/thanh_co_schema.sql")).split(";"))if(!sql.isBlank())statement.execute(sql);
-            try(ResultSet row=statement.executeQuery("SELECT NAME FROM item_template WHERE id=2000")){
-                if(!row.next())throw new IllegalStateException("Missing ticket template source 1787");
+            try(ResultSet row=statement.executeQuery("SELECT NAME FROM item_template WHERE id=1876")){
+                if(!row.next())throw new IllegalStateException("Missing ticket template canonical item 1876");
             }
         }catch(Exception error){throw new IllegalStateException("Cannot initialize Thanh Co ticket",error);}
     }

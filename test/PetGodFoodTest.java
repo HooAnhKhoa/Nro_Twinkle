@@ -27,7 +27,7 @@ public class PetGodFoodTest {
  public static void main(String[] args)throws Exception {
   try{
    try(Connection c=LocalManager.getConnection();Statement s=c.createStatement()){
-    check("nro_panel_qa_20261013".equals(c.getCatalog()),"QA database guard");
+    check(java.util.Set.of("nro_panel_qa_20261013","nro_teamobi_qa_20261017_v2","nro_teamobi_qa_20261017_v3").contains(c.getCatalog()),"QA database guard");
     try(ResultSet r=s.executeQuery("SELECT * FROM item_template ORDER BY id")){while(r.next())Manager.ITEM_TEMPLATES.add(new ItemTemplate(r.getShort("id"),r.getByte("type"),r.getByte("gender"),r.getString("name"),r.getString("description"),r.getShort("icon_id"),r.getShort("part"),r.getBoolean("is_up_to_up"),0));}
     try(ResultSet r=s.executeQuery("SELECT * FROM item_option_template ORDER BY id")){while(r.next())Manager.ITEM_OPTION_TEMPLATES.add(new ItemOptionTemplate(r.getInt("id"),r.getString("name"),0));}
    }

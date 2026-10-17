@@ -659,6 +659,7 @@ public class ShopService {
     }
 
     public void buyItem(Player player, int itemTempId) {
+        if(!nro.models.services.CatalogAssets.check(player,itemTempId))return;
         Shop shop = player.idMark.getShopOpen();
         if(shop!=null&&nro.models.event.trungthu2026.TrungThuShop.TAG.equals(shop.tagName)){
             nro.models.event.trungthu2026.TrungThuShop.buy(player,shop,itemTempId);return;
@@ -749,7 +750,7 @@ public class ShopService {
             int capsuleClanPointPrice = 0;
 
             switch (is.temp.id) {
-                case 1794:
+                case 1851:
                 case 1204:
                 case 1423:
                 case 1438:
@@ -758,13 +759,13 @@ public class ShopService {
                 case 1635:
                     capsuleClanPointPrice = 1;
                     break;
-                case 1790:
+                case 1838:
                     capsuleClanPointPrice = 2;
                     break;
-                case 1791:
+                case 1771:
                     capsuleClanPointPrice = 3;
                     break;
-                case 1792:
+                case 2040:
                     capsuleClanPointPrice = 4;
                     break;
                 case 1634:
