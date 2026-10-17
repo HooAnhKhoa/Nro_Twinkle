@@ -6,14 +6,18 @@ import nro.models.server.Manager;
 import nro.models.network.Message;
 import nro.models.network.MySession;
 import nro.models.player_system.Template;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ItemData {
 
     public static void updateItem(MySession session) {
         updateItemOptionItemplate(session);
         updateItemArrHead2FTemplate(session);
-        updateItemTemplate(session, 750);
-        updateItemTemplate(session, 750, Manager.ITEM_TEMPLATES.size());
+        sendItemTemplates(session);
     }
 
     private static void updateItemOptionItemplate(MySession session) {
@@ -35,58 +39,61 @@ public class ItemData {
         }
     }
 
-    private static void updateItemTemplate(MySession session, int count) {
-        Message msg;
-        try {
-            msg = new Message(-28);
-            msg.writer().writeByte(8);
 
-            msg.writer().writeByte(DataGame.vsItem); //vcitem
-            msg.writer().writeByte(1); //reload itemtemplate
-            msg.writer().writeShort(count);
-            for (int i = 0; i < count; i++) {
-                Template.ItemTemplate itemTemplate = Manager.ITEM_TEMPLATES.get(i);
-                msg.writer().writeByte(itemTemplate.type);
-                msg.writer().writeByte(itemTemplate.gender);
-                msg.writer().writeUTF(itemTemplate.name);
-                msg.writer().writeUTF(itemTemplate.description);
-                msg.writer().writeByte(itemTemplate.level);
-                msg.writer().writeInt(itemTemplate.strRequire);
-                msg.writer().writeShort(itemTemplate.iconID);
-                msg.writer().writeShort(itemTemplate.part);
-                msg.writer().writeBoolean(itemTemplate.isUpToUp);
+    // -28 has a two-byte payload length. Bound the actual encoded bytes, not the item count.
+    static List<Message> itemTemplateMessages() throws IOException {
+        final int limit = 60000;
+        List<Message> packets = new ArrayList<>();
+        int start = 0;
+        while (start < Manager.ITEM_TEMPLATES.size()) {
+            boolean first = start == 0;
+            ByteArrayOutputStream records = new ByteArrayOutputStream();
+            int end = start;
+            while (end < Manager.ITEM_TEMPLATES.size() && (!first || end < 750)) {
+                Template.ItemTemplate item = Manager.ITEM_TEMPLATES.get(end);
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                DataOutputStream out = new DataOutputStream(bytes);
+                out.writeByte(item.type);
+                out.writeByte(item.gender);
+                out.writeUTF(item.name);
+                out.writeUTF(item.description);
+                out.writeByte(item.level);
+                out.writeInt(item.strRequire);
+                out.writeShort(item.iconID);
+                out.writeShort(item.part);
+                out.writeBoolean(item.isUpToUp);
+                byte[] record = bytes.toByteArray();
+                int header = first ? 5 : 7;
+                if (header + record.length > limit) {
+                    throw new IOException("Item template too large: " + item.id);
+                }
+                if (header + records.size() + record.length > limit) break;
+                records.write(record);
+                end++;
             }
-            session.doSendMessage(msg);
-            msg.cleanup();
-        } catch (Exception e) {
-            e.printStackTrace();
+            Message msg = new Message(-28);
+            msg.writer().writeByte(8);
+            msg.writer().writeByte(DataGame.vsItem);
+            msg.writer().writeByte(first ? 1 : 2);
+            if (first) {
+                msg.writer().writeShort(end);
+            } else {
+                msg.writer().writeShort(start);
+                msg.writer().writeShort(end);
+            }
+            msg.writer().write(records.toByteArray());
+            packets.add(msg);
+            start = end;
         }
+        return packets;
     }
 
-    private static void updateItemTemplate(MySession session, int start, int end) {
-        Message msg;
+    private static void sendItemTemplates(MySession session) {
         try {
-            msg = new Message(-28);
-            msg.writer().writeByte(8);
-
-            msg.writer().writeByte(DataGame.vsItem); //vcitem
-            msg.writer().writeByte(2); //add itemtemplate
-            msg.writer().writeShort(start);
-            msg.writer().writeShort(end);
-            for (int i = start; i < end; i++) {
-//                System.out.println("start: " + start + " -> " + end + " id " + Manager.ITEM_TEMPLATES.get(i).id);
-                msg.writer().writeByte(Manager.ITEM_TEMPLATES.get(i).type);
-                msg.writer().writeByte(Manager.ITEM_TEMPLATES.get(i).gender);
-                msg.writer().writeUTF(Manager.ITEM_TEMPLATES.get(i).name);
-                msg.writer().writeUTF(Manager.ITEM_TEMPLATES.get(i).description);
-                msg.writer().writeByte(Manager.ITEM_TEMPLATES.get(i).level);
-                msg.writer().writeInt(Manager.ITEM_TEMPLATES.get(i).strRequire);
-                msg.writer().writeShort(Manager.ITEM_TEMPLATES.get(i).iconID);
-                msg.writer().writeShort(Manager.ITEM_TEMPLATES.get(i).part);
-                msg.writer().writeBoolean(Manager.ITEM_TEMPLATES.get(i).isUpToUp);
+            for (Message msg : itemTemplateMessages()) {
+                session.doSendMessage(msg);
+                msg.cleanup();
             }
-            session.doSendMessage(msg);
-            msg.cleanup();
         } catch (Exception e) {
             e.printStackTrace();
         }
