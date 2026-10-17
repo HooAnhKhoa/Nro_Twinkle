@@ -1047,3 +1047,10 @@ Server nay phát lại đầy đủ catalog bằng các gói dưới 60.000 byte
 Bản phát lại catalog ban đầu gửi lại ở mọi ready, nên chính quá trình cập nhật template tạo thêm ready và gây vòng lặp. Mỗi MySession nay ghi nhận khi catalog đã gửi đủ, chỉ phát lại khi phiên chưa có catalog. Sau phát lại chờ ready xác nhận tiếp theo rồi mới gửi nhân vật. Cổng AtomicBoolean bảo đảm khởi tạo nhân vật duy nhất một lần dù ready đến lặp/đồng thời; kết nối mới có trạng thái riêng. Không dùng trạng thái của cache trên đĩa làm bằng chứng catalog đã đủ trong phiên.
 
 Bài ClientReadyHandshakeTest đi qua Controller.messageNotMap thật, kiểm tra cached/fresh login, 100 ready lặp, catalog gửi dở/thử lại, chờ ack và ready đồng thời; spy chặn phần khởi tạo bản đồ/tài khoản thật ở biên bắt đầu nhân vật. Kiểm tra cache 2-slot và đủ 2.103 template vẫn giữ. JAR cũ được sao lưu ở `D:/NroFreeSetup/Backups/client-ready-loop-20261017`. Cần người dùng đăng nhập lại xác nhận hành trang trên client thật.
+
+## Chỉ số quà đua top Trung Thu (18/10/2026)
+- Pet Minion/Ngựa Troy: SD, HP, KI lần lượt +30/28/26/24/20/18% theo hạng 1, 2, 3, 4–10, 11–50, 51–100. Danh hiệu Phá cỗ và mốc VIP: +15% SD/HP/KI. Giữ số lượng, ngày sử dụng và các phần quà đã sửa riêng của từng đợt.
+- Bảng thưởng trên web có mục Chỉ số từng món. Đợt đang chạy/đã chốt vẫn khóa cấu hình thông thường để tránh sửa nhầm. Chỉ số lưu vào từng gói khi chốt.
+- Dùng danh hiệu Trung Thu trong hành trang để kích hoạt: lưu chỉ số riêng vào dataBadges cùng việc trừ đúng vật phẩm trong một transaction. Chỉ danh hiệu đang bật và còn hạn cộng chỉ số, không cộng hai danh hiệu cùng lúc; bản trùng được giữ nguyên. Hạn 0 là vĩnh viễn. Không phụ thuộc công tắc sự kiện để sử dụng quà đã nhận.
+- Đợt 1 được bổ sung chỉ số vào cấu hình và các gói đã chốt. Món đã nhận được xác định bằng nhân vật, ID và thời điểm nhận để sửa trực tiếp khi game đã dừng; không mở lại biên nhận hoặc phát lại gói. Sao lưu tại D:/NroFreeSetup/Backups/trungthu-top-stats-20261018.
+- Kiểm thử: 12 kiểm tra cộng chỉ số/lưu/hạn/trùng, 18 kiểm tra bảng mặc định, 151 kiểm tra tích hợp và 26 kiểm tra thể lệ Trung Thu trên DB QA riêng.

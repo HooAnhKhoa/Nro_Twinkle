@@ -35,6 +35,7 @@ public final class TrungThuRuntime {
         }
     }
     public static boolean use(Player p,Item used){
+        if(TrungThuTopTitles.use(p,used))return true;
         if(TrungThuCakeBuff.use(p,used))return true;
         int id=used.template.id;
         if(id==item("monkey-tail")){Service.gI().sendThongBao(p,"Gom "+number("exchange.monkey-tails")+" đuôi khỉ, đổi tại NPC Trung Thu.");return true;}

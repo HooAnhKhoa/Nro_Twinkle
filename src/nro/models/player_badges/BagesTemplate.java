@@ -63,6 +63,8 @@ public class BagesTemplate {
     public static List<Item.ItemOption> sendListItemOption(Player player) {
         List<Item.ItemOption> listOptions = new ArrayList<>();
         for (BadgesData data : player.dataBadges) {
+            if(!data.isUse||data.timeofUseBadges<=System.currentTimeMillis())continue;
+            if(data.rewardOptions!=null){listOptions.addAll(data.rewardOptions);continue;}
             for (BagesTemplate temp : Manager.BAGES_TEMPLATES) {
                 if (data.idBadGes == temp.idEffect && data.isUse) {
                     listOptions.addAll(temp.options);

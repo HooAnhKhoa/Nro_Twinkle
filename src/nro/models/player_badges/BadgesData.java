@@ -13,6 +13,7 @@ public class BadgesData {
     public int idBadGes; // id danh hiệu
     public long timeofUseBadges; // hạn sử dụng danh hiệu
     public boolean isUse;
+    public java.util.List<nro.models.item.Item.ItemOption> rewardOptions;
 
     public BadgesData() {
         idBadGes = -1;
@@ -38,9 +39,15 @@ public class BadgesData {
         player.dataBadges.add(this);
     }
 
+    public String optionsJson() {
+        org.json.simple.JSONArray rows=new org.json.simple.JSONArray();
+        if(rewardOptions!=null)for(var option:rewardOptions){org.json.simple.JSONObject row=new org.json.simple.JSONObject();row.put("id",option.optionTemplate.id);row.put("param",option.param);rows.add(row);}
+        return rows.toJSONString();
+    }
+
     @Override
     public String toString() {
         final String n = "\"";
-        return "{" + n + "idBadGes" + n + ":" + n + idBadGes + n + "," + n + "timeofUseBadges" + n + ":" + n + timeofUseBadges + n + "," + n + "isUse" + n + ":" + n + isUse + n + "}";
+        return "{" + n + "idBadGes" + n + ":" + n + idBadGes + n + "," + n + "timeofUseBadges" + n + ":" + n + timeofUseBadges + n + "," + n + "isUse" + n + ":" + n + isUse + n + (rewardOptions==null?"":",\"rewardOptions\":"+optionsJson()) + "}";
     }
 }

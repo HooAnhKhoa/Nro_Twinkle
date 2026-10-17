@@ -1253,7 +1253,9 @@ public class MrBlue {
                     long timeOfUseBadges = Long.parseLong(obj.get("timeofUseBadges").toString());
                     boolean isUse = Boolean.parseBoolean(String.valueOf(obj.get("isUse")));
 
-                    player.dataBadges.add(new BadgesData(idBadges, timeOfUseBadges, isUse));
+                    BadgesData badge=new BadgesData(idBadges, timeOfUseBadges, isUse);
+                    if(obj.get("rewardOptions") instanceof JSONArray opts){badge.rewardOptions=new java.util.ArrayList<>();for(Object value:opts){JSONObject o=(JSONObject)value;badge.rewardOptions.add(new Item.ItemOption(((Number)o.get("id")).intValue(),((Number)o.get("param")).intValue()));}}
+                    player.dataBadges.add(badge);
                 }
                 dataArray.clear();
             } catch (Exception ex) {

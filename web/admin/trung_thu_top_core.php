@@ -2,7 +2,7 @@
 function ttTopDefaults(){
     $i=function($id,$quantity=1,$days=0){return ['id'=>$id,'quantity'=>$quantity,'days'=>$days,'options'=>[]];};
     $tier=function($from,$to,$items){return compact('from','to','items');};
-    return [
+    $rewards = [
       'vip'=>[
         $tier(1,1,[$i(1885,1,365),$i(1283,70),$i(1559,3),$i(1634,3),$i(2046,20),$i(1851,2),$i(2071,3),$i(1868,20000)]),
         $tier(2,2,[$i(1885,1,180),$i(1283,60),$i(1559,2),$i(1634,2),$i(2046,15),$i(1851),$i(2071,2),$i(1868,15000)]),
@@ -22,7 +22,13 @@ function ttTopDefaults(){
         $tier(11,50,[$i(2072,1,90),$i(987,10),$i(1690,20)]),$tier(51,100,[$i(2072,1,60),$i(987,5),$i(1690,10)])],
       'milestone'=>[$i(2076)]
     ];
+    foreach (['normal','vegetarian'] as $board) foreach ([30,28,26,24,20,18] as $index=>$percent) $rewards[$board][$index]['items'][0]['options']=ttTopStatOptions($percent);
+    foreach ($rewards['vip'] as &$row) foreach ($row['items'] as &$item) if ($item['id']===1885) $item['options']=ttTopStatOptions(15);
+    unset($row,$item);
+    $rewards['milestone'][0]['options']=ttTopStatOptions(15);
+    return $rewards;
 }
+function ttTopStatOptions($percent){return array_map(fn($id)=>['id'=>$id,'param'=>$percent],[50,77,103]);}
 function ttTopInt($v,$min,$max){if(!is_int($v)||$v<$min||$v>$max)throw new RuntimeException('Số nhập nằm ngoài giới hạn.');return $v;}
 function ttTopDate($v){
     if(!is_string($v))throw new RuntimeException('Chưa chọn ngày giờ.');

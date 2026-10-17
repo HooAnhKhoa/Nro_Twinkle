@@ -16,7 +16,7 @@ if($action==='read'){
         foreach(['vip','normal','vegetarian'] as $b){$q=$conn->prepare('SELECT s.player_id,p.name,s.score,s.reached_ms FROM trung_thu_score s LEFT JOIN player p ON p.id=s.player_id WHERE season_id=? AND board=? ORDER BY score DESC,reached_ms,player_id LIMIT 100');$q->bind_param('is',$id,$b);$q->execute();$ranks[$b]=$q->get_result()->fetch_all(MYSQLI_ASSOC);}
         $prizes=$conn->query('SELECT board,COUNT(*) total,SUM(claimed_at IS NOT NULL) claimed FROM trung_thu_prize WHERE season_id='.$id.' GROUP BY board')->fetch_all(MYSQLI_ASSOC);
     }
-    panelReply(['season'=>$season,'defaults'=>ttTopDefaults(),'ranks'=>$ranks,'prizes'=>$prizes,'items'=>array_values(array_filter($templates,fn($t)=>!isset($missing[(string)$t['id']]))),'server_ms'=>(int)round(microtime(true)*1000)]);
+    panelReply(['season'=>$season,'defaults'=>ttTopDefaults(),'ranks'=>$ranks,'prizes'=>$prizes,'items'=>array_values(array_filter($templates,fn($t)=>!isset($missing[(string)$t['id']]))),'options'=>array_values($options),'server_ms'=>(int)round(microtime(true)*1000)]);
 }
 if($action!=='save')panelReply(['error'=>'Thao tác không hợp lệ.'],422);
 try{
