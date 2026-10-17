@@ -14,7 +14,8 @@ public final class TrungThuRules{
    +"6. Công thức: "+number("recipe.flour")+" bột mì + "+number("recipe.beans")+" đậu xanh + "+number("recipe.eggs")+" trứng + "+number("recipe.chicken")+" thịt gà + "+n(number("price.chicken-cake-gold"))+" vàng = bánh Gà quay. Đổi sang "+number("price.premium-cake-gems")+" ngọc có thêm "+number("recipe.bonus-mixed-percent")+"% nhận bánh Thập cẩm. Thay thịt gà bằng "+number("recipe.lotus-seed")+" hạt sen, dùng "+number("price.lotus-cake-gems")+" ngọc để làm bánh Hạt sen.\n"
    +"7. Đổi pet: "+number("exchange.grey-rabbit-cakes")+" bánh Gà quay đổi Thỏ xám; "+number("exchange.white-rabbit-cakes")+" bánh Thập cẩm đổi Thỏ trắng; "+number("exchange.black-cat-cakes")+" bánh Hạt sen đổi Mèo đen đuôi vàng. Hạn 3/5/7/15 ngày, có cơ hội vĩnh viễn.\n"
    +"8. Rước đèn/Điểm danh: Quy Lão → khu vực bang → Giu-ma (Ngưu Ma Vương). Bang chủ bắt đầu; thành viên online cùng khu, đeo lồng đèn và xác nhận đủ lượt. Người tham gia nhận X2 TNSM "+number("buff.parade-minutes")+" phút, mỗi hoạt động một lần/ngày.\n"
-   +"9. Cửa hàng: hộp Trung Thu 2026 "+number("price.normal-box-gems")+" ngọc; hộp Chay 2026 "+n(number("price.vegetarian-box-gold"))+" vàng. Mở hộp nhận vàng, hồng ngọc hoặc vật phẩm hiếm.";
+   +"9. Cửa hàng: hộp Trung Thu 2026 "+number("price.normal-box-gems")+" ngọc; hộp Chay 2026 "+n(number("price.vegetarian-box-gold"))+" vàng. Mở hộp nhận vàng, hồng ngọc hoặc vật phẩm hiếm.\n"
+   +"10. Đua top: xem lịch, cách tính điểm và bảng hạng tại Quy Lão → Đua top Trung Thu. Mỗi hộp tính 1 điểm theo cấu hình đợt. Hết giờ tự chốt quà; nhận tại Quy Lão kể cả khi sự kiện đã tắt. Túi đầy giữ quà để nhận sau.";
  }
  private TrungThuRules(){}
 }

@@ -59,5 +59,5 @@ $npcId=(int)$config['npc.lantern-offering'];
 $statement=$conn->prepare('SELECT NAME FROM npc_template WHERE id=?');
 $statement->bind_param('i',$npcId);$statement->execute();$npc=$statement->get_result()->fetch_assoc();
 check($npc!==null&&$npcId===(int)$config['npc.event']&&$npc['NAME']==='Trung thu','lantern offering reuses the existing event NPC');
-check($config['map.rabbit']==='84,126'&&$config['shop.vip-enabled']==='false','rabbit includes public Santa while VIP ranking box stays excluded');
+check($config['map.rabbit']==='84,126'&&$config['shop.vip-enabled']==='false','rabbit includes public Santa while VIP is not seeded into the ordinary shop');
 echo "PASS: $checks resource checks; no templates, players or running server changed\n";

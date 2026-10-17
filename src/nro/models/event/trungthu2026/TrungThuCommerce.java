@@ -12,7 +12,11 @@ public final class TrungThuCommerce {
     public static boolean trade(Player p,BagExchange.Cost cost,BagExchange.Gain gain){
         if(!nro.models.event.EventManager.allowNpc(p,"trung_thu"))return false;
         if(nro.models.server.Maintenance.isRunning){Service.gI().sendThongBao(p,"Máy chủ đang bảo trì. Giao dịch chưa thực hiện.");return false;}
-        BagExchange.Result result=EXCHANGE.execute(p,cost,gain,TrungThuStore::persistBag);
+        return tradeCounted(p,cost,gain,-1,"");
+    }
+    public static boolean tradeCounted(Player p,BagExchange.Cost cost,BagExchange.Gain gain,int item,String basis){
+        if(!nro.models.event.EventManager.allowNpc(p,"trung_thu")||nro.models.server.Maintenance.isRunning)return false;
+        BagExchange.Result result=EXCHANGE.execute(p,cost,gain,player->TrungThuCompetition.persist(player,item,basis));
         notifyResult(p,result);return result==BagExchange.Result.SUCCESS;
     }
     public static void notifyResult(Player p,BagExchange.Result result){
@@ -50,6 +54,7 @@ public final class TrungThuCommerce {
         trade(p,petCost(select),gain(TrungThuRewards.item(pets[select],1,TrungThuRewards.petDays(RANDOM))));
     }
     public static String boxKind(int id){
+        if(id==2079)return "normal-box";
         if(id==item("normal-box")||id==item("legacy-normal-box"))return "normal-box";
         if(id==item("vegetarian-box")||id==item("legacy-vegetarian-box"))return "vegetarian-box";
         return null;
@@ -57,7 +62,7 @@ public final class TrungThuCommerce {
     public static boolean useBox(Player p,Item box){
         String key=boxKind(box.template.id);
         if(key==null)return false;
-        synchronized(p){if(!p.inventory.itemsBag.contains(box)||box.quantity<1)return true;trade(p,cost(Map.of((int)box.template.id,1),0,0),TrungThuRewards.roll(key,RANDOM));}return true;
+        synchronized(p){if(!p.inventory.itemsBag.contains(box)||box.quantity<1)return true;tradeCounted(p,cost(Map.of((int)box.template.id,1),0,0),TrungThuRewards.roll(key,RANDOM),box.template.id,"opened");}return true;
     }
     public static void chooseSide(Player p,int side){
         if(side!=1&&side!=2)return;if(!nro.models.event.EventManager.allowNpc(p,"trung_thu"))return;

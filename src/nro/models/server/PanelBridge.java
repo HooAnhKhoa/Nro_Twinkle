@@ -89,7 +89,7 @@ public final class PanelBridge {
     }
     public static void start() {
         try(Connection c=LocalManager.getConnection();Statement s=c.createStatement()) {
-            for(String file:new String[]{"panel_schema.sql","boss_web.sql","server_rates.sql","drop_rates.sql","drop_rules.sql","intrinsic_schema.sql","event_schema.sql","october20_schema.sql","boss_bounty_schema.sql","toribot_schema.sql"}) {
+            for(String file:new String[]{"panel_schema.sql","boss_web.sql","server_rates.sql","drop_rates.sql","drop_rules.sql","intrinsic_schema.sql","event_schema.sql","trung_thu_top_schema.sql","october20_schema.sql","boss_bounty_schema.sql","toribot_schema.sql"}) {
                 for(String sql:Files.readString(Path.of("web",file)).split(";"))if(!sql.trim().isEmpty())s.execute(sql);
             }
             nro.models.event.EventManager.reload(c);

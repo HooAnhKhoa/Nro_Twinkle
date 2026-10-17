@@ -105,9 +105,9 @@ public final class TrungThuShop {
             Service.gI().sendThongBao(player, "Vật phẩm hoặc giá bán không hợp lệ.");
             return;
         }
-        TrungThuCommerce.trade(player,
+        TrungThuCommerce.tradeCounted(player,
                 TrungThuCommerce.cost(Map.of(), sale.typeSell == 0 ? sale.cost : 0, sale.typeSell == 1 ? sale.cost : 0),
-                TrungThuCommerce.gain(ItemService.gI().createItemFromItemShop(sale)));
+                TrungThuCommerce.gain(ItemService.gI().createItemFromItemShop(sale)),sale.temp.id,"acquired");
     }
 
     private TrungThuShop() {}

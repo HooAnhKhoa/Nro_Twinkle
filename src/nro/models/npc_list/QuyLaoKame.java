@@ -97,6 +97,7 @@ public class QuyLaoKame extends Npc {
                 menu.add("Đổi điểm\nsự kiện\n[" + player.event.getEventPoint() + "]");
                 menu.add("Nhận quà\nKOL");
                 menu.add("Nhận quà\nKOL VIP");
+                menu.add("Đua top\nTrung Thu");
                 if (ruacon != null && ruacon.quantity >= 1) {
                     menu.add("Giao\nRùa con");
                 }
@@ -116,6 +117,7 @@ public class QuyLaoKame extends Npc {
             return;
         }
 
+        if(nro.models.event.trungthu2026.TrungThuCompetition.confirm(player,this,select))return;
         if (player.canReward && nro.models.event.EventManager.enabled("tet")) {
             RewardService.gI().rewardLancon(player);
             return;
@@ -167,6 +169,9 @@ public class QuyLaoKame extends Npc {
                 handleKOLQuest(player, true);
                 break;
             case 4:
+                nro.models.event.trungthu2026.TrungThuCompetition.openNpc(player,this);
+                break;
+            case 5:
                 handleTradeRuacon(player);
                 break;
         }

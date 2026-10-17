@@ -13,7 +13,7 @@ public final class TrungThuRevisionTest{
  static void task(TrungThuRuntimeTest.User p,int level){p.playerTask.sideTask.template=new nro.models.task.SideTaskTemplate();p.playerTask.sideTask.level=(byte)level;p.playerTask.sideTask.count=p.playerTask.sideTask.maxCount=1;}
  public static void run(Connection c)throws Exception{
   check(TrungThuCommerce.boxKind(2078).equals("normal-box")&&TrungThuCommerce.boxKind(1316).equals("normal-box"),"2026 normal box and already-owned legacy box use same rewards");
-  check(TrungThuCommerce.boxKind(2080).equals("vegetarian-box")&&TrungThuCommerce.boxKind(1317).equals("vegetarian-box")&&TrungThuCommerce.boxKind(2079)==null,"2026 vegetarian and legacy box recognized; ranking VIP box excluded");
+  check(TrungThuCommerce.boxKind(2080).equals("vegetarian-box")&&TrungThuCommerce.boxKind(1317).equals("vegetarian-box")&&TrungThuCommerce.boxKind(2079).equals("normal-box"),"2026 vegetarian and legacy box recognized; scheduled ranking VIP box opens with existing normal rewards");
   for(int id:new int[]{2078,2080,1316,1317}){
    var p=user(c,40+(id%10)+(id<2000?10:0),8);put(p,id,1);TrungThuRuntime.use(p,nro.models.services.InventoryService.gI().findItemBag(p,id));check(qty(p,id)==0,"real use path opens box "+id);
   }
@@ -45,7 +45,7 @@ public final class TrungThuRevisionTest{
   check(qty(summon,1310)==0&&rabbit.zoneFinal!=null&&rabbit.zoneFinal.map.mapId==126,"paid rabbit summon reserves real public Santa zone");
   rabbit.respawn();rabbit.joinMap();check(rabbit.zone!=null&&rabbit.zone.map.mapId==126,"rabbit actually appears at Santa");
   check(Arrays.equals(TrungThuConfig.numbers("map.rabbit"),new int[]{84,126}),"rabbit excludes gas dungeon Santa alias 149");
-  String rules=TrungThuRules.text();check(rules.contains("Thành phố Santa")&&rules.contains("Lồng đèn 2 lon")&&rules.contains("20.000.000")&&!rules.contains("X3")&&!rules.toLowerCase().contains("top")&&!rules.contains("nạp"),"player rules show current activities and exact prices without removed promotions");
+  String rules=TrungThuRules.text();check(rules.contains("Thành phố Santa")&&rules.contains("Lồng đèn 2 lon")&&rules.contains("20.000.000")&&!rules.contains("X3")&&rules.contains("Đua top")&&!rules.contains("nạp"),"player rules show current activities and exact prices without removed promotions");
   check(scalar(c,"SELECT COUNT(*) FROM item_shop i JOIN tab_shop t ON t.id=i.tab_id JOIN shop s ON s.id=t.shop_id WHERE s.tag_name='TRUNG_THU_2026' AND i.temp_id IN(2078,2080)")==2,"native shop sells both actual 2026 box templates");
   try(Statement s=c.createStatement()){
    s.executeUpdate("UPDATE item_shop i JOIN tab_shop t ON t.id=i.tab_id JOIN shop sh ON sh.id=t.shop_id SET i.temp_id=1316,i.cost=37 WHERE sh.tag_name='TRUNG_THU_2026' AND i.temp_id=2078");

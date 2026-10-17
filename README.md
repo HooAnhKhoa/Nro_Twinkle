@@ -982,3 +982,20 @@ Nguyên nhân: ItemData gửi toàn bộ template 750..2103 trong một gói -28
 - 151 kiểm tra tích hợp và 26 kiểm tra thể lệ mới trên DB riêng nro_trungthu_rules_20261017; 53 kiểm tra tài nguyên chỉ đọc; danh mục đủ 61 quy tắc rơi. Fixture nhân vật lấy đầy đủ cột bắt buộc từ bản sao QA rồi thay ID riêng; không ghi nhân vật thật. Kiểm thử danh mục được cập nhật nhận đường MobDropBonuses.roll đã thay cho một số PanelBridge.rollDrop từ bản may mắn trước đó.
 - Bảo trì lệnh 65 lưu 15 giây rồi launcher 11208 mở JVM mới 6508 sau 10 giây. JAR SHA256 32564F8B76C1AB8E607B3AB128AAFF590DECA4FB06C77F4026DCC0FD5914F096; 667 class đóng gói đầy đủ. Game bắt tay tại 192.168.2.10:14445 thành công, heartbeat tốt, bảo trì tắt, error log trống.
 - Kiểm tra live 11 hàng shop/option so với bản sao trước thay đổi: chỉ hai ID hộp thay đổi; giá/chỉ số/công tắc/tỷ lệ rơi giữ nguyên. Hai file mô tả panel được cập nhật. Sao lưu ở D:/NroFreeSetup/Backups/trungthu-rules-20261017/. Chưa kiểm tra trực quan toàn bộ menu trong client, không tự cấp đồ test hay thay tiền người chơi.
+
+
+## Đua top Trung Thu theo lịch (17/10/2026)
+
+Trong **Sự kiện → Trung Thu → Lịch đua top & phần thưởng**, chọn ngày giờ Việt Nam, cách tính điểm (mở hộp hoặc mua/đổi tại NPC), giá vàng/ngọc hộp VIP và bảng thưởng, rồi bật lịch và lưu. Không tự dùng lại lịch tháng 8–9 đã hết hạn. Chưa cấu hình lịch thì công tắc thủ công vẫn hoạt động như trước. Sau khi lịch bắt đầu, thời gian, giá và thưởng bị khóa; sau khi chốt có thể tạo đợt mới.
+
+Ba bảng: VIP #2079, hộp ngọc #2078 (nhận cả hộp cũ #1316), hộp chay #2080 (cũ #1317). Mỗi hộp tính 1 điểm theo cách đã chọn; cấp đồ admin, giao dịch hoặc đổi thưởng top không cộng điểm. Hòa điểm ưu tiên thời điểm đạt điểm sớm hơn, cuối cùng ID nhân vật nhỏ hơn. Chỉ tính trong [bắt đầu, kết thúc), không truy hồi điểm từ trước lịch.
+
+Quy Lão có **Đua top Trung Thu** để xem điểm, đổi hộp VIP bằng giá đã cấu hình và nhận quà. VIP mở theo bảng quà hộp Trung Thu hiện có. NPC Trung Thu cũng có lối mở bảng top; Quy Lão vẫn cho nhận sau khi sự kiện tắt.
+
+Hết giờ tự tắt Trung Thu, chốt tối đa 100 hạng mỗi bảng và lưu thưởng trong cùng transaction. Người đạt 25.000 điểm VIP có thêm gói danh hiệu. Game offline khi hết giờ sẽ chốt ở lần khởi động kế tiếp. Quà được lưu riêng cho cả người offline, nhận từng gói vào túi tại Quy Lão; túi đầy hoặc lưu lỗi giữ nguyên gói chưa nhận. Thời hạn vật phẩm bắt đầu khi nhận gói. Không cộng trực tiếp vào túi offline để tránh bị autosave ghi đè.
+
+Bảng mẫu theo thể lệ đã gửi: Minion #2059, Ngựa Troy #2072, Phá cỗ #1885, danh hiệu VIP #2076, sách #1283, capsule SKH #1559, capsule vỡ #1634, khóa bông tai loại đang có #2046, con dấu #1851, hộp NR xanh #2071, mảnh BT3 #1868, phiếu #1690, radar VIP #1809 và đá bảo vệ #987. Có thể thay ID, số lượng và hạn trong giao diện trước khi bắt đầu. Không thêm X3 hoặc khuyến mãi nạp.
+
+Dữ liệu mới: `trung_thu_season`, `trung_thu_score`, `trung_thu_prize` (InnoDB). Điểm cùng transaction với túi/tiền; khóa đợt khi chốt; khóa unique đợt/bảng/người nhận chống phát trùng; biên nhận và túi được lưu cùng transaction khi nhận. Giữ quà các đợt cũ khi tạo lịch mới. Đừng xóa bảng thưởng hoặc sửa SQL của đợt đang chạy.
+
+Kiểm tra: 26 tình huống game đua top, 17 kiểm tra cấu hình PHP và 9 thao tác API localhost trên DB QA riêng. Bản JAR kiểm tra đủ ConstIgnoreName và 669 application classes. Sao lưu trước triển khai: `D:/NroFreeSetup/Backups/trungthu-top-20261017`. Hoàn tác bằng commit trước thay đổi và JAR đã lưu khi game đã dừng theo bảo trì; giữ lại bảng quà/biên nhận để không mất hoặc phát lặp thưởng.

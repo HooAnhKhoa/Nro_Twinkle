@@ -2,9 +2,9 @@
 let state=null,busy=false;
 const $=s=>document.querySelector(s),cards=[...document.querySelectorAll('[data-event]')];
 async function api(body){const response=await fetch('events.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...body,csrf})});const data=await response.json();if(!response.ok)throw Error(data.error||'Không thể kết nối.');return data;}
-function lock(){cards.forEach(card=>card.querySelector('button').disabled=busy||!state);document.querySelectorAll('[data-undo]').forEach(button=>button.disabled=busy);$('#reloadEvents').disabled=busy;}
+function lock(){cards.forEach(card=>card.querySelector('button').disabled=busy||!state||(card.dataset.event==='trung_thu'&&Number(state.trung_thu_schedule?.scheduled)===1));document.querySelectorAll('[data-undo]').forEach(button=>button.disabled=busy);$('#reloadEvents').disabled=busy;}
 function render(){const values=new Map(state.events.map(row=>[row.event_key,Number(row.enabled)===1]));let count=0;
-cards.forEach(card=>{const on=values.get(card.dataset.event)===true;count+=Number(on);card.classList.toggle('is-on',on);card.querySelector('.event-state').textContent=on?'Đang bật':'Đang tắt';card.querySelector('button').setAttribute('aria-checked',String(on));});
+cards.forEach(card=>{const schedule=state.trung_thu_schedule;const planned=card.dataset.event==='trung_thu'&&Number(schedule?.scheduled)===1;const on=planned?!schedule.closed_at&&Date.now()>=Number(schedule.start_ms)&&Date.now()<Number(schedule.end_ms):values.get(card.dataset.event)===true;count+=Number(on);card.classList.toggle('is-on',on);card.querySelector('.event-state').textContent=planned?(on?'Đang bật theo lịch':'Đang tắt theo lịch'):on?'Đang bật':'Đang tắt';card.querySelector('button').setAttribute('aria-checked',String(on));});
 const hungCard=$('[data-event="hung_vuong"]');let runtime=hungCard.querySelector('.event-boss-runtime');
 if(!runtime){runtime=document.createElement('details');runtime.className='event-boss-runtime';hungCard.append(runtime);}runtime.replaceChildren();
 const bossHeading=document.createElement('summary');bossHeading.textContent='Boss đang xuất hiện: '+(state.hung_bosses||[]).reduce((total,boss)=>total+Number(boss.online_count),0);runtime.append(bossHeading);

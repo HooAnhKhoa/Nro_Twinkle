@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS trung_thu_season (
+ id BIGINT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100) NOT NULL,
+ start_ms BIGINT NOT NULL, end_ms BIGINT NOT NULL, scheduled TINYINT NOT NULL DEFAULT 0,
+ basis VARCHAR(16) NOT NULL DEFAULT 'opened', vip_gold BIGINT NOT NULL DEFAULT 0,
+ vip_gems INT NOT NULL DEFAULT 0, rewards MEDIUMTEXT NOT NULL,
+ closed_at DATETIME NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS trung_thu_score (
+ season_id BIGINT NOT NULL, board VARCHAR(16) NOT NULL, player_id BIGINT NOT NULL,
+ score BIGINT NOT NULL, reached_ms BIGINT NOT NULL,
+ PRIMARY KEY(season_id,board,player_id), KEY ranking(season_id,board,score,reached_ms)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS trung_thu_prize (
+ id BIGINT AUTO_INCREMENT PRIMARY KEY, season_id BIGINT NOT NULL, board VARCHAR(16) NOT NULL,
+ player_id BIGINT NOT NULL, place INT NOT NULL, score BIGINT NOT NULL,
+ items MEDIUMTEXT NOT NULL, claimed_at DATETIME NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ UNIQUE KEY receipt(season_id,board,player_id), KEY inbox(player_id,claimed_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

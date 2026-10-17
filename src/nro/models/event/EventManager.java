@@ -79,7 +79,7 @@ public final class EventManager {
         }
     }
     public static EventManager gI() { return INSTANCE; }
-    public static boolean enabled(String key) { return switches.getOrDefault(key, false); }
+    public static boolean enabled(String key) { if("trung_thu".equals(key)){Boolean scheduled=nro.models.event.trungthu2026.TrungThuCompetition.scheduledEnabled();if(scheduled!=null)return scheduled;}return switches.getOrDefault(key, false); }
     public static String bossEvent(String className) {
         if(className.startsWith("nro.models.boss.Broly."))return "broly";
         if(className.startsWith("nro.models.boss.event_hung_vuong."))return "hung_vuong";
@@ -119,7 +119,9 @@ public final class EventManager {
             if(initialized)try(PreparedStatement update=connection.prepareStatement("UPDATE panel_event_runtime SET heartbeat=NOW(),applied_revision=? WHERE id=1")) {
                 update.setLong(1,revision);update.executeUpdate();
             }
+            var season=nro.models.event.trungthu2026.TrungThuCompetition.reload(connection);
             connection.commit();
+            nro.models.event.trungthu2026.TrungThuCompetition.publish(season);
         }catch(SQLException error){connection.rollback();throw error;}
         finally{connection.setAutoCommit(auto);}
     }

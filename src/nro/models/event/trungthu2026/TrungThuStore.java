@@ -21,6 +21,7 @@ public final class TrungThuStore {
                 while(r.next())if(!"InnoDB".equalsIgnoreCase(r.getString(2)))throw new SQLException("Bảng "+r.getString(1)+" phải dùng InnoDB để đổi thưởng an toàn");
             }
             for(String sql:Files.readString(Path.of("web/trung_thu_schema.sql")).split(";"))if(!sql.isBlank())s.execute(sql);
+            for(String sql:Files.readString(Path.of("web/trung_thu_top_schema.sql")).split(";"))if(!sql.isBlank())s.execute(sql);
             TrungThuShop.ensureData(connection);
             // Replace only the original placeholder; keep any administrator-customized appearance.
             s.executeUpdate("UPDATE npc_template SET head=1098,body=1099,leg=1100,avatar=9976 WHERE id=41 AND head=120 AND body=121 AND leg=122 AND avatar=0");
