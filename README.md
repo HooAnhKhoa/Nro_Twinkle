@@ -1031,3 +1031,12 @@ Kiểm tra trên DB QA: 100.000 lượt quay xác định, biên 1 và 100 ngọ
 Theo yêu cầu giảm thêm 2/3 tỷ lệ và 1/2 số lượng: tỷ lệ bậc 1–5 còn 5/3%, 10/3%, 5%, 20/3%, 25/3% (panel làm tròn hiển thị hai chữ số). Lượng quay theo khoảng gốc rồi chia hai, làm tròn xuống, tối thiểu một thỏi khi trúng; khoảng hiển thị lần lượt 1, 1, 1–2, 2–4, 4–6. Ngọc xanh 1–100, VNĐ và Ngọc Rồng giữ nguyên.
 
 Journal đã tạo trước thay đổi giữ nguyên số lượng đã quay; khôi phục chấp nhận cả khoảng cũ và khoảng mới, không quay lại thưởng đang chờ. Sao lưu JAR/web ở `D:/NroFreeSetup/Backups/boss-bounty-reduced-20261017`.
+
+
+## Sửa trắng hành trang sau tải cache (17/10/2026)
+
+Client Unity hiện tại lưu template reset vào NRitem1 và template append vào NRitem2. Catalog 2.103 món phải chia ba gói để không vượt header 16-bit; gói append thứ hai ghi đè append thứ nhất trên đĩa. Lần đăng nhập lại từ cache thiếu ID 750–1615, gồm Inosuke #1089. Lỗi NullReferenceException khi đọc thông tin nhân vật khiến bảng avatar chưa được nạp, sau đó Panel.paintTopInfo tiếp tục lỗi IndexOutOfRangeException. Có thể xảy ra cả khi không mặc cải trang nếu trong túi có món thiếu mẫu.
+
+Server nay phát lại đầy đủ catalog bằng các gói dưới 60.000 byte ngay trước packet nhân vật ở bước client-ready của mỗi lần đăng nhập. Version item tăng 16 để loại cache version 15 thiếu dữ liệu. Không cắt mô tả, đổi ID hay xóa vật phẩm; không sửa/xóa cache client của người dùng. Do client chỉ lưu hai phần, lần đăng nhập sau vẫn cần phát lại catalog; overhead khoảng 145 KB mỗi lần vào nhân vật. Cần source client để thay cách lưu thành nhiều phần bền vững.
+
+Đã kiểm tra cache hai-slot tái hiện lỗ hổng ID, phát lại ba gói khôi phục đủ 2.103 mẫu, và kích thước frame thật. Sao lưu JAR và hai file cache gây lỗi (chỉ đọc bản gốc) tại `D:/NroFreeSetup/Backups/client-item-cache-20261017`.

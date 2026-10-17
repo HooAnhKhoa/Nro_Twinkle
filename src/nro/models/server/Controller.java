@@ -763,6 +763,9 @@ public class Controller implements IMessageHandler {
                     case 13:
                         //client ok
                         if (player != null && player.isPl()) {
+                            // This client persists only NRitem1/NRitem2; extra append chunks are lost on cache reload.
+                            // Replay the complete bounded catalog before the character references any template.
+                            ItemData.updateItem(_session);
                             Service.gI().player(player);
                             Service.gI().Send_Caitrang(player);
 
