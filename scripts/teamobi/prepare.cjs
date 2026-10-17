@@ -36,7 +36,7 @@ for(const a of source.filter(x=>x.type===5||x.type===18)){
  else unresolved.push({id:a.id,name:a.name,icon:a.iconID});
 }
 outfits.set(1593,{head:1467,body:1474,leg:1475,method:'shared-head-body-variant'});
-const items=source.map(a=>({id:a.id,TYPE:a.type,gender:a.gender,NAME:a.name,description:a.description,level:a.level,icon_id:a.iconID,part:a.part,is_up_to_up:+a.isUpToUp,power_require:a.strRequire,gold:0,gem:0,head:outfits.get(a.id)?.head??-1,body:outfits.get(a.id)?.body??-1,leg:outfits.get(a.id)?.leg??-1}));
+const items=source.map(a=>({id:a.id,TYPE:a.type,gender:a.gender,NAME:a.name,description:a.description,level:a.level,icon_id:a.iconID,part:a.part,is_up_to_up:([6,7,8,12,13,14,15,16,22,27,29,30,31,33,35,37].includes(a.type)?1:+a.isUpToUp),power_require:a.strRequire,gold:0,gem:0,head:outfits.get(a.id)?.head??-1,body:outfits.get(a.id)?.body??-1,leg:outfits.get(a.id)?.leg??-1}));
 for(const o of old.item_template){const target=items[itemMap[o.id]];if(target&&+o.id===itemMap[o.id]){target.gold=+o.gold;target.gem=+o.gem;}}
 const flagRows=read('flag-rows'),flags=new Map(flagRows.map(x=>[+x.id,x])),portedFlags=[];
 for(const o of old.item_template){const target=items[itemMap[o.id]],flag=flags.get(+o.part);if(+o.TYPE===11&&target?.TYPE===11&&+o.icon_id===target.icon_id&&flag&&target.part>=0&&target.part!==+o.part){portedFlags.push({...flag,id:target.part,NAME:target.NAME});}}

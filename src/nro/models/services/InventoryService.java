@@ -826,10 +826,10 @@ public class InventoryService {
             itemAdd.itemOptions.add(new Item.ItemOption(73, 0));
         }
 
-        int[] idParam = isItemIncrementalOption(itemAdd);
+        int[] idParam = ItemStacks.stackable(itemAdd) ? isItemIncrementalOption(itemAdd) : new int[]{-1,-1};
         if (idParam[0] != -1) {
             for (Item it : items) {
-                if (it.isNotNullItem() && it.template.id == itemAdd.template.id) {
+                if (ItemStacks.sameCounter(it,itemAdd,idParam[0])) {
                     for (Item.ItemOption io : it.itemOptions) {
                         if (io.optionTemplate.id == idParam[0]) {
                             if ((long) io.param + idParam[1] > Integer.MAX_VALUE) continue;
@@ -841,66 +841,27 @@ public class InventoryService {
                 }
             }
         }
-        if (itemAdd.template.isUpToUp) {
-            for (Item it : items) {
-                if (!it.isNotNullItem() || it.template.id != itemAdd.template.id || (!checkListsEqual(it.itemOptions, itemAdd.itemOptions) && itemAdd.template.id != 2074 && !itemAdd.isDaNangCap() && !itemAdd.isManhTS()) || it.quantity >= 100_000_000) {
-                    continue;
-                }
-
-                //========================ITEM TĂNG SỐ LƯỢNG========================
-                if ((itemAdd.template.id >= 1066 && itemAdd.template.id <= 1070) || itemAdd.template.id == 457
-                        || itemAdd.template.id == 610 || itemAdd.template.type == 14 || itemAdd.template.id == 2048
-                        || itemAdd.template.id > 2049 && itemAdd.template.id < 2056 || itemAdd.template.id == 821
-                        || itemAdd.template.id == 2075) {
-                    it.quantity += itemAdd.quantity;
-                    itemAdd.quantity = 0;
-                    return true;
-                }
-
-                if (it.quantity < 99999) {
-                    int add = 99999 - it.quantity;
-                    if (itemAdd.quantity <= add) {
-                        it.quantity += itemAdd.quantity;
-                        itemAdd.quantity = 0;
-                        return true;
-                    } else {
-                        it.quantity = 99999;
-                        itemAdd.quantity -= add;
-                    }
-                }
+        if (ItemStacks.stackable(itemAdd)) {
+            long room=0;
+            for(Item it:items)if(!it.isNotNullItem())room+=ItemStacks.LIMIT;
+                else if(ItemStacks.same(it,itemAdd))room+=Math.max(0,ItemStacks.LIMIT-it.quantity);
+            if(room<itemAdd.quantity)return false;
+            for(Item it:items)if(ItemStacks.same(it,itemAdd)&&it.quantity<ItemStacks.LIMIT){
+                int moved=Math.min(ItemStacks.LIMIT-it.quantity,itemAdd.quantity);
+                it.quantity+=moved;itemAdd.quantity-=moved;if(itemAdd.quantity==0)return true;
             }
         }
-
-        //add item vào ô mới
-        if (itemAdd.quantity > 0) {
-            for (int i = 0; i < items.size(); i++) {
-                if (!items.get(i).isNotNullItem()) {
-                    items.set(i, ItemService.gI().copyItem(itemAdd));
-                    itemAdd.quantity = 0;
-                    return true;
-                }
-            }
+        for(int i=0;i<items.size()&&itemAdd.quantity>0;i++)if(!items.get(i).isNotNullItem()){
+            Item added=ItemService.gI().copyItem(itemAdd);
+            added.expire=itemAdd.expire;
+            added.quantity=ItemStacks.stackable(itemAdd)?Math.min(ItemStacks.LIMIT,itemAdd.quantity):itemAdd.quantity;
+            items.set(i,added);itemAdd.quantity-=added.quantity;
         }
-        return false;
+        return itemAdd.quantity==0;
     }
 
-    /** Login-only consolidation: preserve slot indices and never alter a live trade's item references. */
-    public void compactEventMaterialStacks(List<Item> items) {
-        for(Item item:items)if(stackableEventMaterial(item)&&item.itemOptions.isEmpty())item.itemOptions.add(new ItemOption(73,0));
-        for(int i=0;i<items.size();i++){
-            Item target=items.get(i);if(!stackableEventMaterial(target)||target.quantity>=99999)continue;
-            for(int j=i+1;j<items.size()&&target.quantity<99999;j++){
-                Item source=items.get(j);
-                if(!stackableEventMaterial(source)||source.template.id!=target.template.id||!checkListsEqual(target.itemOptions,source.itemOptions))continue;
-                int moved=Math.min(99999-target.quantity,source.quantity);target.quantity+=moved;source.quantity-=moved;
-                if(source.quantity==0)items.set(j,ItemService.gI().createItemNull());
-            }
-        }
-    }
-    private boolean stackableEventMaterial(Item item){
-        return item!=null&&item.isNotNullItem()&&(item.template.id==1505||item.template.id==1509||item.template.id==1628)&&item.template.isUpToUp&&item.quantity>0
-            &&item.itemOptions.stream().allMatch(o->o.optionTemplate.id==30||o.optionTemplate.id==73);
-    }
+    /** Login consolidation keeps all slot indices and runs before trade references exist. */
+    public void compactEventMaterialStacks(List<Item> items) { ItemStacks.compact(items); }
 
     public static boolean checkListsEqual(List<ItemOption> list1, List<ItemOption> list2) {
         if (list1.size() != list2.size()) {

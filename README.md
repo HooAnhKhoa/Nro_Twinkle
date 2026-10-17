@@ -999,3 +999,12 @@ Bảng mẫu theo thể lệ đã gửi: Minion #2059, Ngựa Troy #2072, Phá c
 Dữ liệu mới: `trung_thu_season`, `trung_thu_score`, `trung_thu_prize` (InnoDB). Điểm cùng transaction với túi/tiền; khóa đợt khi chốt; khóa unique đợt/bảng/người nhận chống phát trùng; biên nhận và túi được lưu cùng transaction khi nhận. Giữ quà các đợt cũ khi tạo lịch mới. Đừng xóa bảng thưởng hoặc sửa SQL của đợt đang chạy.
 
 Kiểm tra: 26 tình huống game đua top, 17 kiểm tra cấu hình PHP và 9 thao tác API localhost trên DB QA riêng. Bản JAR kiểm tra đủ ConstIgnoreName và 669 application classes. Sao lưu trước triển khai: `D:/NroFreeSetup/Backups/trungthu-top-20261017`. Hoàn tác bằng commit trước thay đổi và JAR đã lưu khi game đã dừng theo bảo trì; giữ lại bảng quà/biên nhận để không mất hoặc phát lặp thưởng.
+
+
+## Sửa stack sau đổi catalog chuẩn (17/10/2026)
+
+Bộ ItemTemplates phía client đánh dấu isUpToUp=false cho toàn bộ 2.103 món; khi nhập làm catalog server đã mất cờ gộp cũ. `web/consumable_stack_schema.sql` khôi phục cờ cho nhóm tiêu hao: đậu, sách kỹ năng, nguyên liệu/nhiệm vụ, ngọc rồng, đá, bùa, vệ tinh, hộp, thức ăn, sao pha lê và mảnh thẻ. Chạy idempotent trước khi nạp template. Catalog JSON và script chuẩn bị dữ liệu cũng giữ chính sách này cho lần nhập sau. Trang bị, cải trang, pet, thú cưỡi, bông tai và danh hiệu không được gộp. Version item tăng 15 để client tải lại cờ.
+
+ItemStacks so sánh ID và đầy đủ chỉ số không phụ thuộc thứ tự; bỏ qua duy nhất option rỗng 73/0. Khác khóa giao dịch, khác chỉ số hoặc có hạn dùng/expire riêng thì giữ tách. Tối đa 99.999 món mỗi chồng; phần dư vào ô tiếp theo. Nếu thiếu chỗ, thêm đồ thất bại không sửa chồng đang có. Counter cũ của TĐLT/Porata cộng đúng số phút/số mảnh và vẫn giữ khóa giao dịch.
+
+Khi đăng nhập, túi và rương tự gộp các chồng tương thích, giữ vị trí các ô còn lại và tổng số lượng. Không ghi đè túi người đang online bằng bản sao cũ. Đã kiểm tra mẫu bốn chồng đậu 13 = 52, đồng thời replay bản sao dữ liệu hiện tại của beuyen. Sao lưu JAR/cờ template/túi-rương trước thay đổi trong `D:/NroFreeSetup/Backups/item-stacks-20261017`; hoàn tác code/JAR khi game đã dừng, khôi phục riêng cờ template khi cần, không khôi phục túi cũ sau khi người chơi đã phát sinh giao dịch.
