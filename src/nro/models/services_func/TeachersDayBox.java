@@ -5,11 +5,17 @@ import nro.models.item.Item;
 import nro.models.player.Player;
 import nro.models.services.*;
 import nro.models.event.trungthu2026.*;
-/** Five exclusive teacher rewards; identical pools for ordinary and VIP boxes. */
+/** VIP-only teacher rewards with independent permanent-duration roll. */
 public final class TeachersDayBox {
  private static final BagExchange EXCHANGE=new BagExchange(500,System::currentTimeMillis);
- public static boolean handles(int id){return id==1739||id==1944;}
- public static Item reward(int choice,int gender){
+ public static boolean handles(int id){return id==1944;}
+ public static int select(int draw){
+  if(draw<0||draw>=10000)throw new IllegalArgumentException("Teacher reward draw");
+  if(draw<2250)return 0;if(draw<3250)return 1;if(draw<5500)return 2;if(draw<7750)return 3;return 4;
+ }
+ public static boolean permanent(int draw){if(draw<0||draw>=100)throw new IllegalArgumentException("Duration draw");return draw<5;}
+ public static Item reward(int choice,int gender){return reward(choice,gender,false);}
+ public static Item reward(int choice,int gender,boolean permanent){
   if(choice<0||choice>=5||gender<0||gender>2)throw new IllegalArgumentException("Teacher reward selection");
   int id=switch(choice){case 0->1362;case 1->1937;case 2->1389+gender;case 3->1384;default->1383;};
   Item item=ItemService.gI().createNewItem((short)id,1);
@@ -20,13 +26,14 @@ public final class TeachersDayBox {
    case 3->new int[][]{{50,23},{77,23},{103,23},{94,7},{108,10},{24,0},{93,7}};
    default->new int[][]{{50,22},{77,23},{103,22},{97,5},{108,10},{160,25},{93,7}};
   };
-  for(int[] stat:stats)item.itemOptions.add(new Item.ItemOption(stat[0],stat[1]));return item;
+  for(int[] stat:stats)if(stat[0]!=93)item.itemOptions.add(new Item.ItemOption(stat[0],stat[1]));
+  if(!permanent)item.itemOptions.add(new Item.ItemOption(93,choice==3||choice==4?7:15));return item;
  }
  public static boolean use(Player p,Item box){
   if(box==null||!box.isNotNullItem()||!handles(box.template.id))return false;
   synchronized(p){
    if(!p.isPl()||nro.models.server.Maintenance.isRunning||box.quantity<1||!p.inventory.itemsBag.contains(box))return true;
-   Item gift=reward(ThreadLocalRandom.current().nextInt(5),p.gender);if(!CatalogAssets.check(p,gift.template.id))return true;
+   Item gift=reward(select(ThreadLocalRandom.current().nextInt(10000)),p.gender,permanent(ThreadLocalRandom.current().nextInt(100)));if(!CatalogAssets.check(p,gift.template.id))return true;
    var result=EXCHANGE.execute(p,new BagExchange.Cost(Map.of((int)box.template.id,1),0,0),new BagExchange.Gain(List.of(gift),0,0,0),TrungThuStore::persistBag);
    InventoryService.gI().sendItemBags(p);
    Service.gI().sendThongBao(p,result==BagExchange.Result.SUCCESS?"Bạn nhận được "+gift.template.name+".":result==BagExchange.Result.BAG_FULL?"Hành trang đầy. Hộp được giữ nguyên.":"Chưa mở được hộp. Hộp được giữ nguyên, hãy thử lại.");
