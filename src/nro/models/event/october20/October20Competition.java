@@ -21,7 +21,7 @@ public final class October20Competition {
     private static final BagExchange CLAIM=new BagExchange(500,System::currentTimeMillis);
     public static Boolean scheduledEnabled(){Schedule s=schedule;return s==null||!s.scheduled?null:!s.paused&&System.currentTimeMillis()>=s.start&&System.currentTimeMillis()<s.end;}
     public static void publish(Schedule s){schedule=s;}
-    public static String boardName(String board){return switch(board){case "roses"->"Hộp Quà 20/10 (ngọc)";case "cards"->"Thiệp Chúc VIP";case "gifts"->"Hộp Quà 20/10";case "rose_bonus"->"Mốc top 1 Hộp ngọc";default->"Mốc top 1 Thiệp VIP";};}
+    public static String boardName(String board){return switch(board){case "roses"->"Đổi điểm Quy Lão";case "cards"->"Thiệp Chúc VIP";case "gifts"->"Hộp Quà 20/10";case "rose_bonus"->"Mốc top 1 Đổi điểm";default->"Mốc top 1 Thiệp VIP";};}
     public static Schedule reload(Connection c)throws SQLException{
         Schedule s=null;String rewards=null;
         try(Statement q=c.createStatement();ResultSet r=q.executeQuery("SELECT * FROM october20_season ORDER BY id DESC LIMIT 1 FOR UPDATE")){
@@ -71,7 +71,7 @@ public final class October20Competition {
         }
     }
     private static final BagExchange BUY=new BagExchange(500,System::currentTimeMillis);
-    public static String board(int id){return switch(id){case 1720->"roses";case 1718->"cards";case 1719->"gifts";default->null;};}
+    public static String board(int id){return switch(id){case 1718->"cards";case 1719->"gifts";default->null;};}
     static Schedule readSchedule(ResultSet r)throws SQLException{return new Schedule(r.getLong("id"),r.getLong("start_ms"),r.getLong("points_end_ms"),r.getLong("end_ms"),r.getBoolean("scheduled"),r.getBoolean("paused"),r.getInt("rose_gems"),r.getInt("card_gems"),r.getLong("gift_gold"),r.getTimestamp("closed_at")!=null);}
     public static Schedule current(){return schedule;}
     public static void buy(Player p,int id,int quantity){
@@ -154,7 +154,7 @@ public final class October20Competition {
                 var fmt=java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").withZone(java.time.ZoneId.of("Asia/Ho_Chi_Minh"));
                 text.append(r.getString("name")).append('\n').append(fmt.format(java.time.Instant.ofEpochMilli(r.getLong("start_ms")))).append(" → ").append(fmt.format(java.time.Instant.ofEpochMilli(r.getLong("end_ms")))).append('\n');
                 text.append(r.getTimestamp("closed_at")!=null?"Đã chốt top; nhận quà tại Quy Lão hoặc Chi Chi.":!r.getBoolean("scheduled")?"Chưa bật lịch.":System.currentTimeMillis()<r.getLong("start_ms")?"Chưa bắt đầu.":System.currentTimeMillis()<r.getLong("points_end_ms")?"Đang đua top.":"Đang chốt thưởng.").append('\n');
-                text.append("Chốt điểm: ").append(fmt.format(java.time.Instant.ofEpochMilli(r.getLong("points_end_ms")))).append("\nMỗi món mua tại NPC: 1 điểm. Đồ được cấp, giao dịch hoặc mở hộp không tính điểm.\n");
+                text.append("Chốt điểm: ").append(fmt.format(java.time.Instant.ofEpochMilli(r.getLong("points_end_ms")))).append("\nMỗi món đổi/mua tại NPC: 1 điểm. Đồ được cấp, giao dịch hoặc mở hộp không tính điểm.\n");
             }
             for(String board:List.of("roses","cards","gifts")){
                 text.append('\n').append(boardName(board)).append('\n');
@@ -169,10 +169,10 @@ public final class October20Competition {
     }
     private static final int CARD_MENU=202610402,GIFT_MENU=202610403;
     public static void openNpc(Player p,Npc npc){
-        Schedule s=schedule;String info=s==null?"Chưa cấu hình lịch 20/10.":"Hộp Quà 20/10 (ngọc): "+s.roseGems+" ngọc xanh; Thiệp VIP: "+s.cardGems+" ngọc bất kỳ (ưu tiên hồng ngọc); Hộp Quà: "+s.giftGold+" vàng.\n";
-        npc.createOtherMenu(p,MENU,"SỰ KIỆN PHỤ NỮ VIỆT NAM 20/10\n"+info+"Mua 1 món = 1 điểm ở bảng tương ứng, không cộng điểm từ mở hộp. Quà top nhận được sau khi chốt.\nXem bảng top để biết chính xác lịch giờ Việt Nam.","Hộp Quà 20/10 (ngọc)","Shop Chi Chi","Xem top","Nhận quà top","Thể lệ","Đóng");
-    }
-    private static void quantityMenu(Player p,Npc npc,int item){
+        Schedule s=schedule;String info="Điểm sự kiện: "+p.event.getEventPoint()+". Đổi quà tại Quy Lão theo giá điểm của shop.\n";
+        if(s!=null)info+="Thiệp VIP: "+s.cardGems+" ngọc bất kỳ; Hộp Quà Chi Chi: "+s.giftGold+" vàng.\n";
+        npc.createOtherMenu(p,MENU,"SỰ KIỆN 20/10\n"+info+"Đổi/mua thành công 1 món = 1 điểm đua top tương ứng. Đổi quà trừ số dư điểm sự kiện, không trừ điểm top.","Đổi điểm\n20/10","Shop Chi Chi","Xem top","Nhận quà top","Thể lệ","Đóng");
+    }    private static void quantityMenu(Player p,Npc npc,int item){
         Schedule s=schedule;if(s==null||!Boolean.TRUE.equals(scheduledEnabled())){Service.gI().sendThongBao(p,"Chưa mở sự kiện.");return;}
         int menu=item==1720?VIP_MENU:item==1718?CARD_MENU:GIFT_MENU;
         StringBuilder text=new StringBuilder("Mua "+ItemService.gI().getTemplate(item).name+"\n");
@@ -183,10 +183,10 @@ public final class October20Competition {
         int menu=p.idMark.getIndexMenu();if(menu!=MENU&&menu!=VIP_MENU&&menu!=CARD_MENU&&menu!=GIFT_MENU)return false;p.idMark.setIndexMenu(-1);
         if(menu!=MENU){if(select>=0&&select<VIP_QUANTITIES.length)buy(p,menu==VIP_MENU?1720:menu==CARD_MENU?1718:1719,VIP_QUANTITIES[select]);return true;}
         switch(select){
-            case 0->{if(npc.tempId!=nro.models.consts.ConstNpc.QUY_LAO_KAME)Service.gI().sendThongBao(p,"Đến Quy Lão ở Đảo Kame để mua Hộp Quà 20/10 (ngọc).");else quantityMenu(p,npc,1720);}
+            case 0->{if(npc.tempId!=nro.models.consts.ConstNpc.QUY_LAO_KAME)Service.gI().sendThongBao(p,"Đến Quy Lão ở Đảo Kame để đổi quà bằng điểm sự kiện.");else nro.models.shop.EventPointShop.open(p,"october20");}
             case 1->{if(npc.tempId!=nro.models.consts.ConstNpc.CHI_CHI)Service.gI().sendThongBao(p,"Đến Chi Chi để mua Thiệp VIP và Hộp Quà 20/10.");else October20Shop.open(p);}
             case 2->Service.gI().sendThongBaoOK(p,standings(p));case 3->claim(p);
-            case 4->Service.gI().sendThongBaoOK(p,"Ba bảng đua top: mua Hộp Quà 20/10 (ngọc) tại Quy Lão; mua Thiệp Chúc VIP, Hộp Quà 20/10 tại Chi Chi. Mỗi món mua thành công tính 1 điểm. Chỉ điểm của đợt hiện tại, không tính đồ admin cấp hoặc giao dịch. Hòa điểm: đạt trước xếp trên. Top 1 Hộp ngọc đủ 21.000 điểm, Top 1 Thiệp VIP đủ 41.250 điểm nhận thêm Capsule kích hoạt 1 món tự chọn. Không có X3 nạp. Xem top để biết giờ chốt; phần thưởng giữ cho người offline, nhận từng gói sau khi chốt.");
+            case 4->Service.gI().sendThongBaoOK(p,"Ba bảng đua top: đổi quà bằng điểm sự kiện tại Quy Lão; mua Thiệp Chúc VIP, Hộp Quà 20/10 tại Chi Chi. Mỗi món đổi/mua thành công tính 1 điểm, đổi quà không trừ điểm top. Chỉ điểm của đợt hiện tại, không tính đồ admin cấp hoặc giao dịch. Hòa điểm: đạt trước xếp trên. Top 1 Đổi điểm đủ 21.000 điểm, Top 1 Thiệp VIP đủ 41.250 điểm nhận thêm Capsule kích hoạt 1 món tự chọn. Không có X3 nạp. Xem top để biết giờ chốt; phần thưởng giữ cho người offline, nhận từng gói sau khi chốt.");
         }return true;
     }
     private October20Competition(){}

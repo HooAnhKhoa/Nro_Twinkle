@@ -1,0 +1,42 @@
+package nro.models.event.october20;
+import java.sql.*;import java.nio.file.*;import java.nio.charset.StandardCharsets;
+import nro.models.data.LocalManager;import nro.models.server.Manager;import nro.models.services.*;import nro.models.shop.*;import nro.models.player.*;import nro.models.item.Item;import nro.models.player_system.Template.*;
+public class EventPointShopTest extends October20CompetitionTest {
+ static User player(int n)throws Exception{User p=user(n);p.playerTask.taskMain=new nro.models.task.TaskMain();p.playerTask.taskMain.id=999;p.getSession().userId=(int)p.id;p.event.setEventPoint(2000);sql("UPDATE player SET event_point=2000 WHERE id="+p.id);return p;}
+ static void refresh()throws Exception{try(Connection c=LocalManager.getConnection()){nro.models.event.EventManager.reload(c);EventPointShop.reload(c);}}
+ static String menu(User p){return new String(p.menu,StandardCharsets.UTF_8);}
+ public static void main(String[] args)throws Exception{try{
+  try(Connection c=LocalManager.getConnection();Statement q=c.createStatement()){
+   ok("nro_october20_top_20261018".equals(c.getCatalog()),"isolated QA guard");q.executeUpdate("DELETE FROM player WHERE id BETWEEN "+(BASE+60)+" AND "+(BASE+69));q.executeUpdate("DELETE FROM panel_event_shop_audit");
+   for(String t:java.util.List.of("october20_purchase","october20_prize","october20_score","october20_season"))q.executeUpdate("DELETE FROM "+t);
+   q.executeUpdate("UPDATE panel_event_config SET enabled=0 WHERE event_key IN('october20','trung_thu','tet')");
+   try(ResultSet r=q.executeQuery("SELECT * FROM item_template ORDER BY id")){while(r.next())Manager.ITEM_TEMPLATES.add(new ItemTemplate((short)r.getInt("id"),(byte)r.getInt("TYPE"),(byte)r.getInt("gender"),r.getString("NAME"),r.getString("description"),(short)r.getInt("icon_id"),(short)r.getInt("part"),r.getBoolean("is_up_to_up"),r.getInt("power_require")));}
+   try(ResultSet r=q.executeQuery("SELECT * FROM item_option_template ORDER BY id")){while(r.next())Manager.ITEM_OPTION_TEMPLATES.add(new ItemOptionTemplate(r.getInt("id"),r.getString("NAME"),0));}
+   Manager.SHOPS=nro.models.database.ShopDAO.getShops(c);long now=System.currentTimeMillis();
+   try(PreparedStatement p=c.prepareStatement("INSERT INTO october20_season(name,start_ms,points_end_ms,end_ms,scheduled,rewards) VALUES('QA points',?,?,?,1,?)")){p.setLong(1,now-1000);p.setLong(2,now+600000);p.setLong(3,now+1200000);p.setString(4,Files.readString(Path.of("october20-top-rewards.json")));p.executeUpdate();}
+  }
+  refresh();User p=player(60),full=player(61),failed=player(62);ok(EventPointShop.active().contains("october20"),"schedule enables exchange despite base switch off");
+  ok(EventPointShop.open(p,"october20")&&p.shop!=null&&p.shop[0]==3,"native special-currency shop packet opens");Shop shop=p.idMark.getShopOpen();
+  ok(shop.tagName.startsWith(EventPointShop.PREFIX)&&shop.tabShops.get(0).itemShops.size()==7,"event shop snapshot contains seven ready rewards");  ItemShop sale=shop.getItemShop(1944);ok(sale!=null&&sale.cost==99&&sale.iconSpec==14116,"VIP box shown for 99 event points with point icon");
+  long gold=p.inventory.gold;int gems=p.inventory.gem;ShopService.gI().takeItem(p,(byte)0,1944);ok(qty(p,1944)==1&&p.event.getEventPoint()==1901&&p.inventory.gold==gold&&p.inventory.gem==gems,"native buy spends common event points without gold or gems");
+  ok(n("SELECT event_point FROM player WHERE id="+p.id)==1901&&n("SELECT score FROM october20_score WHERE player_id="+p.id+" AND board='roses'")==1,"points bag and rank persist together");
+  pause();EventPointShop.buy(p,shop,1944);ok(p.event.getEventPoint()==1802&&n("SELECT score FROM october20_score WHERE player_id="+p.id+" AND board='roses'")==2,"spending balance never subtracts accumulated ranking");
+  pause();p.event.setEventPoint(1);EventPointShop.buy(p,shop,1944);ok(qty(p,1944)==2&&p.event.getEventPoint()==1,"insufficient points preserve inventory");p.event.setEventPoint(1802);
+  pause();full.inventory.itemsBag.clear();full.inventory.itemsBag.add(item(0,1));EventPointShop.open(full,"october20");EventPointShop.buy(full,full.idMark.getShopOpen(),1944);ok(full.event.getEventPoint()==2000&&qty(full,1944)==0,"full bag does not spend points");
+  pause();sql("UPDATE item_shop SET cost=100 WHERE id="+sale.id);EventPointShop.buy(p,shop,1944);ok(p.event.getEventPoint()==1802&&qty(p,1944)==2,"stale price rejects transaction");sql("UPDATE item_shop SET cost=99 WHERE id="+sale.id);
+  pause();sql("INSERT INTO item_shop_option(item_shop_id,option_id,param) VALUES("+sale.id+",50,1)");EventPointShop.buy(p,shop,1944);ok(p.event.getEventPoint()==1802&&qty(p,1944)==2,"stale reward stats reject transaction");sql("DELETE FROM item_shop_option WHERE item_shop_id="+sale.id+" AND option_id=50");
+  pause();sql("UPDATE october20_season SET paused=1");EventPointShop.buy(p,shop,1944);ok(p.event.getEventPoint()==1802&&qty(p,1944)==2,"DB pause blocks even before poll refresh");sql("UPDATE october20_season SET paused=0");refresh();
+  pause();EventPointShop.open(failed,"october20");sql("DROP TRIGGER IF EXISTS qa_event_point_fail");sql("CREATE TRIGGER qa_event_point_fail BEFORE INSERT ON panel_event_shop_audit FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='QA point rollback'");try{EventPointShop.buy(failed,failed.idMark.getShopOpen(),1944);ok(failed.event.getEventPoint()==2000&&qty(failed,1944)==0&&n("SELECT event_point FROM player WHERE id="+failed.id)==2000&&n("SELECT COUNT(*) FROM october20_score WHERE player_id="+failed.id)==0,"SQL failure restores points bag score and audit");}finally{sql("DROP TRIGGER qa_event_point_fail");}
+  pause();sql("UPDATE october20_season SET points_end_ms="+(System.currentTimeMillis()-1));refresh();EventPointShop.buy(p,shop,1944);ok(p.event.getEventPoint()==1703&&n("SELECT score FROM october20_score WHERE player_id="+p.id+" AND board='roses'")==2,"exchange remains open after cutoff without adding rank points");
+  long count=n("SELECT COUNT(*) FROM panel_event_shop_audit");pause();sql("UPDATE october20_season SET end_ms="+(System.currentTimeMillis()-1));EventPointShop.buy(p,shop,1944);ok(p.event.getEventPoint()==1703&&count==n("SELECT COUNT(*) FROM panel_event_shop_audit"),"exact event end rejects held shop snapshot");refresh();ok(!EventPointShop.active().contains("october20")&&!EventPointShop.open(p,"october20"),"expired exchange cannot open");
+  var quy=new nro.models.npc_list.QuyLaoKame(5,1,0,0,13,0){public boolean canOpenNpc(Player who){who.idMark.setNpcChose(this);return true;}};
+  var chi=new nro.models.npc_list.ChiChi(5,1,0,0,nro.models.consts.ConstNpc.CHI_CHI,0){public boolean canOpenNpc(Player who){who.idMark.setNpcChose(this);return true;}};
+  quy.openBaseMenu(failed);ok(!menu(failed).contains("20/10")&&!menu(failed).contains("Trung Thu")&&!menu(failed).contains("Đổi điểm"),"inactive event and exchange menus hidden for player without prizes");
+  quy.openBaseMenu(p);ok(menu(p).contains("Nhận quà top")&&!menu(p).contains("Đua top")&&!menu(p).contains("Đổi điểm"),"only pending claim remains after event end");
+  chi.openBaseMenu(failed);ok(!menu(failed).contains("20/10")&&menu(failed).contains("Cửa hàng"),"Chi Chi hides inactive event but keeps ordinary shop");
+  chi.openBaseMenu(p);ok(menu(p).contains("Nhận quà top")&&!menu(p).contains("Sự kiện"),"Chi Chi keeps only pending claim");
+  sql("UPDATE october20_season SET end_ms="+(System.currentTimeMillis()+600000)+",points_end_ms="+(System.currentTimeMillis()+300000)+",closed_at=NULL");refresh();quy.openBaseMenu(p);ok(menu(p).contains("Đổi điểm")&&menu(p).contains("Đua top")&&!menu(p).contains("Trung Thu"),"active October menu appears while inactive Trung Thu stays hidden");quy.confirmMenu(p,1);ok(p.idMark.getShopOpen().tagName.startsWith(EventPointShop.PREFIX),"dynamic Quy Lao exchange selection opens correct shop");
+  chi.openBaseMenu(p);chi.confirmMenu(p,1);ok(p.idMark.getIndexMenu()==202610400,"dynamic Chi Chi event selection opens correct page");chi.confirmMenu(p,1);ok(October20Shop.TAG.equals(p.idMark.getShopOpen().tagName),"Chi Chi gem and gold purchase shop preserved");
+  quy.openBaseMenu(failed);sql("UPDATE october20_season SET paused=1");refresh();quy.confirmMenu(failed,1);ok(!EventPointShop.active().contains("october20"),"held menu cannot reopen paused exchange");  System.out.println("PASS "+checks+" event point shop checks");
+ }finally{LocalManager.close();}System.exit(0);}
+}

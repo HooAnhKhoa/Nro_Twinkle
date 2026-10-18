@@ -1,5 +1,5 @@
 (()=>{'use strict';
-const $=id=>document.getElementById(id),names={roses:'Hộp Quà 20/10 (ngọc)',cards:'Thiệp Chúc VIP',gifts:'Hộp Quà 20/10',rose_bonus:'Top 1 Hộp ngọc · 21.000 điểm',card_bonus:'Top 1 Thiệp VIP · 41.250 điểm'};
+const $=id=>document.getElementById(id),names={roses:'Đổi điểm Quy Lão',cards:'Thiệp Chúc VIP',gifts:'Hộp Quà 20/10',rose_bonus:'Top 1 Đổi điểm Quy Lão · 21.000 điểm',card_bonus:'Top 1 Thiệp VIP · 41.250 điểm'};
 let state=null,prizes=null,items=new Map(),optionNames=new Map(),busy=false,dirty=false,newSeason=false,signature=null,missing={};
 async function api(body){const r=await fetch('october20_top.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...body,csrf})});const d=await r.json();if(!r.ok)throw Error(d.error||'Không kết nối được.');return d;}
 function el(tag,text){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n;}

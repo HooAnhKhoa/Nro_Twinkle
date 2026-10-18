@@ -83,6 +83,11 @@ public class QuyLaoKame extends Npc {
         KOL_VIP_QUESTS.put(7, new KOLQuestData(ConstNpc.KOL_QUEST_TYPE_MONSTER_KILL_COUNT, -1, 100000, Arrays.asList(new RewardItem(1592, 20), new RewardItem(1757, 10)), "Nhiệm vụ 7:\nHạ 100.000 quái (dùng tự động luyện tập)"));
     }
 
+    private static final int EVENT_SHOPS_MENU=202610406;
+    private final java.util.Map<Player,java.util.List<Integer>> baseSelections=java.util.Collections.synchronizedMap(new java.util.WeakHashMap<>());
+    private final java.util.Map<Player,java.util.List<String>> exchangeSelections=java.util.Collections.synchronizedMap(new java.util.WeakHashMap<>());
+    private void addMenu(ArrayList<String> menu,java.util.List<Integer> actions,int action,String label){menu.add(label);actions.add(action);}
+    private void openEventExchange(Player p){var keys=nro.models.shop.EventPointShop.active();if(keys.isEmpty()){Service.gI().sendThongBao(p,"Chưa có sự kiện đổi điểm đang mở.");return;}if(keys.size()==1){nro.models.shop.EventPointShop.open(p,keys.get(0));return;}exchangeSelections.put(p,keys);createOtherMenu(p,EVENT_SHOPS_MENU,"Đổi điểm sự kiện ["+p.event.getEventPoint()+"]",keys.stream().map(nro.models.shop.EventPointShop::name).toArray(String[]::new));}
     public QuyLaoKame(int mapId, int status, int cx, int cy, int tempId, int avartar) {
         super(mapId, status, cx, cy, tempId, avartar);
     }
@@ -92,19 +97,19 @@ public class QuyLaoKame extends Npc {
         Item ruacon = InventoryService.gI().findItemBag(player, 874);
         if (canOpenNpc(player)) {
             ArrayList<String> menu = new ArrayList<>();
+            java.util.List<Integer> actions=new ArrayList<>();
+            var pending=nro.models.shop.EventPointShop.pending(player);
             if (!player.canReward || !nro.models.event.EventManager.enabled("tet")) {
-                menu.add("Nói\nchuyện");
-                menu.add("Đổi điểm\nsự kiện\n[" + player.event.getEventPoint() + "]");
-                menu.add("Nhận quà\nKOL");
-                menu.add("Nhận quà\nKOL VIP");
-                menu.add("Đua top\nTrung Thu");
-                menu.add("Đua top\n20/10");
-                if (ruacon != null && ruacon.quantity >= 1) {
-                    menu.add("Giao\nRùa con");
-                }
-            } else {
-                menu.add("Giao\nLân con");
-            }
+                addMenu(menu,actions,0,"Nói\nchuyện");
+                if(!nro.models.shop.EventPointShop.active().isEmpty())addMenu(menu,actions,1,"Đổi điểm\nsự kiện\n["+player.event.getEventPoint()+"]");
+                addMenu(menu,actions,2,"Nhận quà\nKOL");addMenu(menu,actions,3,"Nhận quà\nKOL VIP");
+                if(nro.models.event.EventManager.enabled("trung_thu"))addMenu(menu,actions,4,"Đua top\nTrung Thu");
+                else if(pending.contains("trung_thu"))addMenu(menu,actions,7,"Nhận quà top\nTrung Thu");
+                if(nro.models.event.EventManager.enabled("october20"))addMenu(menu,actions,5,"Đua top\n20/10");
+                else if(pending.contains("october20"))addMenu(menu,actions,8,"Nhận quà top\n20/10");
+                if(ruacon!=null&&ruacon.quantity>=1)addMenu(menu,actions,6,"Giao\nRùa con");
+            }else addMenu(menu,actions,9,"Giao\nLân con");
+            baseSelections.put(player,java.util.List.copyOf(actions));
             String[] menus = menu.toArray(String[]::new);
             if (!TaskService.gI().checkDoneTaskTalkNpc(player, this)) {
                 this.createOtherMenu(player, ConstNpc.BASE_MENU, "Con muốn hỏi gì nào?", menus);
@@ -118,12 +123,10 @@ public class QuyLaoKame extends Npc {
             return;
         }
 
+        if(player.idMark.getIndexMenu()==EVENT_SHOPS_MENU){var keys=exchangeSelections.remove(player);player.idMark.setIndexMenu(-1);if(keys!=null&&select>=0&&select<keys.size())nro.models.shop.EventPointShop.open(player,keys.get(select));return;}
         if(nro.models.event.trungthu2026.TrungThuCompetition.confirm(player,this,select))return;
         if(nro.models.event.october20.October20Competition.confirm(player,this,select))return;
-        if (player.canReward && nro.models.event.EventManager.enabled("tet")) {
-            RewardService.gI().rewardLancon(player);
-            return;
-        }
+
 
         switch (player.idMark.getIndexMenu()) {
             case ConstNpc.BASE_MENU:
@@ -157,12 +160,13 @@ public class QuyLaoKame extends Npc {
     }
 
     private void handleBaseMenu(Player player, int select) {
+        var actions=baseSelections.remove(player);if(actions==null||select<0||select>=actions.size())return;select=actions.get(select);
         switch (select) {
             case 0:
                 handleTalk(player);
                 break;
             case 1:
-                ShopService.gI().opendShop(player, "SHOP_DOI_DIEM", false);
+                openEventExchange(player);
                 break;
             case 2:
                 handleKOLQuest(player, false);
@@ -171,11 +175,14 @@ public class QuyLaoKame extends Npc {
                 handleKOLQuest(player, true);
                 break;
             case 4:
-                nro.models.event.trungthu2026.TrungThuCompetition.openNpc(player,this);
+                if(nro.models.event.EventManager.enabled("trung_thu"))nro.models.event.trungthu2026.TrungThuCompetition.openNpc(player,this);
                 break;
             case 5:
-                nro.models.event.october20.October20Competition.openNpc(player,this);
+                if(nro.models.event.EventManager.enabled("october20"))nro.models.event.october20.October20Competition.openNpc(player,this);
                 break;
+            case 9: if(player.canReward&&nro.models.event.EventManager.enabled("tet"))RewardService.gI().rewardLancon(player);break;
+            case 7: nro.models.event.trungthu2026.TrungThuCompetition.claim(player);break;
+            case 8: nro.models.event.october20.October20Competition.claim(player);break;
             case 6:
                 handleTradeRuacon(player);
                 break;

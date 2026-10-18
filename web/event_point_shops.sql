@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS panel_event_shop (
+ event_key VARCHAR(32) PRIMARY KEY,shop_id INT NOT NULL,revision BIGINT NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS panel_event_shop_audit (
+ id BIGINT AUTO_INCREMENT PRIMARY KEY,event_key VARCHAR(32) NOT NULL,player_id BIGINT NOT NULL,
+ item_id INT NOT NULL,points_cost INT NOT NULL,season_id BIGINT NULL,counted TINYINT NOT NULL,
+ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,KEY player_event(player_id,event_key)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

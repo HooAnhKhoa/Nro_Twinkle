@@ -14,7 +14,7 @@ check($r['rose_bonus'][0]['id']===1655&&$r['card_bonus'][0]['id']===1655,'both r
 function fails($data,$templates,$missing,$options,$label){try{octTopValidate($data,$templates,$missing,$options);throw new LogicException('Unexpected pass');}catch(RuntimeException $e){echo "PASS $label\n";}}
 $x=$data;$x['points_end']=$x['start'];fails($x,$templates,[],$options,'inverted cutoff rejected');
 $x=$data;$x['rose_gems']=0;fails($x,$templates,[],$options,'free purchases rejected');
-fails($data,$templates,[1797=>'missing frames'],$options,'missing costume blocks activation');fails($data,$templates,[1720=>'missing icon'],$options,'missing sale icon blocks activation');
+fails($data,$templates,[1797=>'missing frames'],$options,'missing costume blocks activation');fails($data,$templates,[1718=>'missing icon'],$options,'missing sale icon blocks activation');
 $x=$data;$x['scheduled']=false;check(octTopValidate($x,$templates,[1797=>'missing frames'],$options)['scheduled']===0,'draft can be prepared before art is complete');
 $x=$data;$x['rewards']['cards'][0]['items'][0]['options'][]=['id'=>93,'param'=>30];fails($x,$templates,[],$options,'expiry must use days field');
 $x=$data;$x['card_gems']=1.5;fails($x,$templates,[],$options,'fractional price rejected');
