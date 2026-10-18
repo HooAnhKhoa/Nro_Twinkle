@@ -186,7 +186,7 @@ public final class October20Competition {
             case 0->{if(npc.tempId!=nro.models.consts.ConstNpc.QUY_LAO_KAME)Service.gI().sendThongBao(p,"Đến Quy Lão ở Đảo Kame để mua Hộp Hoa Hồng.");else quantityMenu(p,npc,2101);}
             case 1->{if(npc.tempId!=nro.models.consts.ConstNpc.CHI_CHI)Service.gI().sendThongBao(p,"Đến Chi Chi để mua Thiệp VIP và Hộp Quà 20/10.");else October20Shop.open(p);}
             case 2->Service.gI().sendThongBaoOK(p,standings(p));case 3->claim(p);
-            case 4->Service.gI().sendThongBaoOK(p,"Ba bảng đua top: mua Hộp Hoa Hồng tại Quy Lão; mua Thiệp Chúc VIP, Hộp Quà 20/10 tại Chi Chi. Mỗi món mua thành công tính 1 điểm. Chỉ điểm của đợt hiện tại, không tính đồ admin cấp hoặc giao dịch. Hòa điểm: đạt trước xếp trên. Top 1 Hoa Hồng đủ 21.000 điểm, Top 1 Thiệp VIP đủ 41.250 điểm nhận thêm hộp Beerus. Không có X3 nạp. Xem top để biết giờ chốt; phần thưởng giữ cho người offline, nhận từng gói sau khi chốt.");
+            case 4->Service.gI().sendThongBaoOK(p,"Ba bảng đua top: mua Hộp Hoa Hồng tại Quy Lão; mua Thiệp Chúc VIP, Hộp Quà 20/10 tại Chi Chi. Mỗi món mua thành công tính 1 điểm. Chỉ điểm của đợt hiện tại, không tính đồ admin cấp hoặc giao dịch. Hòa điểm: đạt trước xếp trên. Top 1 Hoa Hồng đủ 21.000 điểm, Top 1 Thiệp VIP đủ 41.250 điểm nhận thêm Capsule kích hoạt 1 món tự chọn. Không có X3 nạp. Xem top để biết giờ chốt; phần thưởng giữ cho người offline, nhận từng gói sau khi chốt.");
         }return true;
     }
     private October20Competition(){}

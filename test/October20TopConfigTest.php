@@ -10,7 +10,7 @@ check($r['roses'][0]['items'][0]['id']===2006&&$r['roses'][0]['items'][5]['quant
 check($r['gifts'][0]['items'][1]['id']===1173&&$r['gifts'][0]['items'][1]['quantity']===999,'gift top1 999 angel chests');
 check($r['cards'][3]['items'][0]['days']===365&&$r['gifts'][3]['items'][0]['days']===0,'distinct costume lifetimes match terms');
 check(count($r['cards'][0]['items'][0]['options'])===4,'costume rewards have combat stats');
-check($r['rose_bonus'][0]['id']===2102&&$r['card_bonus'][0]['id']===2102,'both rank1 milestones use approved box');
+check($r['rose_bonus'][0]['id']===1655&&$r['card_bonus'][0]['id']===1655,'both rank1 milestones use selectable activation capsule');
 function fails($data,$templates,$missing,$options,$label){try{octTopValidate($data,$templates,$missing,$options);throw new LogicException('Unexpected pass');}catch(RuntimeException $e){echo "PASS $label\n";}}
 $x=$data;$x['points_end']=$x['start'];fails($x,$templates,[],$options,'inverted cutoff rejected');
 $x=$data;$x['rose_gems']=0;fails($x,$templates,[],$options,'free purchases rejected');
