@@ -30,6 +30,15 @@ public class ConsumableStackTest{
   var locked=new ArrayList<Item>(List.of(item(886,2),item(886,3,30,0)));ItemStacks.compact(locked);ok(stacks(locked,886)==2,"trade locks stay separate");
   var stats=new ArrayList<Item>(List.of(item(381,2,50,20),item(381,3,50,25)));ItemStacks.compact(stats);ok(stacks(stats,381)==2,"different combat stats stay separate");
   Item timed=item(886,2,93,3),timed2=item(886,3,93,3);timed.createTime=1;var expiry=new ArrayList<Item>(List.of(timed,timed2));ItemStacks.compact(expiry);ok(stacks(expiry,886)==2&&timed.createTime==1,"timed items never refresh or merge expiry");
+  for(int id:new int[]{1739,1944,1840,1757,1821}){
+   Item old=item(id,2,93,30),fresh=item(id,3,93,30);old.createTime=System.currentTimeMillis()-86400000L;long oldest=old.createTime;
+   var boxes=new ArrayList<Item>(List.of(fresh,old));ItemStacks.compact(boxes);
+   ok(stacks(boxes,id)==1&&qty(boxes,id)==5&&boxes.get(0).createTime==oldest,"timed box login compaction preserves quantity and oldest expiry #"+id);
+   Item incoming=item(id,4,93,30);ok(inv.addItemList(boxes,incoming)&&qty(boxes,id)==9&&boxes.get(0).createTime==oldest,"timed box purchase stacks in full bag #"+id);
+   ok(!ItemStacks.same(boxes.get(0),item(id,1,93,15))&&!ItemStacks.same(boxes.get(0),item(id,1)),"different or permanent expiry stays separate #"+id);
+   ok(!ItemStacks.same(boxes.get(0),item(id,1,93,30,30,0)),"different trade locks stay separate #"+id);
+   Item expired=item(id,1,93,30);expired.createTime=1;ok(!ItemStacks.same(expired,boxes.get(0)),"expired box cannot poison live stack #"+id);
+  }
   var limit=new ArrayList<Item>(List.of(item(886,99998),item(886,5)));ItemStacks.compact(limit);ok(limit.get(0).quantity==99999&&limit.get(1).quantity==4,"stack cap preserves remainder");
   var full=new ArrayList<Item>(List.of(item(886,99998)));Item incoming=item(886,5);ok(!inv.addItemList(full,incoming)&&full.get(0).quantity==99998&&incoming.quantity==5,"insufficient capacity never partially mutates a stack");
   var split=new ArrayList<Item>(List.of(new Item(),new Item()));ok(inv.addItemList(split,item(886,100004))&&split.get(0).quantity==99999&&split.get(1).quantity==5,"oversized reward safely splits across free slots");

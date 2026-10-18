@@ -9,7 +9,7 @@ public final class EventPointShop {
  public static final String PREFIX="EVENT_POINTS:";
  public static final List<String> KEYS=List.of("october20","trung_thu","hung_vuong","christmas","halloween","tet","summer");
  private static volatile Map<String,Binding> bindings=Map.of();
- private static final BagExchange EXCHANGE=new BagExchange(500,System::currentTimeMillis);
+ private static final BagExchange EXCHANGE=new BagExchange(0,System::currentTimeMillis);
  public static void reload(Connection c)throws SQLException{Map<String,Binding> next=new LinkedHashMap<>();try(Statement q=c.createStatement();ResultSet r=q.executeQuery("SELECT * FROM panel_event_shop ORDER BY event_key")){while(r.next()){String key=r.getString("event_key");if(KEYS.contains(key))next.put(key,new Binding(key,r.getInt("shop_id"),r.getLong("revision")));}}bindings=Map.copyOf(next);}
  public static String name(String key){return switch(key){case "october20"->"20/10";case "trung_thu"->"Trung Thu";case "hung_vuong"->"Giỗ Tổ";case "christmas"->"Noel";case "halloween"->"Halloween";case "tet"->"Tết";default->"Hè";};}
  public static List<String> active(){return KEYS.stream().filter(k->bindings.containsKey(k)&&EventManager.enabled(k)).toList();}

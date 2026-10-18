@@ -7,9 +7,23 @@ import nro.models.item.Item;
 public final class ItemStacks {
     public static final int LIMIT=99999;
     private static final Set<Integer> TYPES=Set.of(6,7,8,12,13,14,15,16,22,27,29,30,31,33,35,37);
+    private static final Set<Integer> TIMED_BOXES=Set.of(1739,1944,1840,1757,1821);
+    private static boolean liveExpiry(Item item){
+        for(var o:item.itemOptions)if(o.optionTemplate.id==93){
+            if(!TIMED_BOXES.contains((int)item.template.id)||o.param<=0||item.createTime<=0
+                ||System.currentTimeMillis()-item.createTime>=o.param*86400000L)return false;
+        }
+        return true;
+    }
+    /** Merging boxes never extends the oldest box's expiry. */
+    public static void keepOldestExpiry(Item target,Item source){
+        if(TIMED_BOXES.contains((int)target.template.id)
+            &&target.itemOptions.stream().anyMatch(o->o.optionTemplate.id==93))
+            target.createTime=Math.min(target.createTime,source.createTime);
+    }
     public static boolean stackable(Item item){
         return item!=null&&item.isNotNullItem()&&item.quantity>0&&item.template.isUpToUp&&TYPES.contains((int)item.template.type)
-            &&item.expire==0&&item.itemOptions.stream().noneMatch(o->o.optionTemplate.id==93);
+            &&item.expire==0&&liveExpiry(item);
     }
     private static int counter(Item item){
         for(var o:item.itemOptions)if(o.optionTemplate.id==1||o.optionTemplate.id==31)return o.optionTemplate.id;
@@ -40,7 +54,7 @@ public final class ItemStacks {
                     long total=(long)a.param+b.param;if(a.param<0||b.param<0||total>Integer.MAX_VALUE)continue;
                     a.param=(int)total;source.quantity=0;items.set(j,ItemService.gI().createItemNull());
                 }else if(target.quantity<LIMIT&&same(target,source)){
-                    int moved=Math.min(LIMIT-target.quantity,source.quantity);target.quantity+=moved;source.quantity-=moved;
+                    int moved=Math.min(LIMIT-target.quantity,source.quantity);keepOldestExpiry(target,source);target.quantity+=moved;source.quantity-=moved;
                     if(source.quantity==0)items.set(j,ItemService.gI().createItemNull());
                 }
             }

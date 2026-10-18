@@ -1097,3 +1097,8 @@ Kiểm thử QA: 51 kiểm tra qua UseItem và menu Con Mèo thật, đủ 7 lo�
 - Chi Chi hiện trực tiếp từng bảng top của sự kiện đang chạy. Chọn một bảng để xem đúng bảng xếp hạng và nút Nhận quà, không qua menu sự kiện trùng lặp. Hết giờ chỉ giữ nút của bảng mà nhân vật còn quà chưa nhận. Cửa hàng gom shop thường và các shop sự kiện đang mở; hộp VIP Trung Thu vẫn có lựa chọn 1/10/50/100.
 - Nhận thưởng lọc đúng bảng trên cả october20_prize và trung_thu_prize; rose_bonus/card_bonus đi cùng bảng tương ứng, milestone Trung Thu đi cùng VIP. Quà đợt cũ vẫn được giữ, nhận từng gói; đầy túi hoặc SQL lỗi không mất quà và chống bấm lại.
 - Quy Lão chỉ giữ Nói chuyện, Đổi điểm khi có shop sự kiện đang mở và giao vật phẩm nhiệm vụ khi đủ điều kiện. Bỏ nút KOL/KOL VIP và toàn bộ nút top/nhận top tại đây; NPC Trung Thu cũng bỏ nút top trùng. Không thêm chức năng xóa trang bị có hạn trong ảnh.
+
+### Đổi điểm liên tiếp và gộp hộp có hạn
+- Shop điểm sự kiện mua trực tiếp như cũ, bỏ cooldown 500 ms; không thêm nút/menu. Vẫn kiểm tra điểm, sức chứa, lịch và cấu hình trong giao dịch để không mất điểm/đồ khi lỗi.
+- Hộp #1739/#1944/#1840/#1757 và trứng #1821 có cùng chỉ số, khóa giao dịch, số ngày hạn được gộp tối đa 99.999. Hạn tính theo chiếc cũ nhất, không gia hạn khi gộp. Hộp đã hết hạn, khác hạn/khóa và trang bị không gộp. Hộp cũ tự gộp lúc đăng nhập lại.
+- Kiểm thử: 992 kiểm tra stack, 28 kiểm tra shop điểm; JAR có 681 lớp ứng dụng nạp hợp lệ.

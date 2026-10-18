@@ -848,7 +848,7 @@ public class InventoryService {
             if(room<itemAdd.quantity)return false;
             for(Item it:items)if(ItemStacks.same(it,itemAdd)&&it.quantity<ItemStacks.LIMIT){
                 int moved=Math.min(ItemStacks.LIMIT-it.quantity,itemAdd.quantity);
-                it.quantity+=moved;itemAdd.quantity-=moved;if(itemAdd.quantity==0)return true;
+                ItemStacks.keepOldestExpiry(it,itemAdd);it.quantity+=moved;itemAdd.quantity-=moved;if(itemAdd.quantity==0)return true;
             }
         }
         for(int i=0;i<items.size()&&itemAdd.quantity>0;i++)if(!items.get(i).isNotNullItem()){
