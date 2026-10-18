@@ -98,6 +98,8 @@ public class ShopService {
         }
     }
 
+    public void openOctober20Shop(Player p,Shop shop){if(nro.models.event.october20.October20Shop.TAG.equals(shop.tagName))openShopType0(p,new Shop(shop));}
+
     private Shop getShop(String tagName) throws Exception {
         for (Shop s : Manager.SHOPS) {
             if (s.tagName != null && s.tagName.equals(tagName)) {
@@ -661,6 +663,7 @@ public class ShopService {
     public void buyItem(Player player, int itemTempId) {
         if(!nro.models.services.CatalogAssets.check(player,itemTempId))return;
         Shop shop = player.idMark.getShopOpen();
+        if(shop!=null&&nro.models.event.october20.October20Shop.TAG.equals(shop.tagName)){nro.models.event.october20.October20Shop.buy(player,shop,itemTempId);return;}
         if(shop!=null&&nro.models.event.trungthu2026.TrungThuShop.TAG.equals(shop.tagName)){
             nro.models.event.trungthu2026.TrungThuShop.buy(player,shop,itemTempId);return;
         }

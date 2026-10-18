@@ -319,6 +319,7 @@ public class NpcFactory {
         new Npc(-1, -1, -1, -1, ConstNpc.CON_MEO, 351) {
             @Override
             public void confirmMenu(Player player, int select) {
+                if(nro.models.services_func.AngelShardChest.confirm(player,select))return;
                 if(nro.models.services_func.GreenDragonBox.confirm(player,select))return;
                 switch (player.idMark.getIndexMenu()) {
                     case ConstNpc.IGNORE_MENU -> {
@@ -361,6 +362,7 @@ public class NpcFactory {
                                 Service.gI().sendThongBao(player, "Lựa chọn không hợp lệ.");
                         }
                     }
+                    case 2102 -> {player.idMark.setIndexMenu(-1);try{ItemService.gI().OpenSKH(player,2102,select);}catch(Exception e){Logger.logException(NpcFactory.class,e);}}
                     case ConstNpc.CAPSULE_KICH_HOAT -> {
                         try {
                             switch (select) {

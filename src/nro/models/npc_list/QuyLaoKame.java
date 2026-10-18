@@ -98,6 +98,7 @@ public class QuyLaoKame extends Npc {
                 menu.add("Nhận quà\nKOL");
                 menu.add("Nhận quà\nKOL VIP");
                 menu.add("Đua top\nTrung Thu");
+                menu.add("Đua top\n20/10");
                 if (ruacon != null && ruacon.quantity >= 1) {
                     menu.add("Giao\nRùa con");
                 }
@@ -118,6 +119,7 @@ public class QuyLaoKame extends Npc {
         }
 
         if(nro.models.event.trungthu2026.TrungThuCompetition.confirm(player,this,select))return;
+        if(nro.models.event.october20.October20Competition.confirm(player,this,select))return;
         if (player.canReward && nro.models.event.EventManager.enabled("tet")) {
             RewardService.gI().rewardLancon(player);
             return;
@@ -172,6 +174,9 @@ public class QuyLaoKame extends Npc {
                 nro.models.event.trungthu2026.TrungThuCompetition.openNpc(player,this);
                 break;
             case 5:
+                nro.models.event.october20.October20Competition.openNpc(player,this);
+                break;
+            case 6:
                 handleTradeRuacon(player);
                 break;
         }

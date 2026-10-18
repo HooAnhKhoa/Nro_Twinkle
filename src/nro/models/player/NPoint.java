@@ -694,7 +694,7 @@ public class NPoint {
                 if (gtl.isNotNullItem()) {
                     this.wearingTrainArmor = true;
                     this.player.inventory.trainArmor = gtl;
-                    this.tlSubSD += ItemService.gI().getPercentTrainArmor(gtl);
+                    this.tlSubSD += ItemService.gI().getTrainArmorPenalty(gtl);
                 } else {
                     if (this.player.inventory.trainArmor == null) {
                         gtl = this.player.inventory.itemsBag.stream().filter(item -> item.isNotNullItem() && item.template.type == 32 && item.itemOptions != null

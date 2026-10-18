@@ -4,6 +4,7 @@ require_once __DIR__.'/event_catalog.php';
 $catalog=eventCatalog();
 foreach(explode(';',file_get_contents(__DIR__.'/../event_schema.sql')) as $sql)if(trim($sql)!=='')$conn->query($sql);
 if($_SERVER['REQUEST_METHOD']==='POST'){
+    foreach(explode(';',file_get_contents(__DIR__.'/../october20_top_schema.sql')) as $sql)if(trim($sql)!=='')$conn->query($sql);
     foreach(explode(';',file_get_contents(__DIR__.'/../trung_thu_top_schema.sql')) as $sql)if(trim($sql)!=='')$conn->query($sql);
     $data=panelInput();$action=$data['action']??'';
     if($action==='read'){
@@ -12,7 +13,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
         $history=$conn->query('SELECT id,event_key,before_enabled,after_enabled,revision,created_at,undone_at FROM panel_event_audit ORDER BY id DESC LIMIT 20')->fetch_all(MYSQLI_ASSOC);
         $hungBosses=$conn->query("SELECT name,online_count,current_locations,TIMESTAMPDIFF(SECOND,heartbeat,NOW()) age FROM boss_web_config WHERE boss_key IN ('nro.models.boss.event_hung_vuong.ThuyTinh','nro.models.boss.event_hung_vuong.SonTinh') ORDER BY name")->fetch_all(MYSQLI_ASSOC);
         $offerings=$conn->query('SELECT locations,TIMESTAMPDIFF(SECOND,heartbeat,NOW()) age FROM panel_event_mob_runtime WHERE id=1')->fetch_assoc();
-        panelReply(['config'=>$config,'events'=>$events,'history'=>$history,'hung_bosses'=>$hungBosses,'offerings'=>$offerings,'trung_thu_schedule'=>$conn->query('SELECT scheduled,start_ms,end_ms,closed_at FROM trung_thu_season ORDER BY id DESC LIMIT 1')->fetch_assoc()]);
+        panelReply(['config'=>$config,'events'=>$events,'history'=>$history,'hung_bosses'=>$hungBosses,'offerings'=>$offerings,'trung_thu_schedule'=>$conn->query('SELECT scheduled,start_ms,end_ms,closed_at FROM trung_thu_season ORDER BY id DESC LIMIT 1')->fetch_assoc(),'october20_schedule'=>$conn->query('SELECT scheduled,paused,start_ms,points_end_ms,end_ms,closed_at FROM october20_season ORDER BY id DESC LIMIT 1')->fetch_assoc()]);
     }
     $key=$data['event_key']??null;
     $revision=filter_var($data['revision']??null,FILTER_VALIDATE_INT,['options'=>['min_range'=>1]]);
@@ -25,7 +26,9 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
         $stmt=$conn->prepare('SELECT enabled FROM panel_event_config WHERE event_key=? FOR UPDATE');$stmt->bind_param('s',$key);$stmt->execute();$row=$stmt->get_result()->fetch_assoc();
         if(!$row)throw new RuntimeException('Không tìm thấy cấu hình sự kiện.');
         $season=$conn->query('SELECT scheduled FROM trung_thu_season ORDER BY id DESC LIMIT 1 FOR UPDATE')->fetch_assoc();
-        if($key==='trung_thu'&&!empty($season['scheduled']))throw new RuntimeException('Trung Thu đang do lịch đua top quản lý. Chỉnh trong Lịch & phần thưởng.');
+        $october=$conn->query('SELECT scheduled FROM october20_season ORDER BY id DESC LIMIT 1 FOR UPDATE')->fetch_assoc();
+    if($key==='october20')throw new RuntimeException('20/10 đang dùng lịch. Tạm tắt/mở ở Lịch 20/10.');
+    if($key==='trung_thu'&&!empty($season['scheduled']))throw new RuntimeException('Trung Thu đang do lịch đua top quản lý. Chỉnh trong Lịch & phần thưởng.');
         $before=(int)$row['enabled'];$next=(int)($data['enabled']??false);
         if($action==='undo'){
             $auditId=filter_var($data['audit_id']??null,FILTER_VALIDATE_INT,['options'=>['min_range'=>1]]);
@@ -49,8 +52,8 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
 <section class="events-summary"><strong id="eventCount">Đang tải…</strong><span id="eventSync" role="status">Đang kết nối game…</span></section>
 <p class="events-help">Thay đổi được lưu ngay khi bấm công tắc và giữ sau khi khởi động lại. NPC của EV sẽ ẩn khi tắt và hiện lại khi bật. Tắt EV không xóa vật phẩm đã nhận. Các công tắc độc lập; tỷ lệ rơi vẫn chỉnh ở mục Rơi đồ.</p>
 <p id="eventMessage" role="status" aria-live="polite"></p><div class="events-grid">
-<?php foreach($catalog as $key=>$event):?><article class="event-card" data-event="<?=panelEscape($key)?>"><header><span class="event-icon"><?=panelEscape($event['icon'])?></span><div><h2><?=panelEscape($event['name'])?></h2><span class="event-state">Đang tải…</span></div><button class="event-switch" type="button" role="switch" aria-checked="false" aria-label="<?=panelEscape($event['name'])?>" disabled><span></span></button></header><p><?=panelEscape($event['scope'])?></p><details><summary>Phạm vi áp dụng</summary><p><?=panelEscape($event['detail'])?></p></details><?php if($key==='trung_thu'):?><p><a href="#trungThuTop" onclick="document.getElementById('trungThuTop').open=true">Lịch đua top &amp; phần thưởng →</a></p><?php endif;?><?php if($key==='october20'):?><button type="button" id="openOctober20Settings">Công thức &amp; phần thưởng</button><?php endif;?></article><?php endforeach;?>
+<?php foreach($catalog as $key=>$event):?><article class="event-card" data-event="<?=panelEscape($key)?>"><header><span class="event-icon"><?=panelEscape($event['icon'])?></span><div><h2><?=panelEscape($event['name'])?></h2><span class="event-state">Đang tải…</span></div><button class="event-switch" type="button" role="switch" aria-checked="false" aria-label="<?=panelEscape($event['name'])?>" disabled><span></span></button></header><p><?=panelEscape($event['scope'])?></p><details><summary>Phạm vi áp dụng</summary><p><?=panelEscape($event['detail'])?></p></details><?php if($key==='trung_thu'):?><p><a href="#trungThuTop" onclick="document.getElementById('trungThuTop').open=true">Lịch đua top &amp; phần thưởng →</a></p><?php endif;?><?php if($key==='october20'):?><a href="#octoberTop" onclick="document.getElementById('octoberTop').open=true">Lịch, shop &amp; đua top →</a><?php endif;?></article><?php endforeach;?>
 </div><details class="events-incomplete"><summary>Các EV chưa có chức năng hoàn chỉnh</summary><p>8/3 mới có bộ nạp dữ liệu; Top Up mới có khung lớp; 20/11 và Valentine mới có mã định danh. Chưa cung cấp công tắc cho các mục này. Rồng sự kiện có luồng riêng, chưa nằm trong nhóm công tắc mùa lễ này.</p></details>
-<?php require __DIR__.'/october20_form.php'; require __DIR__.'/trung_thu_top_form.php'; ?>
+<?php require __DIR__.'/october20_top_form.php'; require __DIR__.'/trung_thu_top_form.php'; ?>
 <details class="events-history"><summary>Lịch sử bật/tắt và hoàn tác</summary><div id="eventHistory">Đang tải…</div></details></main>
-<script>const csrf=<?=json_encode($_SESSION['panel_csrf'])?>,eventCatalog=<?=json_encode($catalog,JSON_UNESCAPED_UNICODE|JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT)?>;</script><script src="events.js?v=4-schedule"></script><script src="trung_thu_top.js?v=2-stats"></script></body></html>
+<script>const csrf=<?=json_encode($_SESSION['panel_csrf'])?>,eventCatalog=<?=json_encode($catalog,JSON_UNESCAPED_UNICODE|JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT)?>;</script><script src="events.js?v=5-october"></script><script src="trung_thu_top.js?v=2-stats"></script><script src="october20_top.js?v=2"></script></body></html>

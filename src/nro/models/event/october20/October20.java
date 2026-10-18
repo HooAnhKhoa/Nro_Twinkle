@@ -14,7 +14,7 @@ import nro.models.services.*;
 import nro.models.server.Maintenance;
 import nro.models.server.PanelBridge;
 
-/** October 20: no ranking, no timed schedule, uses existing item assets. */
+/** October 20: scheduled purchase ranking; legacy gifts remain redeemable. */
 public final class October20 {
     public static final int MENU=19101,CONFIRM=19102;
     public static final int[] ACCESSORIES={1515,1520,954};
@@ -42,7 +42,8 @@ public final class October20 {
         if(draw<c.n(kind+".accessory")+c.n(kind+".stones"))return item(220+random.nextInt(5),c.n(kind+".quantity"));
         Item support=item(381+random.nextInt(3),c.n(kind+".quantity"));support.itemOptions.add(new Item.ItemOption(30,0));return support;
     }
-    public static void open(Npc npc,Player p){
+    public static void open(Npc npc,Player p){October20Competition.openNpc(p,npc);}
+    private static void legacyOpen(Npc npc,Player p){
         if(!EventManager.allowNpc(p,"october20"))return;
         QUOTES.remove(p);
         try{
@@ -51,6 +52,7 @@ public final class October20 {
         }catch(Exception e){failure(p,e);}
     }
     public static boolean menu(Npc npc,Player p,int select){
+        if(October20Competition.confirm(p,npc,select))return true;
         int menu=p.idMark.getIndexMenu();if(menu!=MENU&&menu!=CONFIRM)return false;
         synchronized(p){
             if(!EventManager.allowNpc(p,"october20")){QUOTES.remove(p);return true;}
@@ -81,7 +83,9 @@ public final class October20 {
         }
     }
     public static boolean use(Player p,Item used){
-        int id=used.template.id;if(enabled()&&Arrays.stream(MATERIALS).anyMatch(v->v==id)){Service.gI().sendThongBao(p,"Nguyên liệu 20/10: đến Chi Chi ở Đảo Kame để gói quà.");return true;}if(id!=1719&&id!=1720)return false;
+        int id=used.template.id;
+        if(id==1718||id==2101){synchronized(p){if(!ready(p)||!p.inventory.itemsBag.contains(used)||used.quantity<1)return true;var c=October20Config.current();Item reward=reward(c,id==1718?"special":"normal",ThreadLocalRandom.current());var result=EXCHANGE.execute(p,new BagExchange.Cost(Map.of(id,1),0,0),new BagExchange.Gain(List.of(reward),0,0,0),who->October20Store.commit(who,c,false,0,"open.purchased",List.of(reward)));notify(p,result,"Bạn nhận "+reward.template.name+" x"+reward.quantity+". Mở hộp không cộng điểm đua top.");}return true;}
+        if(enabled()&&Arrays.stream(MATERIALS).anyMatch(v->v==id)){Service.gI().sendThongBao(p,"Nguyên liệu 20/10: đến Chi Chi ở Đảo Kame để gói quà.");return true;}if(id!=1719&&id!=1720)return false;
         synchronized(p){
             if(!ready(p)||!p.inventory.itemsBag.contains(used)||used.quantity<1)return true;
             var c=October20Config.current();String kind=id==1719?"normal":"special";Item reward=reward(c,kind,ThreadLocalRandom.current());

@@ -62,7 +62,7 @@ public class October20Test {
    var stale=user(9,10,true);ingredients(stale);try(Connection c=LocalManager.getConnection();Statement s=c.createStatement()){s.executeUpdate("UPDATE october20_config SET revision=revision+1 WHERE id=1");}
    check(October20.execute(stale,cfg,0)==BagExchange.Result.SAVE_FAILED&&TrungThuRuntimeTest.qty(stale,1508)==100,"commit rejects a config changed after confirmation without taking materials");
    try(Connection c=LocalManager.getConnection();Statement s=c.createStatement()){s.executeUpdate("UPDATE october20_config SET revision="+revision+" WHERE id=1");}
-   var npc=new ChiChi(5,1,0,0,ConstNpc.CHI_CHI,0);October20.open(npc,stale);October20.menu(npc,stale,0);check(stale.idMark.getIndexMenu()==October20.CONFIRM,"NPC recipe requires explicit confirmation");October20.menu(npc,stale,0);long boxes=TrungThuRuntimeTest.qty(stale,1719);October20.menu(npc,stale,0);check(boxes==1&&TrungThuRuntimeTest.qty(stale,1719)==1,"confirmation quote is consumed once");
+   var npc=new ChiChi(5,1,0,0,ConstNpc.CHI_CHI,0);October20.open(npc,stale);check(stale.idMark.getIndexMenu()==202610400,"NPC opens new ranking and shop menu");long beforeMaterials=TrungThuRuntimeTest.qty(stale,1508);October20.menu(npc,stale,0);check(TrungThuRuntimeTest.qty(stale,1508)==beforeMaterials&&TrungThuRuntimeTest.qty(stale,1719)==0,"Chi Chi directs rose buyers to Quy Lao without crafting legacy boxes");
    check(PanelBridgeCheck(cfg),"drop category is gated by event and common event switch");
    enabled(true);nro.models.server.PanelBridge.dropMultiplier=100;
    var mob=new nro.models.mob.Mob();mob.zone=stats.zone;mob.tempId=1;var drops=new ArrayList<nro.models.map.ItemMap>();October20.drops(mob,stats,drops,20,30);

@@ -14,10 +14,11 @@ public final class BagExchange {
         public Gain{items=List.copyOf(items);if(gold<0||gems<0||ruby<0)throw new IllegalArgumentException("Thưởng không hợp lệ");}
     }
     @FunctionalInterface public interface Commit {void save(Player player)throws Exception;}
-    public record Cost(Map<Integer,Integer> items,long gold,int gems){
+    public record Cost(Map<Integer,Integer> items,long gold,int gems,int ruby){
+        public Cost(Map<Integer,Integer> items,long gold,int gems){this(items,gold,gems,0);}
         public Cost {
             items=Map.copyOf(items);
-            if(gold<0||gems<0||items.entrySet().stream().anyMatch(e->e.getKey()<0||e.getValue()<1))throw new IllegalArgumentException("Chi phí không hợp lệ");
+            if(gold<0||gems<0||ruby<0||items.entrySet().stream().anyMatch(e->e.getKey()<0||e.getValue()<1))throw new IllegalArgumentException("Chi phí không hợp lệ");
         }
     }
     private final long cooldownMillis;
@@ -36,7 +37,7 @@ public final class BagExchange {
         synchronized(player){
             Long previous=lastSuccess.get(player);
             if(previous!=null&&clock.getAsLong()-previous<cooldownMillis)return Result.COOLDOWN;
-            if(rewards.isEmpty()&&gain.gold==0&&gain.gems==0&&gain.ruby==0&&cost.items.isEmpty()&&cost.gold==0&&cost.gems==0)return Result.INVALID_REWARD;
+            if(rewards.isEmpty()&&gain.gold==0&&gain.gems==0&&gain.ruby==0&&cost.items.isEmpty()&&cost.gold==0&&cost.gems==0&&cost.ruby==0)return Result.INVALID_REWARD;
             for(Item reward:rewards)if(reward==null||!reward.isNotNullItem()||reward.quantity<1||reward.quantity>99999
                 ||reward.template.type==9||reward.template.type==10||reward.template.type==34||reward.template.id==517||reward.template.id==518)return Result.INVALID_REWARD;
             for(var entry:cost.items.entrySet()){
@@ -44,10 +45,10 @@ public final class BagExchange {
                 if(count<entry.getValue())return Result.MISSING_ITEMS;
             }
             if(player.inventory.gold<cost.gold)return Result.MISSING_GOLD;
-            if(player.inventory.gem<cost.gems)return Result.MISSING_GEMS;
+            if(player.inventory.gem<cost.gems||player.inventory.ruby<cost.ruby)return Result.MISSING_GEMS;
             if(gain.gold>nro.models.player.Inventory.LIMIT_GOLD-(player.inventory.gold-cost.gold)
                 ||(long)player.inventory.gem-cost.gems+gain.gems>Integer.MAX_VALUE
-                ||(long)player.inventory.ruby+gain.ruby>Integer.MAX_VALUE)return Result.CURRENCY_LIMIT;
+                ||(long)player.inventory.ruby-cost.ruby+gain.ruby>Integer.MAX_VALUE)return Result.CURRENCY_LIMIT;
             List<Item> snapshot=new ArrayList<>();for(Item item:player.inventory.itemsBag)snapshot.add(copy(item));
             long goldBefore=player.inventory.gold;int gemsBefore=player.inventory.gem,rubyBefore=player.inventory.ruby;
             boolean committed=false;
@@ -59,7 +60,7 @@ public final class BagExchange {
                         InventoryService.gI().subQuantityItemsBag(player,item,take);remaining-=take;
                     }
                 }
-                player.inventory.gold=player.inventory.gold-cost.gold+gain.gold;player.inventory.gem=player.inventory.gem-cost.gems+gain.gems;player.inventory.ruby+=gain.ruby;
+                player.inventory.gold=player.inventory.gold-cost.gold+gain.gold;player.inventory.gem=player.inventory.gem-cost.gems+gain.gems;player.inventory.ruby=player.inventory.ruby-cost.ruby+gain.ruby;
                 // Plain bag items only: avoid special-item services with external side effects.
                 for(Item reward:rewards)if(!InventoryService.gI().addItemList(player.inventory.itemsBag,copy(reward)))return Result.BAG_FULL;
                 try{commit.save(player);}catch(Exception error){nro.models.utils.Logger.logException(BagExchange.class,error);return Result.SAVE_FAILED;}

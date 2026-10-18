@@ -279,6 +279,9 @@ public class UseItem {
             }
             if (item.template.strRequire <= pl.nPoint.power) {
                 switch (item.template.type) {
+                    case 32:
+                        InventoryService.gI().itemBagToBody(pl,indexBag);
+                        break;
                     case 18: // Canonical companion pet; use ordinary equipment slot 7.
                         InventoryService.gI().itemBagToBody(pl,indexBag);
                         if(pl.inventory.itemsBody.get(7)==item&&item.template.head>=0&&item.template.body>=0&&item.template.leg>=0){
@@ -670,6 +673,9 @@ public class UseItem {
                                 PetService.Pet2(pl, 2076, 1752, 1753);
                                 Service.gI().point(pl);
                                 break;
+                            case AngelShardChest.BOX:
+                                AngelShardChest.open(pl,item);
+                                break;
                             case GreenDragonBox.BOX:
                                 GreenDragonBox.open(pl,item);
                                 break;
@@ -677,6 +683,7 @@ public class UseItem {
                                 try {ItemService.gI().OpenSKH(pl,1559,Util.nextInt(5));}
                                 catch(Exception error){Logger.logException(UseItem.class,error);Service.gI().sendThongBao(pl,"Chưa mở được Capsule. Hãy thử lại.");}
                                 break;
+                            case 2102: // Approved substitute: one existing activation piece, not a new Beerus set.
                             case 1655: // capule kich hoat
                                 UseItem.gI().CapsuleKichHoat(pl, item);
                                 break;

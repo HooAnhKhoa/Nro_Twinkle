@@ -1,0 +1,19 @@
+{
+  "tool": "built-in image_gen",
+  "background": "transparent",
+  "reference": "User banner codex-clipboard-a0d0fe6f-76a7-4b4a-a807-8132809f7ae1.png",
+  "prompts": [
+    {
+      "asset": "bulma-street-sheet-v1.png",
+      "prompt": "New transparent 5x4 full-body pixel-art sprite sheet of the center Bulma: turquoise hair, black/red BULMA cap, red streetwear jacket, white shirt, dark shorts and red boots. Twenty right-facing poses: idle 1, idle 2, walk 1–4, run 1–4, fly idle, fly fast, punch 1–2, kick, energy blast, hurt, crouch, jump, land. Consistent proportions, equal cells, same feet baseline, no labels/borders/background."
+    },
+    {
+      "asset": "ly-street-sheet-v1.png",
+      "prompt": "New transparent 5x4 full-body Dragon Ball pixel-art sprite sheet based on the rightmost Ly Tieu Nuong: blonde high ponytail, red/black accessory, sunglasses, dark cropped top and shorts, black thigh-high boots and fingerless gloves. Same twenty right-facing animation poses and grid constraints as Bulma. No other characters, text, effects, shadows or banner."
+    },
+    {
+      "asset": "rose-box-icon-v1.png",
+      "prompt": "One transparent 2D pixel-art game inventory icon inspired by the rightmost pink rose box/card: square pink gift box/card, prominent red rose emblem, thick dark pixel outline, highlights, readable at 32x32 logical pixels, slightly three-quarter front. One centered complete object, generous transparent margin, no text, banner, characters, external border or drop shadow."
+    }
+  ]
+}

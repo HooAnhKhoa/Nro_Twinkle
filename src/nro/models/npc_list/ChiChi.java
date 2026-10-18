@@ -16,7 +16,7 @@ public class ChiChi extends Npc {
         if(!canOpenNpc(player))return;
         List<String> menu=new ArrayList<>();
         menu.add("Cửa hàng");
-        if(October20.enabled())menu.add("Sự kiện\n20/10");
+        menu.add("Sự kiện\n20/10");
         menu.add("Đóng");
         createOtherMenu(player,ConstNpc.BASE_MENU,"Bạn muốn hỏi chi?",menu.toArray(new String[0]));
     }
@@ -25,6 +25,6 @@ public class ChiChi extends Npc {
         if(October20.menu(this,player,select))return;
         if(mapId!=5||!player.idMark.isBaseMenu())return;
         if(select==0)ShopService.gI().opendShop(player,"SHOP_CHI_CHI",false);
-        else if(select==1&&October20.enabled())October20.open(this,player);
+        else if(select==1)October20.open(this,player);
     }
 }

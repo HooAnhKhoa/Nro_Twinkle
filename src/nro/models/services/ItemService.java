@@ -130,7 +130,7 @@ public class ItemService {
 
     public void OpenSKH(Player player, int itemUseId, int select) throws Exception {
         synchronized(player){
-        if(nro.models.server.Maintenance.isRunning||!player.isPl()||(itemUseId!=1559&&itemUseId!=1655))return;
+        if(nro.models.server.Maintenance.isRunning||!player.isPl()||(itemUseId!=1559&&itemUseId!=1655&&itemUseId!=2102))return;
         if (select < 0 || select > 4) {
             return;
         }
@@ -378,6 +378,8 @@ public class ItemService {
                     return 30;
                 case 1716:
                     return 40;
+                case 2006:
+                    return 50;
                 default:
                     return 0;
             }
@@ -385,6 +387,8 @@ public class ItemService {
             return 0;
         }
     }
+
+    public int getTrainArmorPenalty(Item item){return item!=null&&item.isNotNullItem()&&item.template.id==2006?40:getPercentTrainArmor(item);}
 
     public boolean isTrainArmor(Item item) {
         if (item != null && item.template != null) {
@@ -396,6 +400,7 @@ public class ItemService {
                 case 531:
                 case 536:
                 case 1716:
+                case 2006:
                     return true;
                 default:
                     return false;

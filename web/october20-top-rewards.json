@@ -1,0 +1,835 @@
+{
+  "roses": [
+    {
+      "from": 1,
+      "to": 1,
+      "items": [
+        {
+          "id": 2006,
+          "quantity": 1,
+          "days": 0,
+          "options": [
+            {
+              "id": 9,
+              "param": 0
+            }
+          ]
+        },
+        {
+          "id": 1283,
+          "quantity": 70,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1559,
+          "quantity": 3,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1634,
+          "quantity": 3,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1851,
+          "quantity": 5,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 2046,
+          "quantity": 20,
+          "days": 0,
+          "options": []
+        }
+      ]
+    },
+    {
+      "from": 2,
+      "to": 2,
+      "items": [
+        {
+          "id": 2006,
+          "quantity": 1,
+          "days": 0,
+          "options": [
+            {
+              "id": 9,
+              "param": 0
+            }
+          ]
+        },
+        {
+          "id": 1283,
+          "quantity": 60,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1559,
+          "quantity": 2,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1634,
+          "quantity": 2,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1851,
+          "quantity": 3,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 2046,
+          "quantity": 10,
+          "days": 0,
+          "options": []
+        }
+      ]
+    },
+    {
+      "from": 3,
+      "to": 3,
+      "items": [
+        {
+          "id": 2006,
+          "quantity": 1,
+          "days": 0,
+          "options": [
+            {
+              "id": 9,
+              "param": 0
+            }
+          ]
+        },
+        {
+          "id": 1283,
+          "quantity": 50,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1559,
+          "quantity": 1,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1634,
+          "quantity": 1,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1851,
+          "quantity": 2,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 2046,
+          "quantity": 5,
+          "days": 0,
+          "options": []
+        }
+      ]
+    },
+    {
+      "from": 4,
+      "to": 10,
+      "items": [
+        {
+          "id": 1283,
+          "quantity": 20,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1690,
+          "quantity": 50,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1909,
+          "quantity": 250,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1851,
+          "quantity": 1,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 2046,
+          "quantity": 2,
+          "days": 0,
+          "options": []
+        }
+      ]
+    },
+    {
+      "from": 11,
+      "to": 50,
+      "items": [
+        {
+          "id": 1283,
+          "quantity": 10,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1690,
+          "quantity": 20,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1909,
+          "quantity": 100,
+          "days": 0,
+          "options": []
+        }
+      ]
+    },
+    {
+      "from": 51,
+      "to": 100,
+      "items": [
+        {
+          "id": 1283,
+          "quantity": 5,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1690,
+          "quantity": 10,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1909,
+          "quantity": 20,
+          "days": 0,
+          "options": []
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "from": 1,
+      "to": 1,
+      "items": [
+        {
+          "id": 2085,
+          "quantity": 1,
+          "days": 0,
+          "options": [
+            {
+              "id": 50,
+              "param": 20
+            },
+            {
+              "id": 5,
+              "param": 20
+            },
+            {
+              "id": 14,
+              "param": 7
+            },
+            {
+              "id": 226,
+              "param": 7
+            }
+          ]
+        },
+        {
+          "id": 1283,
+          "quantity": 70,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1559,
+          "quantity": 3,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1634,
+          "quantity": 3,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 2046,
+          "quantity": 10,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 2006,
+          "quantity": 1,
+          "days": 0,
+          "options": [
+            {
+              "id": 9,
+              "param": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "from": 2,
+      "to": 2,
+      "items": [
+        {
+          "id": 2085,
+          "quantity": 1,
+          "days": 0,
+          "options": [
+            {
+              "id": 50,
+              "param": 20
+            },
+            {
+              "id": 5,
+              "param": 20
+            },
+            {
+              "id": 14,
+              "param": 7
+            },
+            {
+              "id": 226,
+              "param": 7
+            }
+          ]
+        },
+        {
+          "id": 1283,
+          "quantity": 60,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1559,
+          "quantity": 2,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1634,
+          "quantity": 2,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 2046,
+          "quantity": 5,
+          "days": 0,
+          "options": []
+        }
+      ]
+    },
+    {
+      "from": 3,
+      "to": 3,
+      "items": [
+        {
+          "id": 2085,
+          "quantity": 1,
+          "days": 0,
+          "options": [
+            {
+              "id": 50,
+              "param": 20
+            },
+            {
+              "id": 5,
+              "param": 20
+            },
+            {
+              "id": 14,
+              "param": 7
+            },
+            {
+              "id": 226,
+              "param": 7
+            }
+          ]
+        },
+        {
+          "id": 1283,
+          "quantity": 50,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1559,
+          "quantity": 1,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1634,
+          "quantity": 1,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 2046,
+          "quantity": 2,
+          "days": 0,
+          "options": []
+        }
+      ]
+    },
+    {
+      "from": 4,
+      "to": 10,
+      "items": [
+        {
+          "id": 2085,
+          "quantity": 1,
+          "days": 365,
+          "options": [
+            {
+              "id": 50,
+              "param": 20
+            },
+            {
+              "id": 5,
+              "param": 20
+            },
+            {
+              "id": 14,
+              "param": 7
+            },
+            {
+              "id": 226,
+              "param": 7
+            }
+          ]
+        },
+        {
+          "id": 1283,
+          "quantity": 20,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1690,
+          "quantity": 50,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1909,
+          "quantity": 100,
+          "days": 0,
+          "options": []
+        }
+      ]
+    },
+    {
+      "from": 11,
+      "to": 50,
+      "items": [
+        {
+          "id": 2085,
+          "quantity": 1,
+          "days": 90,
+          "options": [
+            {
+              "id": 50,
+              "param": 20
+            },
+            {
+              "id": 5,
+              "param": 20
+            },
+            {
+              "id": 14,
+              "param": 7
+            },
+            {
+              "id": 226,
+              "param": 7
+            }
+          ]
+        },
+        {
+          "id": 1283,
+          "quantity": 10,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1690,
+          "quantity": 20,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1909,
+          "quantity": 20,
+          "days": 0,
+          "options": []
+        }
+      ]
+    },
+    {
+      "from": 51,
+      "to": 100,
+      "items": [
+        {
+          "id": 2085,
+          "quantity": 1,
+          "days": 30,
+          "options": [
+            {
+              "id": 50,
+              "param": 20
+            },
+            {
+              "id": 5,
+              "param": 20
+            },
+            {
+              "id": 14,
+              "param": 7
+            },
+            {
+              "id": 226,
+              "param": 7
+            }
+          ]
+        },
+        {
+          "id": 1283,
+          "quantity": 5,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1690,
+          "quantity": 10,
+          "days": 0,
+          "options": []
+        }
+      ]
+    }
+  ],
+  "gifts": [
+    {
+      "from": 1,
+      "to": 1,
+      "items": [
+        {
+          "id": 2091,
+          "quantity": 1,
+          "days": 0,
+          "options": [
+            {
+              "id": 50,
+              "param": 20
+            },
+            {
+              "id": 5,
+              "param": 20
+            },
+            {
+              "id": 14,
+              "param": 7
+            },
+            {
+              "id": 226,
+              "param": 7
+            }
+          ]
+        },
+        {
+          "id": 1173,
+          "quantity": 999,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1559,
+          "quantity": 3,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1634,
+          "quantity": 1,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 2006,
+          "quantity": 1,
+          "days": 0,
+          "options": [
+            {
+              "id": 9,
+              "param": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "from": 2,
+      "to": 2,
+      "items": [
+        {
+          "id": 2091,
+          "quantity": 1,
+          "days": 0,
+          "options": [
+            {
+              "id": 50,
+              "param": 20
+            },
+            {
+              "id": 5,
+              "param": 20
+            },
+            {
+              "id": 14,
+              "param": 7
+            },
+            {
+              "id": 226,
+              "param": 7
+            }
+          ]
+        },
+        {
+          "id": 1173,
+          "quantity": 500,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1559,
+          "quantity": 2,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1909,
+          "quantity": 250,
+          "days": 0,
+          "options": []
+        }
+      ]
+    },
+    {
+      "from": 3,
+      "to": 3,
+      "items": [
+        {
+          "id": 2091,
+          "quantity": 1,
+          "days": 0,
+          "options": [
+            {
+              "id": 50,
+              "param": 20
+            },
+            {
+              "id": 5,
+              "param": 20
+            },
+            {
+              "id": 14,
+              "param": 7
+            },
+            {
+              "id": 226,
+              "param": 7
+            }
+          ]
+        },
+        {
+          "id": 1173,
+          "quantity": 400,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1559,
+          "quantity": 1,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1909,
+          "quantity": 100,
+          "days": 0,
+          "options": []
+        }
+      ]
+    },
+    {
+      "from": 4,
+      "to": 10,
+      "items": [
+        {
+          "id": 2091,
+          "quantity": 1,
+          "days": 0,
+          "options": [
+            {
+              "id": 50,
+              "param": 20
+            },
+            {
+              "id": 5,
+              "param": 20
+            },
+            {
+              "id": 14,
+              "param": 7
+            },
+            {
+              "id": 226,
+              "param": 7
+            }
+          ]
+        },
+        {
+          "id": 1173,
+          "quantity": 300,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1690,
+          "quantity": 50,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1909,
+          "quantity": 20,
+          "days": 0,
+          "options": []
+        }
+      ]
+    },
+    {
+      "from": 11,
+      "to": 50,
+      "items": [
+        {
+          "id": 2091,
+          "quantity": 1,
+          "days": 60,
+          "options": [
+            {
+              "id": 50,
+              "param": 20
+            },
+            {
+              "id": 5,
+              "param": 20
+            },
+            {
+              "id": 14,
+              "param": 7
+            },
+            {
+              "id": 226,
+              "param": 7
+            }
+          ]
+        },
+        {
+          "id": 1173,
+          "quantity": 100,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1690,
+          "quantity": 20,
+          "days": 0,
+          "options": []
+        }
+      ]
+    },
+    {
+      "from": 51,
+      "to": 100,
+      "items": [
+        {
+          "id": 2091,
+          "quantity": 1,
+          "days": 30,
+          "options": [
+            {
+              "id": 50,
+              "param": 20
+            },
+            {
+              "id": 5,
+              "param": 20
+            },
+            {
+              "id": 14,
+              "param": 7
+            },
+            {
+              "id": 226,
+              "param": 7
+            }
+          ]
+        },
+        {
+          "id": 1173,
+          "quantity": 50,
+          "days": 0,
+          "options": []
+        },
+        {
+          "id": 1690,
+          "quantity": 10,
+          "days": 0,
+          "options": []
+        }
+      ]
+    }
+  ],
+  "rose_bonus": [
+    {
+      "id": 2102,
+      "quantity": 1,
+      "days": 0,
+      "options": []
+    }
+  ],
+  "card_bonus": [
+    {
+      "id": 2102,
+      "quantity": 1,
+      "days": 0,
+      "options": []
+    }
+  ]
+}
