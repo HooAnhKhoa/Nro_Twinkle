@@ -55,8 +55,9 @@ public final class EventPointShop {
   }
   try(PreparedStatement q=c.prepareStatement("SELECT enabled FROM panel_event_config WHERE event_key=? FOR UPDATE")){q.setString(1,key);try(ResultSet r=q.executeQuery()){if(!r.next()||!r.getBoolean(1))throw new SQLException("Event disabled");}}return new long[3];
  }
- public static Set<String> pending(Player p){Set<String> result=new HashSet<>();try(Connection c=LocalManager.getConnection()){
-  for(String key:List.of("october20","trung_thu")){String table=key.equals("october20")?"october20_prize":"trung_thu_prize";try(PreparedStatement q=c.prepareStatement("SELECT 1 FROM "+table+" WHERE player_id=? AND claimed_at IS NULL LIMIT 1")){q.setLong(1,p.id);try(ResultSet r=q.executeQuery()){if(r.next())result.add(key);}}}
- }catch(SQLException e){nro.models.utils.Logger.logException(EventPointShop.class,e);}return result;}
- private EventPointShop(){}
+ public static Set<String> pending(Player p){return pendingBoards(p).keySet();}
+ public static Map<String,Set<String>> pendingBoards(Player p){Map<String,Set<String>> result=new HashMap<>();try(Connection c=LocalManager.getConnection()){
+  for(String key:List.of("october20","trung_thu")){String table=key.equals("october20")?"october20_prize":"trung_thu_prize";try(PreparedStatement q=c.prepareStatement("SELECT DISTINCT board FROM "+table+" WHERE player_id=? AND claimed_at IS NULL")){q.setLong(1,p.id);try(ResultSet r=q.executeQuery()){while(r.next()){String board=switch(r.getString(1)){case "rose_bonus"->"roses";case "card_bonus"->"cards";case "milestone"->"vip";default->r.getString(1);};result.computeIfAbsent(key,k->new HashSet<>()).add(board);}}}
+  }
+ }catch(SQLException e){nro.models.utils.Logger.logException(EventPointShop.class,e);}return result;} private EventPointShop(){}
 }

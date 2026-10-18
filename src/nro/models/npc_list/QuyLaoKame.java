@@ -98,15 +98,9 @@ public class QuyLaoKame extends Npc {
         if (canOpenNpc(player)) {
             ArrayList<String> menu = new ArrayList<>();
             java.util.List<Integer> actions=new ArrayList<>();
-            var pending=nro.models.shop.EventPointShop.pending(player);
             if (!player.canReward || !nro.models.event.EventManager.enabled("tet")) {
                 addMenu(menu,actions,0,"Nói\nchuyện");
                 if(!nro.models.shop.EventPointShop.active().isEmpty())addMenu(menu,actions,1,"Đổi điểm\nsự kiện\n["+player.event.getEventPoint()+"]");
-                addMenu(menu,actions,2,"Nhận quà\nKOL");addMenu(menu,actions,3,"Nhận quà\nKOL VIP");
-                if(nro.models.event.EventManager.enabled("trung_thu"))addMenu(menu,actions,4,"Đua top\nTrung Thu");
-                else if(pending.contains("trung_thu"))addMenu(menu,actions,7,"Nhận quà top\nTrung Thu");
-                if(nro.models.event.EventManager.enabled("october20"))addMenu(menu,actions,5,"Đua top\n20/10");
-                else if(pending.contains("october20"))addMenu(menu,actions,8,"Nhận quà top\n20/10");
                 if(ruacon!=null&&ruacon.quantity>=1)addMenu(menu,actions,6,"Giao\nRùa con");
             }else addMenu(menu,actions,9,"Giao\nLân con");
             baseSelections.put(player,java.util.List.copyOf(actions));
@@ -124,8 +118,8 @@ public class QuyLaoKame extends Npc {
         }
 
         if(player.idMark.getIndexMenu()==EVENT_SHOPS_MENU){var keys=exchangeSelections.remove(player);player.idMark.setIndexMenu(-1);if(keys!=null&&select>=0&&select<keys.size())nro.models.shop.EventPointShop.open(player,keys.get(select));return;}
-        if(nro.models.event.trungthu2026.TrungThuCompetition.confirm(player,this,select))return;
-        if(nro.models.event.october20.October20Competition.confirm(player,this,select))return;
+
+
 
 
         switch (player.idMark.getIndexMenu()) {
@@ -168,21 +162,7 @@ public class QuyLaoKame extends Npc {
             case 1:
                 openEventExchange(player);
                 break;
-            case 2:
-                handleKOLQuest(player, false);
-                break;
-            case 3:
-                handleKOLQuest(player, true);
-                break;
-            case 4:
-                if(nro.models.event.EventManager.enabled("trung_thu"))nro.models.event.trungthu2026.TrungThuCompetition.openNpc(player,this);
-                break;
-            case 5:
-                if(nro.models.event.EventManager.enabled("october20"))nro.models.event.october20.October20Competition.openNpc(player,this);
-                break;
             case 9: if(player.canReward&&nro.models.event.EventManager.enabled("tet"))RewardService.gI().rewardLancon(player);break;
-            case 7: nro.models.event.trungthu2026.TrungThuCompetition.claim(player);break;
-            case 8: nro.models.event.october20.October20Competition.claim(player);break;
             case 6:
                 handleTradeRuacon(player);
                 break;

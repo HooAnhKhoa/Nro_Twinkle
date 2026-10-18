@@ -16,7 +16,7 @@ public final class TrungThu2026 extends Npc {
 
     @Override public void openBaseMenu(Player p){
         if(canOpenNpc(p)&&nro.models.event.EventManager.allowNpc(p,"trung_thu"))
-            createOtherMenu(p,HOME,"Trung Thu: săn Khỉ, truy tìm Thỏ, treo đèn, làm bánh và rước đèn bang hội.\nKhỉ/Thỏ xuất hiện khi dùng vật phẩm triệu hồi.","Cửa hàng","Làm bánh","Đổi pet","Đổi đuôi khỉ","Đổi cà rốt","Treo đèn","Chọn phe","Thể lệ",p.zone.map.mapId==number("map.santa")?"Về Siêu Thị":"Đến Santa","Đua top","Đóng");
+            createOtherMenu(p,HOME,"Trung Thu: săn Khỉ, truy tìm Thỏ, treo đèn, làm bánh và rước đèn bang hội.\nKhỉ/Thỏ xuất hiện khi dùng vật phẩm triệu hồi.","Cửa hàng","Làm bánh","Đổi pet","Đổi đuôi khỉ","Đổi cà rốt","Treo đèn","Chọn phe","Thể lệ",p.zone.map.mapId==number("map.santa")?"Về Siêu Thị":"Đến Santa","Đóng");
     }
 
     private static String format(long value){return NumberFormat.getIntegerInstance(Locale.forLanguageTag("vi-VN")).format(value);}
@@ -52,7 +52,7 @@ public final class TrungThu2026 extends Npc {
 
     @Override public void confirmMenu(Player p,int select){
         if(!canOpenNpc(p))return;
-        if(TrungThuCompetition.confirm(p,this,select))return;
+
         if(!nro.models.event.EventManager.allowNpc(p,"trung_thu"))return;
         int menu=p.idMark.getIndexMenu();
         if(menu>=CONFIRM&&menu<CONFIRM+9){
@@ -73,7 +73,7 @@ public final class TrungThu2026 extends Npc {
             case 5->preview(p,8);
             case 6->createOtherMenu(p,SIDE,"Mang kiếm gỗ trong túi, chọn cờ phe và hạ boss đối lập ở Siêu Thị.","Ủng hộ Gogeta","Ủng hộ Omega","Đóng");
             case 7->nro.models.services.Service.gI().sendThongBaoOK(p,TrungThuRules.text());
-            case 9->TrungThuCompetition.openNpc(p,this);
+
             case 8->{
                 int target=p.zone.map.mapId==number("map.santa")?84:number("map.santa");
                 nro.models.map.Map map=nro.models.map.service.MapService.gI().getMapById(target);

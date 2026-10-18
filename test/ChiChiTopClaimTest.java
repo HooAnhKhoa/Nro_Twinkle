@@ -1,0 +1,29 @@
+package nro.models.event.october20;
+import java.sql.*;import java.io.*;import java.util.*;
+import nro.models.data.LocalManager;import nro.models.player.Player;import nro.models.server.Manager;import nro.models.item.Item;import nro.models.player_system.Template.*;import nro.models.shop.EventPointShop;
+public class ChiChiTopClaimTest extends October20CompetitionTest {
+ static int index(User p,String needle)throws Exception{try(var r=new DataInputStream(new ByteArrayInputStream(p.menu))){r.readShort();r.readUTF();int n=r.readUnsignedByte();for(int i=0;i<n;i++)if(r.readUTF().contains(needle))return i;}throw new AssertionError("Missing menu "+needle);}
+ static void prize(String table,long season,String board,long who,int item)throws Exception{sql("INSERT INTO "+table+"(season_id,board,player_id,place,score,items) VALUES("+season+",'"+board+"',"+who+",1,100,'[{\"id\":"+item+",\"quantity\":1,\"days\":0,\"options\":[]}]')");}
+ static long claimed(String table,long who,String board)throws Exception{return n("SELECT COUNT(*) FROM "+table+" WHERE player_id="+who+" AND board='"+board+"' AND claimed_at IS NOT NULL");}
+ public static void main(String[] args)throws Exception{try{
+  try(Connection c=LocalManager.getConnection();Statement q=c.createStatement()){
+   ok("nro_october20_top_20261018".equals(c.getCatalog()),"QA database guard");q.executeUpdate("DELETE FROM player WHERE id BETWEEN "+(BASE+70)+" AND "+(BASE+79));for(String t:List.of("october20_prize","trung_thu_prize"))q.executeUpdate("DELETE FROM "+t+" WHERE player_id BETWEEN "+(BASE+70)+" AND "+(BASE+79));
+   try(ResultSet r=q.executeQuery("SELECT * FROM item_template ORDER BY id")){while(r.next())Manager.ITEM_TEMPLATES.add(new ItemTemplate((short)r.getInt("id"),(byte)r.getInt("TYPE"),(byte)r.getInt("gender"),r.getString("NAME"),r.getString("description"),(short)r.getInt("icon_id"),(short)r.getInt("part"),r.getBoolean("is_up_to_up"),r.getInt("power_require")));}
+   try(ResultSet r=q.executeQuery("SELECT * FROM item_option_template ORDER BY id")){while(r.next())Manager.ITEM_OPTION_TEMPLATES.add(new ItemOptionTemplate(r.getInt("id"),r.getString("NAME"),0));}
+  }
+  long season=n("SELECT MAX(id) FROM october20_season");User p=user(70),full=user(71),failed=user(72);
+  for(String board:List.of("roses","cards","gifts","rose_bonus","card_bonus"))prize("october20_prize",season,board,p.id,13);
+  for(String board:List.of("vip","normal","vegetarian","milestone"))prize("trung_thu_prize",900001,board,p.id,13);
+  prize("october20_prize",season,"cards",full.id,13);prize("october20_prize",season,"cards",failed.id,13);
+  var chi=new nro.models.npc_list.ChiChi(5,1,0,0,nro.models.consts.ConstNpc.CHI_CHI,0){public boolean canOpenNpc(Player who){who.idMark.setNpcChose(this);return true;}};
+  var pending=EventPointShop.pendingBoards(p);ok(pending.get("october20").equals(Set.of("roses","cards","gifts"))&&pending.get("trung_thu").equals(Set.of("vip","normal","vegetarian")),"bonus receipts map to their own board buttons");
+  chi.openBaseMenu(p);chi.confirmMenu(p,index(p,"Thiệp VIP"));String detail=new String(p.menu,java.nio.charset.StandardCharsets.UTF_8);ok(detail.contains("Thiệp Chúc VIP")&&!detail.contains("\nĐổi điểm Quy Lão\n"),"selected ranking shows only its board");chi.confirmMenu(p,0);
+  ok(claimed("october20_prize",p.id,"cards")==1&&claimed("october20_prize",p.id,"roses")==0&&claimed("october20_prize",p.id,"gifts")==0,"card button claims card prize without taking older rose or gift prizes");long count=n("SELECT COUNT(*) FROM october20_prize WHERE player_id="+p.id+" AND claimed_at IS NOT NULL");chi.confirmMenu(p,0);ok(count==n("SELECT COUNT(*) FROM october20_prize WHERE player_id="+p.id+" AND claimed_at IS NOT NULL"),"replayed menu cannot claim second package");
+  pause();chi.openBaseMenu(p);chi.confirmMenu(p,index(p,"Thiệp VIP"));chi.confirmMenu(p,0);ok(claimed("october20_prize",p.id,"card_bonus")==1&&claimed("october20_prize",p.id,"rose_bonus")==0,"card milestone goes with card board only");ok(!EventPointShop.pendingBoards(p).get("october20").contains("cards"),"fully claimed board drops out of pending buttons");
+  pause();chi.openBaseMenu(p);chi.confirmMenu(p,index(p,"Hộp ngọc"));chi.confirmMenu(p,0);ok(claimed("trung_thu_prize",p.id,"normal")==1&&claimed("trung_thu_prize",p.id,"vip")==0&&claimed("trung_thu_prize",p.id,"milestone")==0,"Trung Thu normal button cannot take VIP or milestone prizes");
+  pause();chi.openBaseMenu(p);chi.confirmMenu(p,index(p,"Hộp VIP"));chi.confirmMenu(p,0);pause();chi.openBaseMenu(p);chi.confirmMenu(p,index(p,"Hộp VIP"));chi.confirmMenu(p,0);ok(claimed("trung_thu_prize",p.id,"vip")==1&&claimed("trung_thu_prize",p.id,"milestone")==1,"VIP button claims its ranking and milestone receipts");
+  full.inventory.itemsBag.clear();full.inventory.itemsBag.add(item(0,1));chi.openBaseMenu(full);chi.confirmMenu(full,index(full,"Thiệp VIP"));chi.confirmMenu(full,0);ok(claimed("october20_prize",full.id,"cards")==0&&qty(full,13)==0,"full bag leaves board prize pending");
+  sql("DROP TRIGGER IF EXISTS qa_chichi_claim_fail");sql("CREATE TRIGGER qa_chichi_claim_fail BEFORE UPDATE ON october20_prize FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='QA Chi Chi rollback'");try{chi.openBaseMenu(failed);chi.confirmMenu(failed,index(failed,"Thiệp VIP"));chi.confirmMenu(failed,0);ok(claimed("october20_prize",failed.id,"cards")==0&&qty(failed,13)==0,"failed save cannot consume receipt or grant reward");}finally{sql("DROP TRIGGER qa_chichi_claim_fail");}
+  System.out.println("PASS "+checks+" Chi Chi board claim checks");
+ }finally{LocalManager.close();}System.exit(0);}
+}

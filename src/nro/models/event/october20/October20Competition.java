@@ -122,12 +122,15 @@ public final class October20Competition {
             }return items;
         }catch(Exception e){throw new SQLException("Bảng thưởng không hợp lệ",e);}
     }
-    public static void claim(Player p){
+    public static void claim(Player p){claim(p,null);}
+    public static void claim(Player p,String board){
+        if(board!=null&&!List.of("roses","cards","gifts").contains(board))return;
+        String bonus="roses".equals(board)?"rose_bonus":"cards".equals(board)?"card_bonus":"gifts";
         if(nro.models.server.Maintenance.isRunning)return;
         synchronized(p){
             long id=0;String json=null;
-            try(Connection c=LocalManager.getConnection();PreparedStatement q=c.prepareStatement("SELECT id,items FROM october20_prize WHERE player_id=? AND claimed_at IS NULL ORDER BY id LIMIT 1")){
-                q.setLong(1,p.id);try(ResultSet r=q.executeQuery()){if(r.next()){id=r.getLong(1);json=r.getString(2);}}
+            try(Connection c=LocalManager.getConnection();PreparedStatement q=c.prepareStatement("SELECT id,items FROM october20_prize WHERE player_id=? AND claimed_at IS NULL AND (? IS NULL OR board=? OR board=?) ORDER BY id LIMIT 1")){
+                q.setLong(1,p.id);q.setString(2,board);q.setString(3,board);q.setString(4,bonus);try(ResultSet r=q.executeQuery()){if(r.next()){id=r.getLong(1);json=r.getString(2);}}
             }catch(SQLException e){nro.models.utils.Logger.logException(October20Competition.class,e);Service.gI().sendThongBao(p,"Chưa đọc được quà. Thử lại sau.");return;}
             if(id==0){Service.gI().sendThongBao(p,"Bạn chưa có quà đua top chưa nhận.");return;}
             final long prize=id;
@@ -145,7 +148,9 @@ public final class October20Competition {
             }catch(SQLException e){nro.models.utils.Logger.logException(October20Competition.class,e);Service.gI().sendThongBao(p,"Chưa nhận được quà. Quà vẫn được giữ để nhận lại sau.");}
         }
     }
-    public static String standings(Player p){
+    public static String standings(Player p){return standings(p,null);}
+    public static String standings(Player p,String selectedBoard){
+        if(selectedBoard!=null&&!List.of("roses","cards","gifts").contains(selectedBoard))return "Bảng top không hợp lệ.";
         StringBuilder text=new StringBuilder("ĐUA TOP 20/10\nGiờ Việt Nam. Hòa điểm: người đạt điểm trước xếp trên.\n");
         try(Connection c=LocalManager.getConnection()){
             long season=0;
@@ -153,10 +158,11 @@ public final class October20Competition {
                 if(!r.next())return "Chưa có lịch đua top 20/10.";season=r.getLong("id");
                 var fmt=java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").withZone(java.time.ZoneId.of("Asia/Ho_Chi_Minh"));
                 text.append(r.getString("name")).append('\n').append(fmt.format(java.time.Instant.ofEpochMilli(r.getLong("start_ms")))).append(" → ").append(fmt.format(java.time.Instant.ofEpochMilli(r.getLong("end_ms")))).append('\n');
-                text.append(r.getTimestamp("closed_at")!=null?"Đã chốt top; nhận quà tại Quy Lão hoặc Chi Chi.":!r.getBoolean("scheduled")?"Chưa bật lịch.":System.currentTimeMillis()<r.getLong("start_ms")?"Chưa bắt đầu.":System.currentTimeMillis()<r.getLong("points_end_ms")?"Đang đua top.":"Đang chốt thưởng.").append('\n');
+                text.append(r.getTimestamp("closed_at")!=null?"Đã chốt top; nhận quà tại Chi Chi.":!r.getBoolean("scheduled")?"Chưa bật lịch.":System.currentTimeMillis()<r.getLong("start_ms")?"Chưa bắt đầu.":System.currentTimeMillis()<r.getLong("points_end_ms")?"Đang đua top.":"Đang chốt thưởng.").append('\n');
                 text.append("Chốt điểm: ").append(fmt.format(java.time.Instant.ofEpochMilli(r.getLong("points_end_ms")))).append("\nMỗi món đổi/mua tại NPC: 1 điểm. Đồ được cấp, giao dịch hoặc mở hộp không tính điểm.\n");
             }
             for(String board:List.of("roses","cards","gifts")){
+                if(selectedBoard!=null&&!board.equals(selectedBoard))continue;
                 text.append('\n').append(boardName(board)).append('\n');
                 try(PreparedStatement q=c.prepareStatement("SELECT s.score,p.name FROM october20_score s LEFT JOIN player p ON p.id=s.player_id WHERE season_id=? AND board=? ORDER BY score DESC,reached_ms,player_id LIMIT 10")){
                     q.setLong(1,season);q.setString(2,board);int rank=0;try(ResultSet r=q.executeQuery()){while(r.next())text.append(++rank).append(". ").append(r.getString(2)).append(": ").append(r.getLong(1)).append('\n');}
