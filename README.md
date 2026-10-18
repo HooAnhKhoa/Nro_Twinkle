@@ -1078,3 +1078,5 @@ Kiểm thử QA: 51 kiểm tra qua UseItem và menu Con Mèo thật, đủ 7 lo�
 - Kiểm thử phần chức năng: 41 kiểm tra game/đua top/nhận thưởng/giáp/rương; 17 kiểm tra cấu hình PHP; 13 kiểm tra HTTP đăng nhập/CSRF/lịch/khóa/tạm dừng; hồi quy 151 + 26 Trung Thu và 33 kiểm tra 20/10 cũ. JAR đủ 676 application classes và ConstIgnoreName. Web QA localhost đã dừng sau test.
 
 - Hộp Hoa Hồng #2101 thiếu ảnh được thay bằng Hộp Quà 20/10 #1720 tại Quy Lão: 20 ngọc xanh theo mặc định, chỉnh giá trên web. Giữ bảng điểm roses và mốc 21.000, tách khỏi hộp #1719 bán vàng tại Chi Chi. Dùng bảng mở quà đặc biệt sẵn có của #1720; mở hộp không cộng điểm đua top. Không đổi template/ID chuẩn hoặc túi người chơi.
+
+- Giáp tập luyện cấp 5 #2006 theo ảnh: option 77=15 (HP), 103=15 (KI), 94=5 (giảm sát thương), 47=50000 (giáp), 9 giữ số phút luyện tập. Mặc giảm 40% sức đánh, tháo tăng 50% khi còn phút. Áp dụng cho quà top mới, quà đang chờ và giáp người chơi đã nhận; không đặt lại hạn dùng hoặc phút đã luyện.

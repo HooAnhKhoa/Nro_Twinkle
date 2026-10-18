@@ -25,3 +25,5 @@ foreach(['cards'=>1797,'gifts'=>1778] as $board=>$id){
  foreach($r[$board] as $rank)check($rank['items'][0]['id']===$id,'equivalent applied to rank '.$board.' '.$rank['from']);
 }
 check(octTopValidate($data,$templates,$missing,$options)['scheduled']===1,'all actual sale and reward assets allow activation');
+
+foreach(['roses','cards','gifts'] as $board)foreach($r[$board] as $rank)foreach($rank['items'] as $item)if($item['id']===2006){$stats=array_column($item['options'],'param','id');check(($stats[77]??null)===15&&($stats[103]??null)===15&&($stats[94]??null)===5&&($stats[47]??null)===50000&&($stats[9]??null)===0,'armor 5 reward stats match reference');}
