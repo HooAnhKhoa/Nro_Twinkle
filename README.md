@@ -1060,3 +1060,8 @@ Bài ClientReadyHandshakeTest đi qua Controller.messageNotMap thật, kiểm tr
 - Capsule 1 món kích hoạt chuẩn ID 1559 trước đó thiếu nhánh sử dụng. Nay mở ngẫu nhiên một loại áo/quần/găng/giày/rada và set phù hợp hành tinh, dùng bảng đồ/chỉ số vốn có. Capsule tự chọn ID 1655 vẫn chọn món như trước. Trừ Capsule và nhận trang bị được lưu cùng giao dịch, lỗi SQL/đầy túi phục hồi nguyên trạng; Capsule cuối có thể nhường chính ô của nó cho đồ nhận.
 - Kiểm tra: 38 tình huống lịch/đua top/đổi VIP; kiểm thử Capsule qua gói tin client trên ba hành tinh, đầy túi và rollback SQL; 151 kiểm tra tích hợp và 26 kiểm tra thể lệ Trung Thu. JAR đủ 671 class ứng dụng và ConstIgnoreName.
 - Bản chạy Teamobi2026-panel-vip-bulk.jar, sao lưu launcher cũ tại D:/NroFreeSetup/Backups/vip-bulk-capsule-20261018. Không sửa túi đồ hoặc điểm thật để thử tính năng.
+
+## Hộp ngọc rồng xanh (18/10/2026)
+Hộp chuẩn ID 2071 thiếu nhánh sử dụng. Dùng hộp trong hành trang mở menu Con Mèo chọn 1–7 sao hoặc Đóng; đúng mô tả tùy chọn, nhận một viên chuẩn ID 2064–2070, không dùng cơ chế rương/chìa vàng ID 1560/1561. Không thay cơ chế khảm hoặc công dụng của từng viên.
+Giao dịch trừ một hộp và thêm ngọc được lưu cùng transaction. Kiểm tra lại vật phẩm trong túi trước xác nhận; menu hết hiệu lực sau một lựa chọn. Đầy túi/lỗi SQL giữ nguyên hộp, cho phép gộp vào stack ngọc có sẵn hoặc dùng ô vừa trừ hộp cuối. Tắt sự kiện không cản mở quà đã nhận.
+Kiểm thử QA: 51 kiểm tra qua UseItem và menu Con Mèo thật, đủ 7 loại, chống bấm lặp, đóng, chuyển vật phẩm, đầy túi/stack, SQL rollback và thử lại. JAR có 672 application classes và ConstIgnoreName. Sao lưu launcher trước cập nhật tại D:/NroFreeSetup/Backups/green-dragon-box-20261018.

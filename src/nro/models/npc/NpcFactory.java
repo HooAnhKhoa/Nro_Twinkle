@@ -319,6 +319,7 @@ public class NpcFactory {
         new Npc(-1, -1, -1, -1, ConstNpc.CON_MEO, 351) {
             @Override
             public void confirmMenu(Player player, int select) {
+                if(nro.models.services_func.GreenDragonBox.confirm(player,select))return;
                 switch (player.idMark.getIndexMenu()) {
                     case ConstNpc.IGNORE_MENU -> {
                         // Không làm gì
