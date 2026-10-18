@@ -82,6 +82,7 @@ public class EffectSkin {
 
     public void update() {
         updateVoHinh();
+        if(player.nPoint!=null&&player.nPoint.teacherRage.changed(player,System.currentTimeMillis()))Service.gI().point(player);
         if (!this.player.isDie() && this.player.zone != null && !MapService.gI().isMapOffline(this.player.zone.map.mapId)) {
             updateOdo();
             updateXinbato();
@@ -322,7 +323,7 @@ public class EffectSkin {
                             } else {
                                 Service.gI().chat(pl, textBuffSD[Util.nextInt(0, textBuffSD.length - 1)]);
                             }
-                            EffectSkillService.gI().setDameBuff(player, 11000, player.nPoint.tlSexyDame);
+                            EffectSkillService.gI().setDameBuff(pl, 11000, player.nPoint.tlSexyDame);
                         }
                     }
                     this.lastTimeThoBulma = System.currentTimeMillis();

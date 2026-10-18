@@ -184,6 +184,7 @@ public class NPoint {
 
     /*------------------------Effect skin-------------------------------------*/
     public Item trainArmor;
+    public final TeacherRage teacherRage=new TeacherRage();
     public boolean wearingTrainArmor;
 
     public boolean wearingVoHinh;
@@ -1205,6 +1206,7 @@ public class NPoint {
 
         // Consecutive basic punches, separate from the single Cute bonus above.
         dame += dame * this.punchCombo.percent(this.player) / 100L;
+        dame += dame * teacherRage.percent(this.player,System.currentTimeMillis()) / 100L;
 
         // Xử lý giảm dame
         dame -= (dame * tlSubSD / 100L);
@@ -1648,7 +1650,7 @@ public class NPoint {
                     tiemNang += tn * 2;
                 }
                 if (((Pet) this.player).master.nPoint != null && ((Pet) this.player).master.nPoint.tlTNSMPet > 0) {
-                    tiemNang += tn / 100 * (((Pet) this.player).master.nPoint.tlTNSMPet + 100);
+                    tiemNang += tn * ((Pet) this.player).master.nPoint.tlTNSMPet / 100L;
                 }
             }
             if (MapService.gI().isMapNguHanhSon(this.player.zone.map.mapId)) {

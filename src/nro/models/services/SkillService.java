@@ -770,7 +770,7 @@ public class SkillService {
                         for (Player pl : playersMap) {
                             if (!player.equals(pl) && canAttackPlayer(player, pl) && Util.getDistance(player, pl) <= rangeBom) {
                                 dame = pl.isBoss ? player.effectSkill.isMonkey ? dame / 3 : dame / 2 : dame;
-                                pl.injured(player, dame, MapService.gI().isMapYardart(player.zone.map.mapId), false);
+                                pl.injured(player, nro.models.player.TeacherRage.bossDamage(player,pl,dame), MapService.gI().isMapYardart(player.zone.map.mapId), false);
                                 PlayerService.gI().sendInfoHpMpMoney(pl);
                                 Service.gI().Send_Info_NV(pl);
                             }
@@ -921,7 +921,7 @@ public class SkillService {
                 dameAttack /= 3;
             }
         }
-        int dameHit = plInjure.injured(plAtt, miss ? 0 : dameAttack, false, false);
+        int dameHit = plInjure.injured(plAtt, miss ? 0 : nro.models.player.TeacherRage.bossDamage(plAtt,plInjure,dameAttack), false, false);
         if (plAtt.playerSkill == null) {
             return;
         }
