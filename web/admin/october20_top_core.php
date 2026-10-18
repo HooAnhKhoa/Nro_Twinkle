@@ -14,6 +14,6 @@ function octTopValidate($data,$templates,$missing,$options){
   foreach([[1,1],[2,2],[3,3],[4,10],[11,50],[51,100]] as $index=>$range)$result[$board][]=['from'=>$range[0],'to'=>$range[1],'items'=>ttTopValidateItems($rewards[$board][$index]['items']??null,$templates,$assetGuard,$options)];
  }
  foreach(['rose_bonus','card_bonus'] as $board)$result[$board]=ttTopValidateItems($rewards[$board]??null,$templates,$assetGuard,$options);
- if($data['scheduled'])foreach([2101,1718,1719] as $id)if(isset($missing[(string)$id]))throw new RuntimeException('Vật phẩm bán #'.$id.' chưa đủ hình/chức năng. Hoàn thiện trước khi bật lịch.');
+ if($data['scheduled'])foreach([1720,1718,1719] as $id)if(isset($missing[(string)$id]))throw new RuntimeException('Vật phẩm bán #'.$id.' chưa đủ hình/chức năng. Hoàn thiện trước khi bật lịch.');
  return ['name'=>$name,'start'=>$start,'points'=>$points,'end'=>$end,'scheduled'=>(int)$data['scheduled'],'rose'=>$rose,'card'=>$card,'gold'=>$gold,'rewards'=>json_encode($result,JSON_UNESCAPED_UNICODE|JSON_THROW_ON_ERROR)];
 }
