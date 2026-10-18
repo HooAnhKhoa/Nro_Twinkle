@@ -14,7 +14,13 @@ check($r['rose_bonus'][0]['id']===2102&&$r['card_bonus'][0]['id']===2102,'both r
 function fails($data,$templates,$missing,$options,$label){try{octTopValidate($data,$templates,$missing,$options);throw new LogicException('Unexpected pass');}catch(RuntimeException $e){echo "PASS $label\n";}}
 $x=$data;$x['points_end']=$x['start'];fails($x,$templates,[],$options,'inverted cutoff rejected');
 $x=$data;$x['rose_gems']=0;fails($x,$templates,[],$options,'free purchases rejected');
-fails($data,$templates,[2085=>'missing frames'],$options,'missing costume blocks activation');fails($data,$templates,[2101=>'missing icon'],$options,'missing sale icon blocks activation');
-$x=$data;$x['scheduled']=false;check(octTopValidate($x,$templates,[2085=>'missing frames'],$options)['scheduled']===0,'draft can be prepared before art is complete');
+fails($data,$templates,[1797=>'missing frames'],$options,'missing costume blocks activation');fails($data,$templates,[2101=>'missing icon'],$options,'missing sale icon blocks activation');
+$x=$data;$x['scheduled']=false;check(octTopValidate($x,$templates,[1797=>'missing frames'],$options)['scheduled']===0,'draft can be prepared before art is complete');
 $x=$data;$x['rewards']['cards'][0]['items'][0]['options'][]=['id'=>93,'param'=>30];fails($x,$templates,[],$options,'expiry must use days field');
 $x=$data;$x['card_gems']=1.5;fails($x,$templates,[],$options,'fractional price rejected');
+check($r['cards'][0]['items'][0]['id']===1797&&$r['gifts'][0]['items'][0]['id']===1778,'approved available equivalent costumes');
+$missing=json_decode(file_get_contents(__DIR__.'/../config/teamobi-assets.json'),true)['unavailable'];
+foreach(['cards'=>1797,'gifts'=>1778] as $board=>$id){
+ check(!isset($missing[$id]),'equivalent costume has complete assets '.$board);
+ foreach($r[$board] as $rank)check($rank['items'][0]['id']===$id,'equivalent applied to rank '.$board.' '.$rank['from']);
+}
